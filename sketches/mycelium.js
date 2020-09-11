@@ -2,21 +2,56 @@ export default function sketch(p5) {
   let max_iterations = Math.floor(p5.windowWidth * p5.windowHeight * 0.12)
   let current_iteration = 1
   let BG_ALPHA = 250 // For collision detection
-  let SHOW_POSTS = true
   let paths_to_iterate = [0]
   let paths = new Array(1)
+  let DEBUG = false
 
   // Posts
   let imgs = []
   var posts = []
+  let addedPostImagesToCanvas = false;
 
   p5.loadPost = postId => {}
   p5.myCustomRedrawAccordingToNewPropsHandler = props => {
+    if (DEBUG) {
+      console.log("received props: ")
+      console.log(props)
+    }
+
     if (props.posts) {
       posts = props.posts
+      p5.addPostImagesToCanvas()
     }
     if (props.loadPost) {
       p5.loadPost = props.loadPost
+    }
+  }
+
+  p5.addPostImagesToCanvas = () => {
+    if (!addedPostImagesToCanvas && posts.length !== 0) {
+      if (DEBUG) {
+        console.log("Add post images to canvas")
+        console.log(posts)
+      }
+      posts.forEach(function (element, index, array) {
+        let imgUrl = element.images[0]?.formats?.thumbnail?.url || 'https://via.placeholder.com/100x100'
+        let img = p5.createImg(imgUrl, element["title"])
+        img.style('opacity', '0')
+        img.attribute('postId', element["id"])
+        img.position(0, 0)
+        img.size(100, 100)
+        img.mouseClicked(() => p5.openImage(img))
+        img.mouseOver(() => p5.imgOver(img))
+        img.mouseOut(() => p5.imgOut(img))
+        img.style('background', '#fff')
+        img.style('border-radius', '3px')
+        img.style('border', '1px solid #666')
+        img.style('padding', '5px')
+        img.style('cursor', 'pointer')
+        imgs.push(img)
+      })
+      addedPostImagesToCanvas = true
+      p5.loop()
     }
   }
 
@@ -62,6 +97,8 @@ export default function sketch(p5) {
   }
 
   p5.setup = () => {
+    if (DEBUG) console.log("p5.setup()")
+
     p5.createCanvas(p5.windowWidth, p5.windowHeight)
     p5.background(p5.color(235, 235, 235, BG_ALPHA))
     p5.ellipseMode(p5.CENTER)
@@ -73,33 +110,16 @@ export default function sketch(p5) {
     p5.ellipse(paths[0].location.x - paths[0].velocity.x * paths[0].diameter, paths[0].location.y - paths[0].velocity.y * paths[0].diameter, 5, 6) // deixar cifa meio separada
     p5.fill("#666")
 
-
-    posts.forEach(function(element, index, array){
-      let imgUrl = element.images[0]?.formats?.thumbnail?.url || 'https://via.placeholder.com/100x100'
-      let img = p5.createImg(imgUrl, element["title"])
-      img.style('opacity', '0')
-      //img.hide()
-      img.id('post-' + element["id"])
-      img.attribute('postId', element["id"])
-      img.class('posts')
-      //let randomElement = paths[paths_to_iterate[Math.floor(Math.random() * paths_to_iterate.length)]]
-      //img.position((0.2 + 0.6 * Math.random()) * width, (0.2 + 0.6 * Math.random()) * height)
-      //img.position(randomElement.location.x, randomElement.location.y)
-      img.position(0,0)
-      img.size(100, 100)
-      img.mouseClicked(() => p5.openImage(img))
-      img.mouseOver(() => p5.imgOver(img))
-      img.mouseOut(() => p5.imgOut(img))
-      img.style('background', '#fff')
-      img.style('border-radius', '3px')
-      img.style('border', '1px solid #666')
-      img.style('padding', '5px')
-      img.style('cursor', 'pointer')
-      imgs.push(img)
-    })
+    // Prevent race condition
+    if (!addedPostImagesToCanvas){
+      p5.noLoop()
+      p5.addPostImagesToCanvas()
+    }
   }
 
   p5.draw = () => {
+    if (DEBUG) console.log('paths_to_iterate.lenght: ' + paths_to_iterate.length + ' current_iteration: ' + current_iteration + ' max_iterations: ' + max_iterations + ' paths.length: ' + paths.length)
+
     let to_delete = []
     for (let i = 0; i < paths_to_iterate.length && current_iteration < max_iterations; i++) {
       if (i > 10 && Math.random() < 0.3)
@@ -135,8 +155,18 @@ export default function sketch(p5) {
     })
 
     if (current_iteration === max_iterations) {
+      if (DEBUG) console.log('current_iteration === max_iterations')
+
+      if (DEBUG) {
+        console.log('imgs: ')
+        console.log(imgs)
+      }
       imgs.forEach(function(element, index, array) {
+        if (DEBUG) console.log('setting timeout for index ' + index)
+
         setTimeout(() => {
+          if (DEBUG) console.log('img timeout!')
+
           let randomElement = paths[paths_to_iterate[Math.floor(Math.random() * paths_to_iterate.length)]]
           element.position(randomElement.location.x - 50, randomElement.location.y - 50)
           element.style('transition', 'opacity 1s')
@@ -146,15 +176,20 @@ export default function sketch(p5) {
       })
 
       // TODO Do not use setTimeout for this. Use a callback or anything else after the images have been placed.
+      if (DEBUG) console.log('set noLoop timeout')
+
       setTimeout(() => {
+        if (DEBUG) console.log('noLoop timeout reached')
         paths = []
         paths_to_iterate = []
         p5.noLoop()
-      }, 6000);
+      }, 6000)
 
       current_iteration++
     } else if (paths_to_iterate.length === 0) {
-      current_iteration = max_iterations;
+      if (DEBUG) console.log('paths_to_iterate.length === 0')
+
+      current_iteration = max_iterations
     }
   }
 
