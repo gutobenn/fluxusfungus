@@ -13,7 +13,7 @@ Then set each variable on `.env.local`:
 
 - `NEXT_PUBLIC_STRAPI_API_URL` should be set as `http://localhost:1337` (no trailing slash).
 
-Now let's run the project. Make sure that the local Strapi server (from [API](https://github.com/gutobenn/fluxusfungus-api) is still running at http://localhost:1337.
+Now let's run the project. Make sure that the local Strapi server ([API](https://github.com/gutobenn/fluxusfungus-api)) is running at http://localhost:1337.
 
 ```bash
 npm install

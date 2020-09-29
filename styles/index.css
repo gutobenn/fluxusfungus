@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: rgba(235, 235, 235, 250);
+}
+
 .grayscale {
   filter: grayscale(1);
 }

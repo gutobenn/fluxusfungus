@@ -5,9 +5,6 @@ import { useRouter } from 'next/router'
 
 const P5Wrapper = dynamic(import('react-p5-wrapper'), {
   ssr: false,
-  loading: () => (
-    <div className="sketch-holder">Carregando...</div>
-  ),
 });
 
 export default function Sketch({ posts }) {

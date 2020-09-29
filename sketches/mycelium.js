@@ -1,5 +1,7 @@
+import alea from "seedrandom"
+
 export default function sketch(p5) {
-  let max_iterations = Math.floor(p5.windowWidth * p5.windowHeight * 0.12)
+  let max_iterations = Math.floor(p5.windowWidth * p5.windowHeight * 0.75)
   let current_iteration = 1
   let BG_ALPHA = 250 // For collision detection
   let paths_to_iterate = [0]
@@ -9,7 +11,8 @@ export default function sketch(p5) {
   // Posts
   let imgs = []
   var posts = []
-  let addedPostImagesToCanvas = false;
+  let addedPostImagesToCanvas = false
+  var myrng = alea(Math.random())
 
   p5.loadPost = postId => {}
   p5.myCustomRedrawAccordingToNewPropsHandler = props => {
@@ -58,14 +61,14 @@ export default function sketch(p5) {
   class PathFinder {
     constructor(parent) {
       if (parent === undefined) {
-        this.location = p5.createVector((0.3 + 0.5 * Math.random()) * p5.width, (0.3 + 0.5 * Math.random()) * p5.height)
+        this.location = p5.createVector((0.3 + 0.5 * myrng.quick()) * p5.width, (0.3 + 0.5 * myrng.quick()) * p5.height)
         this.velocity = p5.createVector((p5.width / 2) - this.location.x, (p5.height / 2) - this.location.y).normalize()
         this.diameter = 4
         this.level = 1
         this.iteration_counter = 1
       } else {
         this.location = parent.location.copy()
-        this.velocity = parent.velocity.copy().rotate((-1.1 + 2.2 * Math.random()), (-1.1 + 2.2 * Math.random())) // varia angulo em até 1.1rad
+        this.velocity = parent.velocity.copy().rotate((-1.1 + 2.2 * myrng.quick()), (-1.1 + 2.2 * myrng.quick())) // varia angulo em até 1.1rad
         this.level = parent.level + 1
         this.diameter = parent.diameter * 0.98
         this.iteration_counter = parent.iteration_counter + 1
@@ -74,15 +77,15 @@ export default function sketch(p5) {
 
     update() {
       this.location.add(this.velocity)
-      let bump = p5.createVector((-1 + 2 * Math.random()), (-1 + 2 * Math.random()))
+      let bump = p5.createVector((-1 + 2 * myrng.quick()), (-1 + 2 * myrng.quick()))
       bump.mult(0.02 * p5.log(this.iteration_counter))
       this.velocity.add(bump)
       this.velocity.normalize()
-      if (Math.random() / p5.log(this.iteration_counter) < 0.012 || (this.iteration_counter <= 36 && this.iteration_counter % 7 === 0)) { // || this.iteration_counter === 8 || this.iteration_counter === 12) {
+      if (myrng.quick() / p5.log(this.iteration_counter) < 0.012 || (this.iteration_counter <= 36 && this.iteration_counter % 7 === 0)) { // || this.iteration_counter === 8 || this.iteration_counter === 12) {
         paths_to_iterate.push(paths.length)
         let new_path = new PathFinder(this)
         if (paths.length < 8) {
-          new_path.velocity = this.velocity.copy().rotate((paths.length + Math.random() / 2) * p5.HALF_PI)
+          new_path.velocity = this.velocity.copy().rotate((paths.length + myrng.quick() / 2) * p5.HALF_PI)
         }
         paths = p5.append(paths, new_path)
       }
@@ -99,6 +102,8 @@ export default function sketch(p5) {
   p5.setup = () => {
     if (DEBUG) console.log("p5.setup()")
 
+    p5.frameRate(60)
+    p5.pixelDensity(1)
     p5.createCanvas(p5.windowWidth, p5.windowHeight)
     p5.background(p5.color(235, 235, 235, BG_ALPHA))
     p5.ellipseMode(p5.CENTER)
@@ -122,7 +127,7 @@ export default function sketch(p5) {
 
     let to_delete = []
     for (let i = 0; i < paths_to_iterate.length && current_iteration < max_iterations; i++) {
-      if (i > 10 && Math.random() < 0.3)
+      if (i > 10 && myrng.quick() < 0.3)
         continue
 
       let pi = paths_to_iterate[i]
@@ -161,16 +166,16 @@ export default function sketch(p5) {
         console.log('imgs: ')
         console.log(imgs)
       }
+
       imgs.forEach(function(element, index, array) {
         if (DEBUG) console.log('setting timeout for index ' + index)
 
         setTimeout(() => {
           if (DEBUG) console.log('img timeout!')
-
-          let randomElement = paths[paths_to_iterate[Math.floor(Math.random() * paths_to_iterate.length)]]
+          /*let randomElement = paths[paths_to_iterate[Math.floor(myrng.quick() * paths_to_iterate.length)]]
           element.position(randomElement.location.x - 50, randomElement.location.y - 50)
           element.style('transition', 'opacity 1s')
-          element.style('opacity', '100')
+          element.style('opacity', '100')*/
           // TODO Avoid placing images in the limits of the screen or above another image
         }, 500*index)
       })
