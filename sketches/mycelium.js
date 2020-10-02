@@ -80,7 +80,13 @@ export default function sketch(p5) {
         if (paths.length < 8) {
           new_path.velocity = this.velocity.copy().rotate((paths.length + myrng.quick() / 2) * p5.HALF_PI)
         }
-        if (paths_counter % posts_every_nth === 0 && postsPositions.length < posts.length) {
+        if (paths_counter % posts_every_nth === 0
+          && postsPositions.length < posts.length
+          && this.location.x > 15
+          && this.location.y > 15
+          && this.location.x < p5.width - 15
+          && this.location.y < p5.height - 15
+        ) {
           postsPositions.push({ "x": this.location.x, "y": this.location.y }) // TODO evitar limite da tela?
         }
         paths.push(new_path)
@@ -135,6 +141,7 @@ export default function sketch(p5) {
       if (p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)[3] !== BG_ALPHA // collision
         || (diam <= 0.45)
         || loc.x <= 0
+        || loc.y <= 0
         || loc.x >= p5.width
         || loc.y >= p5.height
       ) {
