@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-transparent p-3 flex fixed top-0 inset-x-0 z-50 items-center">
+    <nav className="flex items-center justify-between flex-wrap bg-transparent p-3 flex fixed top-0 inset-x-0 items-center">
       <div className="flex container mx-auto">
         <div className="flex items-center flex-shrink-0 text-black mr-6">
           <span className="font-semibold text-xl tracking-tight">Fluxus Fungus</span>
@@ -15,12 +15,12 @@ export default function Header() {
             </svg>
           </button>
         </div>*/}
-        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-          <div className="text-sm lg:flex-grow">
+        <div className="w-full block flex-grow flex items-center w-auto">
+          <div className="text-sm flex-grow">
           </div>
           <div>
             <Link href={`/?page=sobre`} as={'/sobre'} scroll={false}>
-              <a className="block mt-4 lg:inline-block lg:mt-0 text-grey-800 hover:text-black mr-4">Sobre</a>
+              <a className="block mt-0 text-grey-800 hover:text-black mr-2">Sobre</a>
             </Link>
             {/*<a href="#"
                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Enviar</a>*/}

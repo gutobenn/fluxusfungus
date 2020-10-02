@@ -12,7 +12,7 @@ import { WEBSITE_NAME } from '@/lib/constants'
 export default function Index({ allPosts, aboutPage }) {
   const router = useRouter()
   shuffleArray(allPosts)
-  const sketchPosts = allPosts.slice(0,3);
+  const sketchPosts = allPosts.slice(0,8);
 
   return (
     <>

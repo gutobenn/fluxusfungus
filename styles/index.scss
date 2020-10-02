@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: rgba(235, 235, 235, 250);
+}
+
+.grayscale {
+  filter: grayscale(1);
+}
+
+/* Mycelium sketch */
+.mycelium_blob {
+  background: #ff0000;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  transition: opacity 1s;
+  height: 10px;
+  width: 10px;
+
+  &:hover {
+    background: #333;
+    box-shadow: 0px 0px 7px -3px #333;
+  }
+
+  .invisible {
+    opacity: 0;
+  }
+
+  .pulse {
+    animation: pulse-red 3s infinite;
+  }
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+  }
+
+  50% {
+    transform: scale(1);
+    box-shadow: 0 0 0 7px rgba(255, 82, 82, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+  }
+}

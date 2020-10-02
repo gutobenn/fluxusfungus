@@ -1,18 +1,20 @@
 import alea from "seedrandom"
 
 export default function sketch(p5) {
-  let max_iterations = Math.floor(p5.windowWidth * p5.windowHeight * 0.75)
+  let max_iterations = Math.min(Math.floor(p5.windowWidth * p5.windowHeight * 0.12), 130000)
   let current_iteration = 1
   let BG_ALPHA = 250 // For collision detection
-  let paths_to_iterate = [0]
   let paths = new Array(1)
   let DEBUG = false
 
   // Posts
   let imgs = []
   var posts = []
+  var postsPositions = []
   let addedPostImagesToCanvas = false
   var myrng = alea(Math.random())
+  var paths_counter = 1;
+  let posts_every_nth = Math.floor(max_iterations / 400);
 
   p5.loadPost = postId => {}
   p5.myCustomRedrawAccordingToNewPropsHandler = props => {
@@ -37,20 +39,12 @@ export default function sketch(p5) {
         console.log(posts)
       }
       posts.forEach(function (element, index, array) {
-        let imgUrl = element.images[0]?.formats?.thumbnail?.url || 'https://via.placeholder.com/100x100'
-        let img = p5.createImg(imgUrl, element["title"])
-        img.style('opacity', '0')
+        let img = p5.createSpan('')
+        img.addClass('mycelium_blob')
+        img.addClass('invisible')
         img.attribute('postId', element["id"])
         img.position(0, 0)
-        img.size(100, 100)
         img.mouseClicked(() => p5.openImage(img))
-        img.mouseOver(() => p5.imgOver(img))
-        img.mouseOut(() => p5.imgOut(img))
-        img.style('background', '#fff')
-        img.style('border-radius', '3px')
-        img.style('border', '1px solid #666')
-        img.style('padding', '5px')
-        img.style('cursor', 'pointer')
         imgs.push(img)
       })
       addedPostImagesToCanvas = true
@@ -68,7 +62,7 @@ export default function sketch(p5) {
         this.iteration_counter = 1
       } else {
         this.location = parent.location.copy()
-        this.velocity = parent.velocity.copy().rotate((-1.1 + 2.2 * myrng.quick()), (-1.1 + 2.2 * myrng.quick())) // varia angulo em até 1.1rad
+        this.velocity = parent.velocity.copy().rotate((-1.1 + 2.2 * myrng.quick()), (-1.1 + 2.2 * myrng.quick())) // rotate randomly between [-1.1, 1.1] rad
         this.level = parent.level + 1
         this.diameter = parent.diameter * 0.98
         this.iteration_counter = parent.iteration_counter + 1
@@ -78,16 +72,19 @@ export default function sketch(p5) {
     update() {
       this.location.add(this.velocity)
       let bump = p5.createVector((-1 + 2 * myrng.quick()), (-1 + 2 * myrng.quick()))
-      bump.mult(0.02 * p5.log(this.iteration_counter))
+      bump.mult(0.02 * Math.log(this.iteration_counter))
       this.velocity.add(bump)
       this.velocity.normalize()
-      if (myrng.quick() / p5.log(this.iteration_counter) < 0.012 || (this.iteration_counter <= 36 && this.iteration_counter % 7 === 0)) { // || this.iteration_counter === 8 || this.iteration_counter === 12) {
-        paths_to_iterate.push(paths.length)
+      if (myrng.quick() / Math.log(this.iteration_counter) < 0.012 || (this.iteration_counter <= 36 && this.iteration_counter % 7 === 0)) {
         let new_path = new PathFinder(this)
         if (paths.length < 8) {
           new_path.velocity = this.velocity.copy().rotate((paths.length + myrng.quick() / 2) * p5.HALF_PI)
         }
-        paths = p5.append(paths, new_path)
+        if (paths_counter % posts_every_nth === 0 && postsPositions.length < posts.length) {
+          postsPositions.push({ "x": this.location.x, "y": this.location.y }) // TODO evitar limite da tela?
+        }
+        paths.push(new_path)
+        paths_counter++;
       }
 
       if (this.diameter > 2) {
@@ -123,92 +120,72 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
-    if (DEBUG) console.log('paths_to_iterate.lenght: ' + paths_to_iterate.length + ' current_iteration: ' + current_iteration + ' max_iterations: ' + max_iterations + ' paths.length: ' + paths.length)
+    if (DEBUG) console.log( 'current_iteration: ' + current_iteration + ' max_iterations: ' + max_iterations + ' paths.length: ' + paths.length)
 
-    let to_delete = []
-    for (let i = 0; i < paths_to_iterate.length && current_iteration < max_iterations; i++) {
-      if (i > 10 && myrng.quick() < 0.3)
+    let paths_length = paths.length
+    for (let i = paths_length - 1; i >= 0 && current_iteration < max_iterations; i--) {
+      if (i > 10 && myrng.quick() < 0.3 || paths[i] == null)
         continue
 
-      let pi = paths_to_iterate[i]
-      let loc = paths[pi].location
-      let diam = paths[pi].diameter
-      let vel = paths[pi].velocity
+      let loc = paths[i].location
+      let diam = paths[i].diameter
+      let vel = paths[i].velocity
       let r = diam / 2
 
-      if (p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)[3] !== BG_ALPHA
+      if (p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)[3] !== BG_ALPHA // collision
         || (diam <= 0.45)
         || loc.x <= 0
         || loc.x >= p5.width
         || loc.y >= p5.height
       ) {
-        to_delete.push(i)
+        paths[i] = null;
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
-        paths[pi].update()
+        paths[i].update()
       }
       current_iteration += 1
     }
 
-    to_delete.forEach(function(element, index, array) {
-      delete paths_to_iterate[element]
-      delete paths[paths_to_iterate[element]]
-    })
+    if ( paths_length < 15 || paths_length % 10 == 0 ) {
+      paths = paths.filter(function(el) {
+        return el != null
+      })
+    }
 
-    paths_to_iterate = paths_to_iterate.filter(function(el) {
-      return el != null
-    })
+    if (current_iteration === max_iterations || paths_length === 0) {
+      if (DEBUG) {
+        if (current_iteration === max_iterations) {
+          console.log('current_iteration === max_iterations')
+        }
+        if (DEBUG && paths_length === 0) {
+          console.log('paths_length === 0')
+        }
+      }
 
-    if (current_iteration === max_iterations) {
-      if (DEBUG) console.log('current_iteration === max_iterations')
+      paths = []
+      p5.noLoop()
+
+      console.log("noLoop")
 
       if (DEBUG) {
         console.log('imgs: ')
         console.log(imgs)
       }
-
       imgs.forEach(function(element, index, array) {
         if (DEBUG) console.log('setting timeout for index ' + index)
 
-        setTimeout(() => {
-          if (DEBUG) console.log('img timeout!')
-          /*let randomElement = paths[paths_to_iterate[Math.floor(myrng.quick() * paths_to_iterate.length)]]
-          element.position(randomElement.location.x - 50, randomElement.location.y - 50)
-          element.style('transition', 'opacity 1s')
-          element.style('opacity', '100')*/
-          // TODO Avoid placing images in the limits of the screen or above another image
-        }, 500*index)
+        element.position(postsPositions[index]["x"], postsPositions[index]["y"])
+        element.removeClass('invisible');
+        element.addClass('pulse')
       })
 
-      // TODO Do not use setTimeout for this. Use a callback or anything else after the images have been placed.
-      if (DEBUG) console.log('set noLoop timeout')
-
-      setTimeout(() => {
-        if (DEBUG) console.log('noLoop timeout reached')
-        paths = []
-        paths_to_iterate = []
-        p5.noLoop()
-      }, 6000)
-
       current_iteration++
-    } else if (paths_to_iterate.length === 0) {
-      if (DEBUG) console.log('paths_to_iterate.length === 0')
-
-      current_iteration = max_iterations
     }
   }
 
   p5.openImage = (img) => {
     p5.loadPost(img.attribute("postId"))
-    //alert("Open image lightbox for #" + img.id)
-  }
-
-  p5.imgOver = (img) => {
-    img.style('box-shadow', '0px 0px 7px -3px #333')
-  }
-
-  p5.imgOut = (img) => {
-    img.style('box-shadow', 'none')
+    img.removeClass('pulse')
   }
 
   /*
