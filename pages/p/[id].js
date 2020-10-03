@@ -5,9 +5,9 @@ import Header from '@/components/header'
 import Layout from '@/components/layout'
 import { getAllItemsWithId, getItem } from '@/lib/api'
 import markdownToHtml from '@/lib/markdownToHtml'
-import PostModal from "@/components/post-modal";
-import Head from "next/head";
-import {WEBSITE_NAME} from "@/lib/constants";
+import PostModal from '@/components/post-modal'
+import Head from 'next/head'
+import { WEBSITE_NAME } from '@/lib/constants'
 
 export default function Post({ item }) {
   const router = useRouter()
@@ -26,16 +26,16 @@ export default function Post({ item }) {
         <title>{WEBSITE_NAME}</title>
       </Head>
       <Header />
-      <PostModal
-        item={item}
-      />
+      <PostModal item={item} />
     </Layout>
   )
 }
 
 export async function getStaticProps({ params }) {
   const data = await getItem(params.id)
-  const rendered_content = await markdownToHtml(data?.items[0]?.content[0].content || '')
+  const rendered_content = await markdownToHtml(
+    data?.items[0]?.content[0].content || ''
+  )
   const item_type = data?.items[0]?.content[0]?.__typename
 
   return {
@@ -46,9 +46,9 @@ export async function getStaticProps({ params }) {
         content: {
           ...data?.items[0].content[0],
           content: rendered_content
-        },
-      },
-    },
+        }
+      }
+    }
   }
 }
 
@@ -56,6 +56,6 @@ export async function getStaticPaths() {
   const allItems = await getAllItemsWithId()
   return {
     paths: allItems?.map((item) => `/p/${item.id}`) || [],
-    fallback: true,
+    fallback: true
   }
 }

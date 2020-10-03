@@ -1,16 +1,16 @@
-import dynamic from 'next/dynamic';
-import React, { Component } from 'react';
-import sketch from "../sketches/mycelium";
+import dynamic from 'next/dynamic'
+import React from 'react'
+import sketch from '../sketches/mycelium'
 import { useRouter } from 'next/router'
 
 const P5Wrapper = dynamic(import('react-p5-wrapper'), {
-  ssr: false,
-});
+  ssr: false
+})
 
 export default function Sketch({ posts }) {
   const router = useRouter()
 
-  const loadPost = postId => {
+  const loadPost = (postId) => {
     router.push('/?pId=' + postId, '/p/' + postId, { shallow: true })
   }
 
@@ -25,7 +25,7 @@ export default function Sketch({ posts }) {
         ))}
       </div>
       */}
-      <P5Wrapper sketch={sketch} posts={posts} loadPost={loadPost}/>
+      <P5Wrapper sketch={sketch} posts={posts} loadPost={loadPost} />
     </>
   )
 }

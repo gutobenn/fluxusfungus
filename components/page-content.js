@@ -1,5 +1,5 @@
 import markdownStyles from './markdown-styles.module.css'
-import React from "react";
+import React from 'react'
 
 export default function PageContent({ item }) {
   return (
@@ -12,4 +12,3 @@ export default function PageContent({ item }) {
     </>
   )
 }
-
