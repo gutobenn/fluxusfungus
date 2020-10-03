@@ -27,7 +27,7 @@ export async function getStaticProps({ }) {
   return {
     props: {
       page: {
-        title: 'Sobre',
+        ...page,
         content,
       },
     },

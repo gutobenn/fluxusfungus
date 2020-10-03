@@ -50,3 +50,30 @@ body {
     box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
   }
 }
+
+/* Gallery */
+.gallery-figcaption .gallery-figcaption--info .caption-right {
+  display: none;
+}
+
+.gallery-control {
+  display: none;
+  width: 10% !important;
+}
+
+@media (min-width: 768px) {
+  // Hide thumbnails on desktop
+  ul.thumbnails-list {
+    display: none;
+  }
+  .gallery-control {
+    display: block;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gallery-control {
+    display: block;
+    width: 20% !important;
+  }
+}

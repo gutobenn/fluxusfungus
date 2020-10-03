@@ -42,10 +42,21 @@ export default function Index({ allPosts, aboutPage }) {
 export async function getStaticProps({ }) {
   const allPostsQuery = (await getAllItems()) || []
   const pArray = allPostsQuery.map(async post => {
-    const content = await markdownToHtml(post.content || '')
-    return { ...post, content }
-  });
-  const allPosts = await Promise.all(pArray);
+    const rendered_content = await markdownToHtml(post.content[0]?.content || '')
+
+    const item_type = post.content[0]?.__typename
+
+    return {
+      ...post,
+      type: item_type,
+      content: {
+        ...post.content[0],
+        content: rendered_content
+      },
+    }
+  })
+
+  const allPosts = await Promise.all(pArray)
 
   const aboutPageQuery = await getAbout()
   const aboutContent = await markdownToHtml(aboutPageQuery.about.content || '')

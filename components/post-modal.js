@@ -1,8 +1,10 @@
 import React from "react";
 import Modal from "react-modal";
+import ReactBnbGallery from 'react-bnb-gallery';
 import PostContent from "@/components/post-content";
 import PageContent from "@/components/page-content";
 import {useRouter} from "next/router";
+import {Carousel} from "react-responsive-carousel";
 
 Modal.setAppElement('#__next')
 
@@ -11,7 +13,23 @@ export default function PostModal(props) {
   const { item } = props
   return (
     <>
-      {item && (
+      {item && item.type === 'ComponentPagesGallery' && (
+        <ReactBnbGallery
+          show={true}
+          wrap={true}
+          photos={
+            item.content.Picture.map((picture, i) => {
+              return {
+                'photo' : picture.image.formats.large.url,
+                'caption' : picture.caption,
+                'subcaption' : picture.subcaption
+              }
+            }
+          )}
+          onClose={() => router.push('/')}
+          />
+      )}
+      {item && (item.type === 'ComponentPagesQuote' || item.type === 'AboutPage' ) && (
       <Modal
         isOpen={true} // The modal should always be shown on page load, it is the 'page'
         onRequestClose={() => router.push('/')}

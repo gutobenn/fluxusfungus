@@ -35,13 +35,18 @@ export default function Post({ item }) {
 
 export async function getStaticProps({ params }) {
   const data = await getItem(params.id)
-  const content = await markdownToHtml(data?.items[0]?.content || '')
+  const rendered_content = await markdownToHtml(data?.items[0]?.content[0].content || '')
+  const item_type = data?.items[0]?.content[0]?.__typename
 
   return {
     props: {
       item: {
         ...data?.items[0],
-        content,
+        type: item_type,
+        content: {
+          ...data?.items[0].content[0],
+          content: rendered_content
+        },
       },
     },
   }

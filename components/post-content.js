@@ -1,16 +1,15 @@
 import markdownStyles from './markdown-styles.module.css'
 import React from "react";
+import { Carousel } from 'react-responsive-carousel';
 
 export default function PostContent({ item }) {
-  console.log(item);
   return (
     <>
-      <div>{item.title}</div>
       <div
         className={markdownStyles['markdown']}
-        dangerouslySetInnerHTML={{ __html: item.content }}
+        dangerouslySetInnerHTML={{ __html: item.content.content }}
       />
-      <div>{item.author}</div>
+      { item?.content?.author && <div>[{item.content.author}]</div> }
     </>
   )
 }
