@@ -19,6 +19,7 @@ export default function PostModal(props) {
           photos={item.content.Picture.map((picture) => {
             return {
               photo: picture.image.formats.large.url,
+              thumbnail: picture.image.formats.thumbnail.url,
               caption: picture.caption,
               subcaption: picture.subcaption
             }
@@ -28,44 +29,53 @@ export default function PostModal(props) {
       )}
       {item &&
         (item.type === 'ComponentPagesQuote' || item.type === 'AboutPage') && (
-          <Modal
-            isOpen={true} // The modal should always be shown on page load, it is the 'page'
-            onRequestClose={() => router.push('/')}
-            contentLabel="Post modal"
-            style={{
-              overlay: {
-                backgroundColor: 'rgba(0,0,0,0.25)'
-              },
-              content: {
-                borderColor: '#e2e8f0',
-                boxShadow:
-                  '0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05)',
-                maxWidth: '900px',
-                margin: '0 auto'
-              }
-            }}
-            {...props}
-          >
-            {item?.id ? (
-              <PostContent item={item} />
-            ) : (
-              <PageContent item={item} />
-            )}
+          <>
+            <Modal
+              isOpen={true} // The modal should always be shown on page load, it is the 'page'
+              onRequestClose={() => router.push('/')}
+              contentLabel="Post modal"
+              style={{
+                overlay: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                },
+                content: {
+                  borderColor: '#e2e8f0',
+                  boxShadow:
+                    '0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05)',
+                  maxWidth: '850px',
+                  margin: '0 auto',
+                  transform: 'translateY(-40%)',
+                  maxHeight: '80%',
+                  top: '40%',
+                  left: '10%',
+                  right: '10%',
+                  bottom: 'auto',
+                  width: '80%'
+                }
+              }}
+              {...props}
+            >
+              {item?.id ? (
+                <PostContent item={item} />
+              ) : (
+                <PageContent item={item} />
+              )}
+            </Modal>
             <div
-              className="cursor-pointer z-50 absolute top-0 right-0 mt-4 mr-4"
+              className="cursor-pointer z-50 fixed top-0 right-0 mt-6 mr-6"
               onClick={() => router.push('/')}
             >
               <svg
-                className="fill-current text-black"
+                className="fill-current text-white"
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
+                width="2em"
+                height="2em"
+                viewBox="0 0 24 24"
               >
-                <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+                <path d="m23.25 24c-.19 0-.38-.07-.53-.22l-10.72-10.72-10.72 10.72c-.29.29-.77.29-1.06 0s-.29-.77 0-1.06l10.72-10.72-10.72-10.72c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l10.72 10.72 10.72-10.72c.29-.29.77-.29 1.06 0s .29.77 0 1.06l-10.72 10.72 10.72 10.72c.29.29.29.77 0 1.06-.15.15-.34.22-.53.22"></path>
               </svg>
             </div>
-          </Modal>
+          </>
         )}
     </>
   )

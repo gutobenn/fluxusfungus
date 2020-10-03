@@ -30,7 +30,7 @@ body {
   }
 
   &.pulse {
-    animation: pulse-red 3s infinite;
+    animation: 3s pulse-red 0s infinite;
   }
 }
 
@@ -42,7 +42,12 @@ body {
 
   50% {
     transform: scale(1);
-    box-shadow: 0 0 0 7px rgba(255, 82, 82, 0);
+    box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
   }
 
   100% {
@@ -58,7 +63,7 @@ body {
 
 .gallery-control {
   display: none;
-  width: 10% !important;
+  width: 5% !important;
 }
 
 @media (min-width: 768px) {
@@ -69,11 +74,10 @@ body {
   .gallery-control {
     display: block;
   }
-}
 
-@media (min-width: 1280px) {
-  .gallery-control {
-    display: block;
-    width: 20% !important;
+  // Force image to scale up (large photos currently have only 1000px width)
+  .gallery ul.gallery-images--ul li.gallery-media-photo .picture img.photo {
+    width: 100%;
   }
+
 }

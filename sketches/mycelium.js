@@ -105,7 +105,7 @@ export default function sketch(p5) {
           this.location.x < p5.width - 15 &&
           this.location.y < p5.height - 15
         ) {
-          postsPositions.push({ x: this.location.x, y: this.location.y }) // TODO evitar limite da tela?
+          postsPositions.push({ x: this.location.x, y: this.location.y })
         }
         paths.push(new_path)
         paths_counter++
@@ -215,7 +215,10 @@ export default function sketch(p5) {
       imgs.forEach(function (element, index) {
         if (DEBUG) console.log('setting timeout for index ' + index)
 
-        element.position(postsPositions[index]['x'], postsPositions[index]['y'])
+        element.position(
+          postsPositions[index]['x'] - 6,
+          postsPositions[index]['y'] - 6
+        )
         element.removeClass('invisible')
         element.addClass('pulse')
       })
