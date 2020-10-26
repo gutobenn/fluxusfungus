@@ -18,6 +18,7 @@ export default function sketch(p5) {
   var myrng = alea(Math.random())
   var paths_counter = 1
   let posts_every_nth = Math.floor(max_iterations / 400)
+  var hasNextPage = false
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (DEBUG) {
@@ -31,6 +32,12 @@ export default function sketch(p5) {
     }
     if (props.loadPost) {
       p5.loadPost = props.loadPost
+    }
+    if (props.increaseCount) {
+      p5.increaseCount = props.increaseCount
+    }
+    if (props.hasNextPage === true) {
+      hasNextPage = true
     }
   }
 
@@ -57,10 +64,17 @@ export default function sketch(p5) {
   class PathFinder {
     constructor(parent) {
       if (parent === undefined) {
-        this.location = p5.createVector(
-          (0.3 + 0.5 * myrng.quick()) * p5.width,
-          (0.3 + 0.5 * myrng.quick()) * p5.height
-        )
+        if (p5.windowWidth < 1280) {
+          this.location = p5.createVector(
+            (0.3 + 0.5 * myrng.quick()) * p5.width,
+            (0.3 + 0.5 * myrng.quick()) * p5.height
+          )
+        } else {
+          this.location = p5.createVector(
+            (0.6 + 0.2 * myrng.quick()) * p5.width,
+            (0.3 + 0.5 * myrng.quick()) * p5.height
+          )
+        }
         this.velocity = p5
           .createVector(
             p5.width / 2 - this.location.x,
@@ -230,6 +244,19 @@ export default function sketch(p5) {
   p5.openImage = (img) => {
     p5.loadPost(img.attribute('postId'))
     img.removeClass('pulse')
+
+    if (p5.selectAll('.pulse').length === 0) {
+      if (hasNextPage) {
+        let nextButton = p5.createButton('ver mais »')
+        nextButton.addClass('ff-font-consolas')
+        nextButton.addClass('mycelium_next_button')
+        nextButton.mousePressed(() => p5.increaseCount())
+      } else {
+        let endMessage = p5.createButton('você já viu todos os conteúdos')
+        endMessage.addClass('ff-font-consolas')
+        endMessage.addClass('mycelium_end_message')
+      }
+    }
   }
 
   /*

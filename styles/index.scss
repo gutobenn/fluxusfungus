@@ -2,8 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fonts */
+@font-face {
+  font-family: 'ConsolasRegular';
+  src: url('../public/fonts/consolas-webfont.eot');
+  src: url('../public/fonts/consolas-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../public/fonts/consolas-webfont.woff') format('woff'),
+  url('../public/fonts/consolas-webfont.ttf') format('truetype'),
+  url('../public/fonts/consolas-webfont.svg#ConsolasRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ff-font-consolas {
+  font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace !important;
+}
+
 body {
   background: rgba(235, 235, 235, 250);
+}
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .grayscale {
@@ -32,6 +54,21 @@ body {
   &.pulse {
     animation: 3s pulse-red 0s infinite;
   }
+}
+
+.mycelium_next_button,
+.mycelium_end_message {
+  background: #000000;
+  color: #ffffff;
+  padding: 5px 15px;
+  right: 0;
+  bottom: 15px;
+  position: fixed;
+}
+
+.mycelium_next_button:hover {
+  color: #000000;
+  background: #ffffff;
 }
 
 @keyframes pulse-red {
@@ -80,4 +117,21 @@ body {
     width: 100%;
   }
 
+}
+
+/* Quote */
+.quote-content, .quote-author {
+  font-family: 'Playfair Display', serif;
+  line-height: 1.75;
+  font-size: 1.1rem;
+}
+
+.quote-author {
+  margin-top: 1rem;
+  color: theme('colors.accent');
+}
+
+/* Videos */
+.react-player {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
 }

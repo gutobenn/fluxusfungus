@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import Layout from '@/components/layout'
-import { getAbout, getAllItems } from '@/lib/api'
+import { getAbout, getContaminations, getAllItems } from '@/lib/api'
 import shuffleArray from '@/lib/shuffle'
 import Head from 'next/head'
 import Header from '@/components/header'
@@ -9,10 +9,9 @@ import PostModal from '@/components/post-modal'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { WEBSITE_NAME } from '@/lib/constants'
 
-export default function Index({ allPosts, aboutPage }) {
+export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   const router = useRouter()
   shuffleArray(allPosts)
-  const sketchPosts = allPosts.slice(0, 8)
 
   return (
     <>
@@ -22,7 +21,7 @@ export default function Index({ allPosts, aboutPage }) {
         </Head>
         <Header />
         <div className="container m-0">
-          <Sketch posts={sketchPosts} />
+          <Sketch posts={allPosts} />
           {router.query.pId && (
             <PostModal
               isOpen={!!router.query.pId}
@@ -33,6 +32,12 @@ export default function Index({ allPosts, aboutPage }) {
             <PostModal
               isOpen={router.query.page === 'sobre'}
               item={aboutPage}
+            />
+          )}
+          {router.query.page === 'contaminacoes' && (
+            <PostModal
+              isOpen={router.query.page === 'contaminacoes'}
+              item={contaminationsPage}
             />
           )}
         </div>
@@ -66,8 +71,17 @@ export async function getStaticProps() {
   const aboutContent = await markdownToHtml(aboutPageQuery.about.content || '')
   const aboutPage = { ...aboutPageQuery, content: aboutContent }
 
+  const contaminationsPageQuery = await getContaminations()
+  const contaminationsContent = await markdownToHtml(
+    contaminationsPageQuery.contamination.content || ''
+  )
+  const contaminationsPage = {
+    ...contaminationsPageQuery,
+    content: contaminationsContent
+  }
+
   return {
-    props: { allPosts, aboutPage }
+    props: { allPosts, aboutPage, contaminationsPage }
   }
 
   // TODO get everything in one query?
