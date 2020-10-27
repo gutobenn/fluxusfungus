@@ -11,6 +11,7 @@ Modal.setAppElement('#__next')
 export default function PostModal(props) {
   const router = useRouter()
   const { item } = props
+
   return (
     <>
       {item && item.type === 'ComponentPagesVideo' && (

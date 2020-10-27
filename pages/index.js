@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter } from 'next/router'
 import Layout from '@/components/layout'
 import { getAbout, getContaminations, getAllItems } from '@/lib/api'
@@ -8,10 +9,15 @@ import Sketch from '@/components/sketch'
 import PostModal from '@/components/post-modal'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { WEBSITE_NAME } from '@/lib/constants'
+import * as gtag from "@/lib/gtag";
 
 export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   const router = useRouter()
   shuffleArray(allPosts)
+
+  useEffect(() => {
+    gtag.pageview('/')
+  })
 
   return (
     <>

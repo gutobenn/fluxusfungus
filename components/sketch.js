@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import React, { useState } from 'react'
 import myceliumSketch from '../sketches/mycelium'
 import { useRouter } from 'next/router'
+import * as gtag from '@/lib/gtag'
 
 const P5Wrapper = dynamic(import('react-p5-wrapper'), {
   ssr: false
@@ -18,6 +19,12 @@ export default function Sketch({ posts }) {
 
   const increaseCount = () => {
     setCount(count + 1)
+
+    gtag.event({
+      action: 'next_mycelium',
+      category: 'Content',
+      label: count
+    })
   }
 
   let postsToDisplay = posts.slice(
