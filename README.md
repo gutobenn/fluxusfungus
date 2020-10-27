@@ -1,6 +1,6 @@
-# Fluxus Fungus
+# fluxus fungus
 
-Web client of [Fluxus Fungus](https://fluxusfungus.com). The API code is available at [gutobenn/fluxusfungus-api](https://github.com/gutobenn/fluxusfungus-api).
+Web client of [fluxus fungus](https://fluxusfungus.com). The API code is available at [gutobenn/fluxusfungus-api](https://github.com/gutobenn/fluxusfungus-api).
 
 ## Development
 Copy the `.env.local.example` file in this directory to `.env.local` (which will be ignored by Git):
