@@ -8,7 +8,7 @@ const P5Wrapper = dynamic(import('react-p5-wrapper'), {
 })
 
 export default function Sketch({ posts }) {
-  const numberOfPosts = 8
+  const numberOfPosts = 10
   const router = useRouter()
   const [count, setCount] = useState(0)
 
