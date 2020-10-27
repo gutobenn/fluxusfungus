@@ -248,12 +248,10 @@ export default function sketch(p5) {
     if (p5.selectAll('.pulse').length === 0) {
       if (hasNextPage) {
         let nextButton = p5.createButton('ver mais »')
-        nextButton.addClass('ff-font-consolas')
         nextButton.addClass('mycelium_next_button')
         nextButton.mousePressed(() => p5.increaseCount())
       } else {
         let endMessage = p5.createButton('você já viu todos os conteúdos')
-        endMessage.addClass('ff-font-consolas')
         endMessage.addClass('mycelium_end_message')
       }
     }

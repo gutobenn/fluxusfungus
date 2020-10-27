@@ -3,13 +3,15 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        serif: '"Playfair Display", serif',
         sans:
-          '-apple-system, "Helvetica Neue", "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+          '-apple-system, "Helvetica Neue", "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        mono: 'Consolas, "ConsolasRegular", "Courier New", monospace !important'
       },
       colors: {
-        accent: '#E1C0AF',
-        success: '#0070f3',
-        cyan: '#79FFE1'
+        primary: '#E1C0AF',
+        tomato: '#FF6347',
+        grey1: 'rgba(235, 235, 235, 250)'
       },
       spacing: {
         28: '7rem'
@@ -18,7 +20,8 @@ module.exports = {
         tighter: '-.04em'
       },
       lineHeight: {
-        tight: 1.2
+        tight: 1.2,
+        relaxed2: 1.75
       },
       fontSize: {
         '5xl': '2.5rem',

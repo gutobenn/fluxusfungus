@@ -2,41 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts */
-@font-face {
-  font-family: 'ConsolasRegular';
-  src: url('../public/fonts/consolas-webfont.eot');
-  src: url('../public/fonts/consolas-webfont.eot?#iefix') format('embedded-opentype'),
-  url('../public/fonts/consolas-webfont.woff') format('woff'),
-  url('../public/fonts/consolas-webfont.ttf') format('truetype'),
-  url('../public/fonts/consolas-webfont.svg#ConsolasRegular') format('svg');
-  font-weight: normal;
-  font-style: normal;
+@layer base {
+  @font-face {
+    font-family: 'ConsolasRegular';
+    src: url('../public/fonts/consolas-webfont.eot');
+    src: url('../public/fonts/consolas-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../public/fonts/consolas-webfont.woff') format('woff'),
+    url('../public/fonts/consolas-webfont.ttf') format('truetype'),
+    url('../public/fonts/consolas-webfont.svg#ConsolasRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
 }
 
-.ff-font-consolas {
-  font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace !important;
-}
-
+/* General */
 body {
-  background: rgba(235, 235, 235, 250);
+  @apply bg-grey1;
 }
 
 h1 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  @apply text-xl font-bold mb-4;
 }
 
-.grayscale {
-  filter: grayscale(1);
-}
 
 /* Mycelium sketch */
 .mycelium_blob {
-  background: #ff0000;
-  cursor: pointer;
-  border-radius: 50%;
+  @apply bg-tomato cursor-pointer rounded-full;
   border: 2px solid #fff;
   transition: opacity 1s;
   height: 10px;
@@ -48,7 +39,7 @@ h1 {
   }
 
   &.invisible {
-    opacity: 0;
+    @apply opacity-0;
   }
 
   &.pulse {
@@ -58,80 +49,70 @@ h1 {
 
 .mycelium_next_button,
 .mycelium_end_message {
-  background: #000000;
-  color: #ffffff;
-  padding: 5px 15px;
-  right: 0;
+  @apply bg-black text-white fixed right-0 font-mono;
   bottom: 15px;
-  position: fixed;
+  padding: 5px 15px;
 }
 
 .mycelium_next_button:hover {
-  color: #000000;
-  background: #ffffff;
+  @apply text-black bg-white;
 }
 
 @keyframes pulse-red {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+    box-shadow: 0 0 0 0 rgba(255, 99, 71, 0.7);
   }
 
   50% {
     transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+    box-shadow: 0 0 0 10px rgba(255, 99, 71, 0);
   }
 
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+    box-shadow: 0 0 0 10px rgba(255, 99, 71, 0);
   }
 
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+    box-shadow: 0 0 0 0 rgba(255, 99, 71, 0);
   }
 }
 
+
 /* Gallery */
 .gallery-figcaption .gallery-figcaption--info .caption-right {
-  display: none;
+  @apply hidden;
 }
 
 .gallery-control {
-  display: none;
+  @apply hidden;
   width: 5% !important;
 }
 
 @media (min-width: 768px) {
   // Hide thumbnails on desktop
   ul.thumbnails-list {
-    display: none;
+    @apply hidden;
   }
   .gallery-control {
-    display: block;
+    @apply block;
   }
 
   // Force image to scale up (large photos currently have only 1000px width)
   .gallery ul.gallery-images--ul li.gallery-media-photo .picture img.photo {
-    width: 100%;
+    @apply w-full;
   }
-
 }
 
-/* Quote */
+
+/* Quotes */
 .quote-content, .quote-author {
-  font-family: 'Playfair Display', serif;
-  line-height: 1.75;
+  @apply font-serif leading-relaxed2;
   font-size: 0.94rem;
 }
 
 .quote-author {
-  margin-top: 1rem;
-  color: theme('colors.accent');
-}
-
-/* Videos */
-.react-player {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
+  @apply mt-4 text-primary;
 }

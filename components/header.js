@@ -5,7 +5,7 @@ export default function Header() {
     <nav className="flex items-center justify-between flex-wrap bg-transparent p-3 flex fixed top-0 inset-x-0 items-center xl:h-full xl:w-1/4 xl:flex-row xl:items-stretch">
       <div className="flex container mx-auto xl:flex-col">
         <div className="flex items-center flex-shrink-0 text-black mr-6 xl:ml-8">
-          <span className="font-semibold text-xl text-accent tracking-tight leading-tight ff-font-consolas xl:text-7xl xl:mt-20">
+          <span className="font-semibold text-xl text-primary tracking-tight leading-tight font-mono xl:text-7xl xl:mt-20">
             fluxus fungus
           </span>
         </div>
