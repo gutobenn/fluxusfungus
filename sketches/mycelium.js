@@ -10,6 +10,8 @@ export default function sketch(p5) {
   let paths = new Array(1)
   let DEBUG = false
 
+  var collisionGrid = new Set()
+
   // Posts
   let imgs = []
   var posts = []
@@ -186,7 +188,12 @@ export default function sketch(p5) {
       let vel = paths[i].velocity
 
       if (
-        p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)[3] !== BG_ALPHA || // collision
+        //p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)[3] !== BG_ALPHA || // collision // TODO disable
+        collisionGrid.has(
+          Math.round(loc.x + diam * vel.x) +
+            '_' +
+            Math.round(loc.y + diam * vel.y)
+        ) || // collision detection
         diam <= 0.45 ||
         loc.x <= 0 ||
         loc.y <= 0 ||
@@ -196,12 +203,25 @@ export default function sketch(p5) {
         paths[i] = null
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
+        for (
+          let i = Math.round(loc.x - diam / p5.PI);
+          i <= Math.round(loc.x + diam / p5.PI);
+          i++
+        ) {
+          for (
+            let j = Math.round(loc.y - diam / p5.PI);
+            j <= Math.round(loc.y + diam / p5.PI);
+            j++
+          ) {
+            collisionGrid.add(i + '_' + j)
+          }
+        }
         paths[i].update()
       }
       currentIteration += 1
     }
 
-    if (pathsLength < 15 || pathsLength % 10 == 0) {
+    if (pathsLength < 15 || pathsLength % 10 === 0) {
       paths = paths.filter(function (el) {
         return el != null
       })
@@ -219,6 +239,7 @@ export default function sketch(p5) {
 
       paths = []
       p5.noLoop()
+      console.log(collisionGrid)
 
       console.log('noLoop')
 
