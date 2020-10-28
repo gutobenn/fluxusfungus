@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import myceliumSketch from '../sketches/mycelium'
 import { useRouter } from 'next/router'
 import * as gtag from '@/lib/gtag'
+import shuffleArray from '@/lib/shuffle'
 
 const P5Wrapper = dynamic(import('react-p5-wrapper'), {
   ssr: false
@@ -11,35 +12,36 @@ const P5Wrapper = dynamic(import('react-p5-wrapper'), {
 export default function Sketch({ posts }) {
   const numberOfPosts = 10
   const router = useRouter()
-  const [count, setCount] = useState(0)
+  const [page, setPage] = useState(0)
 
-  const loadPost = (postId) => {
+  const showPost = (postId) => {
     router.push('/?pId=' + postId, '/p/' + postId, { shallow: true })
   }
 
-  const increaseCount = () => {
-    setCount(count + 1)
+  const nextPage = () => {
+    setPage(page + 1)
 
     gtag.event({
-      action: 'next_mycelium',
+      action: 'next_page',
       category: 'Content',
-      label: count
+      label: page
     })
   }
 
+  shuffleArray(posts)
   let postsToDisplay = posts.slice(
-    count * numberOfPosts,
-    (count + 1) * numberOfPosts
+    page * numberOfPosts,
+    (page + 1) * numberOfPosts
   )
 
   return (
     <P5Wrapper
       sketch={myceliumSketch}
       posts={postsToDisplay}
-      loadPost={loadPost}
-      hasNextPage={posts.length > (count + 1) * numberOfPosts}
-      increaseCount={increaseCount}
-      key={'mycelium_sketch_posts_' + count}
+      showPost={showPost}
+      hasNextPage={posts.length > (page + 1) * numberOfPosts}
+      nextPage={nextPage}
+      key={'mycelium_sketch_posts_' + page}
     />
   )
 }

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Header from '@/components/header'
 import { getAbout } from '@/lib/api'
 import markdownToHtml from '@/lib/markdownToHtml'
-import PostModal from '@/components/post-modal'
+import ContentModal from '@/components/content-modal'
 import { WEBSITE_NAME } from '@/lib/constants'
 
 export default function Sobre({ page }) {
@@ -16,7 +16,7 @@ export default function Sobre({ page }) {
           </title>
         </Head>
         <Header />
-        <PostModal item={page} />
+        <ContentModal item={page} />
       </Layout>
     </>
   )

@@ -1,19 +1,17 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/layout'
 import { getAbout, getContaminations, getAllItems } from '@/lib/api'
-import shuffleArray from '@/lib/shuffle'
 import Head from 'next/head'
 import Header from '@/components/header'
 import Sketch from '@/components/sketch'
-import PostModal from '@/components/post-modal'
+import ContentModal from '@/components/content-modal'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { WEBSITE_NAME } from '@/lib/constants'
-import * as gtag from "@/lib/gtag";
+import * as gtag from '@/lib/gtag'
 
 export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   const router = useRouter()
-  shuffleArray(allPosts)
 
   useEffect(() => {
     gtag.pageview('/')
@@ -29,22 +27,13 @@ export default function Index({ allPosts, aboutPage, contaminationsPage }) {
         <div className="container m-0">
           <Sketch posts={allPosts} />
           {router.query.pId && (
-            <PostModal
-              isOpen={!!router.query.pId}
+            <ContentModal
               item={allPosts.find((post) => post.id === router.query.pId)}
             />
           )}
-          {router.query.page === 'sobre' && (
-            <PostModal
-              isOpen={router.query.page === 'sobre'}
-              item={aboutPage}
-            />
-          )}
+          {router.query.page === 'sobre' && <ContentModal item={aboutPage} />}
           {router.query.page === 'contaminacoes' && (
-            <PostModal
-              isOpen={router.query.page === 'contaminacoes'}
-              item={contaminationsPage}
-            />
+            <ContentModal item={contaminationsPage} />
           )}
         </div>
       </Layout>
@@ -73,6 +62,7 @@ export async function getStaticProps() {
 
   const allPosts = await Promise.all(pArray)
 
+  // TODO get everything in one query?
   const aboutPageQuery = await getAbout()
   const aboutContent = await markdownToHtml(aboutPageQuery.about.content || '')
   const aboutPage = { ...aboutPageQuery, content: aboutContent }
@@ -89,6 +79,4 @@ export async function getStaticProps() {
   return {
     props: { allPosts, aboutPage, contaminationsPage }
   }
-
-  // TODO get everything in one query?
 }

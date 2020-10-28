@@ -5,7 +5,7 @@ import Header from '@/components/header'
 import Layout from '@/components/layout'
 import { getAllItemsWithId, getItem } from '@/lib/api'
 import markdownToHtml from '@/lib/markdownToHtml'
-import PostModal from '@/components/post-modal'
+import ContentModal from '@/components/content-modal'
 import Head from 'next/head'
 import { WEBSITE_NAME } from '@/lib/constants'
 
@@ -26,7 +26,7 @@ export default function Post({ item }) {
         <title>{WEBSITE_NAME}</title>
       </Head>
       <Header />
-      <PostModal item={item} />
+      <ContentModal item={item} />
     </Layout>
   )
 }

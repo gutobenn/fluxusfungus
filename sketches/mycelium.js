@@ -1,11 +1,11 @@
 import alea from 'seedrandom'
 
 export default function sketch(p5) {
-  let max_iterations = Math.min(
+  let maxIterations = Math.min(
     Math.floor(p5.windowWidth * p5.windowHeight * 0.12),
     130000
   )
-  let current_iteration = 1
+  let currentIteration = 1
   let BG_ALPHA = 250 // For collision detection
   let paths = new Array(1)
   let DEBUG = false
@@ -16,8 +16,8 @@ export default function sketch(p5) {
   var postsPositions = []
   let addedPostImagesToCanvas = false
   var myrng = alea(Math.random())
-  var paths_counter = 1
-  let posts_every_nth = Math.floor(max_iterations / 400)
+  var pathsCounter = 1
+  let postsEveryNth = Math.floor(maxIterations / 400)
   var hasNextPage = false
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
@@ -30,11 +30,11 @@ export default function sketch(p5) {
       posts = props.posts
       p5.addPostImagesToCanvas()
     }
-    if (props.loadPost) {
-      p5.loadPost = props.loadPost
+    if (props.showPost) {
+      p5.showPost = props.showPost
     }
-    if (props.increaseCount) {
-      p5.increaseCount = props.increaseCount
+    if (props.nextPage) {
+      p5.increasepage = props.nextPage
     }
     if (props.hasNextPage === true) {
       hasNextPage = true
@@ -61,7 +61,7 @@ export default function sketch(p5) {
     }
   }
 
-  class PathFinder {
+  class Path {
     constructor(parent) {
       if (parent === undefined) {
         if (p5.windowWidth < 1280) {
@@ -83,7 +83,7 @@ export default function sketch(p5) {
           .normalize()
         this.diameter = 4
         this.level = 1
-        this.iteration_counter = 1
+        this.iterationCounter = 1
       } else {
         this.location = parent.location.copy()
         this.velocity = parent.velocity
@@ -91,28 +91,28 @@ export default function sketch(p5) {
           .rotate(-1.1 + 2.2 * myrng.quick(), -1.1 + 2.2 * myrng.quick()) // rotate randomly between [-1.1, 1.1] rad
         this.level = parent.level + 1
         this.diameter = parent.diameter * 0.98
-        this.iteration_counter = parent.iteration_counter + 1
+        this.iterationCounter = parent.iterationCounter + 1
       }
     }
 
     update() {
       this.location.add(this.velocity)
       let bump = p5.createVector(-1 + 2 * myrng.quick(), -1 + 2 * myrng.quick())
-      bump.mult(0.02 * Math.log(this.iteration_counter))
+      bump.mult(0.02 * Math.log(this.iterationCounter))
       this.velocity.add(bump)
       this.velocity.normalize()
       if (
-        myrng.quick() / Math.log(this.iteration_counter) < 0.012 ||
-        (this.iteration_counter <= 36 && this.iteration_counter % 7 === 0)
+        myrng.quick() / Math.log(this.iterationCounter) < 0.012 ||
+        (this.iterationCounter <= 36 && this.iterationCounter % 7 === 0)
       ) {
-        let new_path = new PathFinder(this)
+        let newPath = new Path(this)
         if (paths.length < 8) {
-          new_path.velocity = this.velocity
+          newPath.velocity = this.velocity
             .copy()
             .rotate((paths.length + myrng.quick() / 2) * p5.HALF_PI)
         }
         if (
-          paths_counter % posts_every_nth === 0 &&
+          pathsCounter % postsEveryNth === 0 &&
           postsPositions.length < posts.length &&
           this.location.x > 15 &&
           this.location.y > 15 &&
@@ -121,8 +121,8 @@ export default function sketch(p5) {
         ) {
           postsPositions.push({ x: this.location.x, y: this.location.y })
         }
-        paths.push(new_path)
-        paths_counter++
+        paths.push(newPath)
+        pathsCounter++
       }
 
       if (this.diameter > 2) {
@@ -130,7 +130,7 @@ export default function sketch(p5) {
       } else {
         this.diameter = this.diameter * 0.9986
       }
-      this.iteration_counter = this.iteration_counter + 1
+      this.iterationCounter = this.iterationCounter + 1
     }
   }
 
@@ -144,7 +144,7 @@ export default function sketch(p5) {
     p5.ellipseMode(p5.CENTER)
     p5.noStroke()
     p5.smooth()
-    paths[0] = new PathFinder()
+    paths[0] = new Path()
 
     p5.fill('#000')
     p5.ellipse(
@@ -165,18 +165,18 @@ export default function sketch(p5) {
   p5.draw = () => {
     if (DEBUG)
       console.log(
-        'current_iteration: ' +
-          current_iteration +
-          ' max_iterations: ' +
-          max_iterations +
+        'currentIteration: ' +
+          currentIteration +
+          ' maxIterations: ' +
+          maxIterations +
           ' paths.length: ' +
           paths.length
       )
 
-    let paths_length = paths.length
+    let pathsLength = paths.length
     for (
-      let i = paths_length - 1;
-      i >= 0 && current_iteration < max_iterations;
+      let i = pathsLength - 1;
+      i >= 0 && currentIteration < maxIterations;
       i--
     ) {
       if ((i > 10 && myrng.quick() < 0.3) || paths[i] == null) continue
@@ -198,22 +198,22 @@ export default function sketch(p5) {
         p5.ellipse(loc.x, loc.y, diam, diam)
         paths[i].update()
       }
-      current_iteration += 1
+      currentIteration += 1
     }
 
-    if (paths_length < 15 || paths_length % 10 == 0) {
+    if (pathsLength < 15 || pathsLength % 10 == 0) {
       paths = paths.filter(function (el) {
         return el != null
       })
     }
 
-    if (current_iteration === max_iterations || paths_length === 0) {
+    if (currentIteration === maxIterations || pathsLength === 0) {
       if (DEBUG) {
-        if (current_iteration === max_iterations) {
-          console.log('current_iteration === max_iterations')
+        if (currentIteration === maxIterations) {
+          console.log('currentIteration === maxIterations')
         }
-        if (DEBUG && paths_length === 0) {
-          console.log('paths_length === 0')
+        if (DEBUG && pathsLength === 0) {
+          console.log('pathsLength === 0')
         }
       }
 
@@ -237,19 +237,19 @@ export default function sketch(p5) {
         element.addClass('pulse')
       })
 
-      current_iteration++
+      currentIteration++
     }
   }
 
   p5.openImage = (img) => {
-    p5.loadPost(img.attribute('postId'))
+    p5.showPost(img.attribute('postId'))
     img.removeClass('pulse')
 
     if (p5.selectAll('.pulse').length === 0) {
       if (hasNextPage) {
         let nextButton = p5.createButton('ver mais »')
         nextButton.addClass('mycelium_next_button')
-        nextButton.mousePressed(() => p5.increaseCount())
+        nextButton.mousePressed(() => p5.nextPage())
       } else {
         let endMessage = p5.createButton('você já viu todos os conteúdos')
         endMessage.addClass('mycelium_end_message')
