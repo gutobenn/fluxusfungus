@@ -44,7 +44,7 @@ export default function GenericModal(props) {
 function PageContent({ item }) {
   return (
     <>
-      <h1>{item.title}</h1>
+      <h1 className="font-mono">{item.title}</h1>
       <div
         className={markdownStyles['markdown']}
         dangerouslySetInnerHTML={{ __html: item.content }}
@@ -57,7 +57,7 @@ function PostContent({ item }) {
   return (
     <>
       <div
-        className={(markdownStyles['markdown'], 'quote-content')}
+        className={(markdownStyles['markdown'])}
         dangerouslySetInnerHTML={{ __html: item.content.content }}
       />
       {item?.content?.author && (

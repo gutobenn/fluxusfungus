@@ -76,6 +76,11 @@ h1 {
 
 
 /* Gallery */
+.gallery-figcaption--info .photo-caption,
+.gallery-figcaption--info .photo-subcaption {
+  @apply font-serif;
+}
+
 .gallery-figcaption .gallery-figcaption--info .caption-right {
   @apply hidden;
 }
@@ -102,11 +107,7 @@ h1 {
 
 
 /* Quotes */
-.quote-content, .quote-author {
-  @apply font-serif leading-relaxed2;
-  font-size: 0.94rem;
-}
-
 .quote-author {
-  @apply mt-4 text-primary;
+  @apply mt-4 text-primary font-serif leading-relaxed2;
+  font-size: 0.94rem;
 }

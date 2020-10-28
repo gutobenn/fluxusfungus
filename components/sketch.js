@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic'
 import React, { useState } from 'react'
+import ReactPlayer from 'react-player/file'
 import myceliumSketch from '../sketches/mycelium'
 import { useRouter } from 'next/router'
 import * as gtag from '@/lib/gtag'
@@ -35,13 +36,24 @@ export default function Sketch({ posts }) {
   )
 
   return (
-    <P5Wrapper
-      sketch={myceliumSketch}
-      posts={postsToDisplay}
-      showPost={showPost}
-      hasNextPage={posts.length > (page + 1) * numberOfPosts}
-      nextPage={nextPage}
-      key={'mycelium_sketch_posts_' + page}
-    />
+    <>
+      <ReactPlayer
+        playing
+        loop={true}
+        width="100px"
+        height="auto"
+        controls={true}
+        style={{position: 'fixed', left: '0', bottom: '0'}}
+        url="https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
+      />
+      <P5Wrapper
+        sketch={myceliumSketch}
+        posts={postsToDisplay}
+        showPost={showPost}
+        hasNextPage={posts.length > (page + 1) * numberOfPosts}
+        nextPage={nextPage}
+        key={'mycelium_sketch_posts_' + page}
+      />
+    </>
   )
 }

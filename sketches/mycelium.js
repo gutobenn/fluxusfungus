@@ -100,7 +100,7 @@ export default function sketch(p5) {
     update() {
       this.location.add(this.velocity)
       let bump = p5.createVector(-1 + 2 * myrng.quick(), -1 + 2 * myrng.quick())
-      bump.mult(0.008 * Math.log(this.iterationCounter))
+      bump.mult(0.012 * Math.log(this.iterationCounter))
       this.velocity.add(bump)
       this.velocity.normalize()
       if (
@@ -203,7 +203,7 @@ export default function sketch(p5) {
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
         collisionGrid.add(Math.round(loc.x) + '_' + Math.round(loc.y))
-        if (diam > 0.8) {
+        if (diam >= 1) {
           for (
             let i = Math.round(loc.x - diam / p5.PI);
             i <= Math.round(loc.x + diam / p5.PI);
@@ -242,7 +242,6 @@ export default function sketch(p5) {
 
       paths = []
       p5.noLoop()
-      console.log(collisionGrid)
 
       console.log('noLoop')
 
@@ -280,10 +279,4 @@ export default function sketch(p5) {
       }
     }
   }
-
-  /*
-  windowResized = () => {
-    resizeCanvas(p5.windowWidth, p5.windowHeight)
-  }
-  */
 }

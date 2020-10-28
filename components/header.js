@@ -9,11 +9,11 @@ export default function Header() {
             fluxus fungus
           </span>
         </div>
-        <div className="w-full block flex-grow flex items-center w-auto xl:flex-col xl:items-start xl:ml-8 xl:mb-20">
+        <div className="w-full block flex-grow flex items-center w-auto xl:flex-col xl:items-start xl:ml-8 xl:mb-20 font-mono">
           <div className="text-sm flex-grow"></div>
           <div>
             <Link href={`/?page=sobre`} as={'/sobre'} scroll={false}>
-              <a className="block mt-0 text-grey-800 ff-font-consolas hover:text-black mr-2">
+              <a className="block mt-0 text-grey-800 hover:text-black mr-2">
                 sobre
               </a>
             </Link>
@@ -24,7 +24,7 @@ export default function Header() {
               as={'/contaminacoes'}
               scroll={false}
             >
-              <a className="block mt-0 text-grey-800 ff-font-consolas hover:text-black mr-2">
+              <a className="block mt-0 text-grey-800 hover:text-black mr-2">
                 contaminações
               </a>
             </Link>
