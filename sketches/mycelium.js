@@ -122,6 +122,12 @@ export default function sketch(p5) {
           this.location.y < p5.height - 15
         ) {
           postsPositions.push({ x: this.location.x, y: this.location.y })
+
+          let element = imgs[postsPositions.length - 1]
+          element.position(this.location.x - 6, this.location.y - 6)
+          element.removeClass('invisible')
+          element.addClass('pulse')
+
         }
         paths.push(newPath)
         pathsCounter++
@@ -239,7 +245,6 @@ export default function sketch(p5) {
 
       paths = []
       p5.noLoop()
-      console.log(collisionGrid)
 
       console.log('noLoop')
 
@@ -247,6 +252,7 @@ export default function sketch(p5) {
         console.log('imgs: ')
         console.log(imgs)
       }
+      /*
       imgs.forEach(function (element, index) {
         if (DEBUG) console.log('setting timeout for index ' + index)
 
@@ -257,6 +263,7 @@ export default function sketch(p5) {
         element.removeClass('invisible')
         element.addClass('pulse')
       })
+      */
 
       currentIteration++
     }
