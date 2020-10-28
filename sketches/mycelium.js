@@ -90,7 +90,7 @@ export default function sketch(p5) {
         this.location = parent.location.copy()
         this.velocity = parent.velocity
           .copy()
-          .rotate(-1.1 + 2.2 * myrng.quick(), -1.1 + 2.2 * myrng.quick()) // rotate randomly between [-1.1, 1.1] rad
+          .rotate(-0.75 + 1.5 * myrng.quick(), -0.75 + 1.5 * myrng.quick()) // rotate randomly between [-0.75, 0.75] rad
         this.level = parent.level + 1
         this.diameter = parent.diameter * 0.98
         this.iterationCounter = parent.iterationCounter + 1
@@ -100,18 +100,18 @@ export default function sketch(p5) {
     update() {
       this.location.add(this.velocity)
       let bump = p5.createVector(-1 + 2 * myrng.quick(), -1 + 2 * myrng.quick())
-      bump.mult(0.02 * Math.log(this.iterationCounter))
+      bump.mult(0.008 * Math.log(this.iterationCounter))
       this.velocity.add(bump)
       this.velocity.normalize()
       if (
-        myrng.quick() / Math.log(this.iterationCounter) < 0.012 ||
+        myrng.quick() / Math.log(this.iterationCounter) < 0.015 ||
         (this.iterationCounter <= 36 && this.iterationCounter % 7 === 0)
       ) {
         let newPath = new Path(this)
         if (paths.length < 8) {
           newPath.velocity = this.velocity
             .copy()
-            .rotate((paths.length + myrng.quick() / 2) * p5.HALF_PI)
+            .rotate((paths.length + myrng.quick() / 4) * p5.HALF_PI)
         }
         if (
           pathsCounter % postsEveryNth === 0 &&
@@ -188,7 +188,6 @@ export default function sketch(p5) {
       let vel = paths[i].velocity
 
       if (
-        //p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)[3] !== BG_ALPHA || // collision // TODO disable
         collisionGrid.has(
           Math.round(loc.x + diam * vel.x) +
             '_' +
@@ -203,19 +202,23 @@ export default function sketch(p5) {
         paths[i] = null
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
-        for (
-          let i = Math.round(loc.x - diam / p5.PI);
-          i <= Math.round(loc.x + diam / p5.PI);
-          i++
-        ) {
+        collisionGrid.add(Math.round(loc.x) + '_' + Math.round(loc.y))
+        if (diam > 0.8) {
           for (
-            let j = Math.round(loc.y - diam / p5.PI);
-            j <= Math.round(loc.y + diam / p5.PI);
-            j++
+            let i = Math.round(loc.x - diam / p5.PI);
+            i <= Math.round(loc.x + diam / p5.PI);
+            i++
           ) {
-            collisionGrid.add(i + '_' + j)
+            for (
+              let j = Math.round(loc.y - diam / p5.PI);
+              j <= Math.round(loc.y + diam / p5.PI);
+              j++
+            ) {
+              collisionGrid.add(i + '_' + j)
+            }
           }
         }
+
         paths[i].update()
       }
       currentIteration += 1
