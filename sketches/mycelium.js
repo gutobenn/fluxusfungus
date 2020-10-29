@@ -2,7 +2,7 @@ import alea from 'seedrandom'
 
 export default function sketch(p5) {
   let maxIterations = Math.min(
-    Math.floor(p5.windowWidth * p5.windowHeight * 0.12),
+    Math.floor(window.innerWidth * window.innerHeight * 0.12),
     160000
   )
   let currentIteration = 1
@@ -35,7 +35,7 @@ export default function sketch(p5) {
       p5.showPost = props.showPost
     }
     if (props.nextPage) {
-      p5.increasepage = props.nextPage
+      p5.nextPage = props.nextPage
     }
     if (props.hasNextPage === true) {
       hasNextPage = true
@@ -66,7 +66,7 @@ export default function sketch(p5) {
     constructor(parent) {
       if (parent === undefined) {
         // First element
-        if (p5.windowWidth < 1280) {
+        if (window.innerWidth < 1280) {
           // from small to large screens
           this.location = p5.createVector(
             (0.3 + 0.5 * myrng.quick()) * p5.width,
@@ -155,7 +155,7 @@ export default function sketch(p5) {
     // Setup p5 configs
     p5.frameRate(60)
     p5.pixelDensity(1)
-    p5.createCanvas(p5.windowWidth, p5.windowHeight)
+    p5.createCanvas(window.innerWidth, window.innerHeight)
     p5.background(p5.color(235, 235, 235))
     p5.ellipseMode(p5.CENTER)
     p5.noStroke()
