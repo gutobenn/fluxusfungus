@@ -204,6 +204,7 @@ export default function sketch(p5) {
       let vel = paths[i].velocity
 
       // Skip and remove path if a collision is detected or any coordinate is outside the canvas limits
+      let x = p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)
       if (
         collisionGrid.has(
           Math.round(loc.x + diam * vel.x) +
