@@ -20,12 +20,24 @@ export default function Sketch({ posts }) {
   }
 
   const nextPage = () => {
-    setPage(page + 1)
+    let newPage = page + 1
+
+    setPage(newPage)
 
     gtag.event({
       action: 'next_page',
       category: 'Content',
-      label: page
+      label: newPage
+    })
+  }
+
+  const goToFirstPage = () => {
+    setPage(0)
+
+    gtag.event({
+      action: 'back_to_first_page',
+      category: 'Content',
+      label: '0'
     })
   }
 
@@ -41,9 +53,9 @@ export default function Sketch({ posts }) {
         playing
         loop={true}
         width="100px"
-        height="auto"
+        height="50px"
         controls={true}
-        style={{position: 'fixed', left: '0', bottom: '0'}}
+        style={{ position: 'fixed', left: '0', bottom: '0' }}
         url="https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
       />
       <P5Wrapper
@@ -52,6 +64,7 @@ export default function Sketch({ posts }) {
         showPost={showPost}
         hasNextPage={posts.length > (page + 1) * numberOfPosts}
         nextPage={nextPage}
+        goToFirstPage={goToFirstPage}
         key={'mycelium_sketch_posts_' + page}
       />
     </>

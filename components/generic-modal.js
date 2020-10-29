@@ -57,7 +57,7 @@ function PostContent({ item }) {
   return (
     <>
       <div
-        className={(markdownStyles['markdown'])}
+        className={markdownStyles['markdown']}
         dangerouslySetInnerHTML={{ __html: item.content.content }}
       />
       {item?.content?.author && (

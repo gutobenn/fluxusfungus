@@ -47,6 +47,9 @@ export default function sketch(p5) {
     if (props.nextPage) {
       p5.nextPage = props.nextPage
     }
+    if (props.goToFirstPage) {
+      p5.goToFirstPage = props.goToFirstPage
+    }
     if (props.hasNextPage === true) {
       hasNextPage = true
     }
@@ -216,6 +219,7 @@ export default function sketch(p5) {
       // Workaround to fix canvas flickering (enabling and disabling antialiasing).
       // Very hard to reproduce. Seems related to https://bugs.chromium.org/p/chromium/issues/detail?id=1092080
       if (applyChromeAntialisingWorkaround) {
+        // eslint-disable-next-line no-unused-vars
         let pixelColor = p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)
       }
 
@@ -317,6 +321,9 @@ export default function sketch(p5) {
       } else {
         let endMessage = p5.createButton('você já viu todos os conteúdos')
         endMessage.addClass('mycelium_end_message')
+        let firstPageButton = p5.createButton('recarregar')
+        firstPageButton.addClass('mycelium_first_page_button')
+        firstPageButton.mousePressed(() => p5.goToFirstPage())
       }
     }
   }

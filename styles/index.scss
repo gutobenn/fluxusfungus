@@ -48,18 +48,28 @@ h1 {
 }
 
 .mycelium_next_button,
-.mycelium_end_message {
+.mycelium_first_page_button{
   @apply bg-black text-white fixed right-0 font-mono;
   bottom: 15px;
   padding: 5px 15px;
 }
 
-.mycelium_next_button:hover {
+.mycelium_end_message {
+  @apply bg-white text-black fixed right-0 font-mono;
+  bottom: 50px;
+  padding: 5px 15px;
+  cursor: default;
+  margin-bottom: 34px;
+}
+
+.mycelium_next_button:hover,
+.mycelium_first_page_button:hover {
   @apply text-black bg-white;
 }
 
 @media (min-width: 768px) {
   .mycelium_next_button,
+  .mycelium_first_page_button,
   .mycelium_end_message {
     bottom: 45%;
   }
