@@ -43,17 +43,20 @@ export default function Sketch({ posts }) {
         width="100px"
         height="auto"
         controls={true}
-        style={{position: 'fixed', left: '0', bottom: '0'}}
+        style={{ position: 'fixed', left: '0', bottom: '0' }}
         url="https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
       />
-      <P5Wrapper
-        sketch={myceliumSketch}
-        posts={postsToDisplay}
-        showPost={showPost}
-        hasNextPage={posts.length > (page + 1) * numberOfPosts}
-        nextPage={nextPage}
-        key={'mycelium_sketch_posts_' + page}
-      />
+      <div className="chromium-issue-1092080-workaround__wrapper">
+        <P5Wrapper
+          sketch={myceliumSketch}
+          posts={postsToDisplay}
+          showPost={showPost}
+          hasNextPage={posts.length > (page + 1) * numberOfPosts}
+          nextPage={nextPage}
+          key={'mycelium_sketch_posts_' + page}
+        />
+        <div className="chromium-issue-1092080-workaround__overlay"></div>
+      </div>
     </>
   )
 }

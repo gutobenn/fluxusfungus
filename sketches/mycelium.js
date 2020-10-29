@@ -21,6 +21,10 @@ export default function sketch(p5) {
   let postsEveryNth = Math.floor(maxIterations / 400)
   var hasNextPage = false
 
+  var chromiumIssue1092080WorkaroundOverlay = document.querySelector(
+    '.chromium-issue-1092080-workaround__overlay'
+  )
+
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (DEBUG) {
       console.log('received props: ')
@@ -219,6 +223,8 @@ export default function sketch(p5) {
         paths[i] = null
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
+
+        chromiumIssue1092080WorkaroundOverlay.style.transform = `scaleX(${Math.random()})` // Comment this to disable the workaround
 
         collisionGrid.add(Math.round(loc.x) + '_' + Math.round(loc.y))
 
