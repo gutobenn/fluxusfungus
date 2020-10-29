@@ -156,10 +156,11 @@ export default function sketch(p5) {
     p5.frameRate(60)
     p5.pixelDensity(1)
     p5.createCanvas(window.innerWidth, window.innerHeight)
-    p5.background(p5.color(235, 235, 235))
+    p5.setAttributes('antialias', false)
+    p5.noSmooth()
+    p5.background(p5.color(235, 235, 235, 250))
     p5.ellipseMode(p5.CENTER)
     p5.noStroke()
-    p5.smooth()
 
     // Create first element
     paths[0] = new Path()
@@ -220,10 +221,8 @@ export default function sketch(p5) {
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
 
-        collisionGrid.add(Math.round(loc.x) + '_' + Math.round(loc.y))
-
         // If diameter > 1px, mark all near pixels for collision detection
-        if (diam >= 1) {
+        if (diam >= 2) {
           for (
             let i = Math.round(loc.x - diam / p5.PI);
             i <= Math.round(loc.x + diam / p5.PI);
@@ -238,6 +237,9 @@ export default function sketch(p5) {
             }
           }
         } else {
+          let x = p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)
+
+          collisionGrid.add(Math.round(loc.x) + '_' + Math.round(loc.y))
           collisionGrid.add(
             Math.round(loc.x - (diam * vel.x) / p5.PI) +
               '_' +
@@ -250,7 +252,7 @@ export default function sketch(p5) {
       currentIteration += 1
     }
 
-    if (pathsLength < 8 || pathsLength % 10 === 0) {
+    if (pathsLength < 15 || pathsLength % 10 == 0) {
       paths = paths.filter(function (el) {
         return el != null
       })
