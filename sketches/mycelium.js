@@ -227,6 +227,7 @@ export default function sketch(p5) {
         loc.y >= p5.height
       ) {
         paths[i] = null
+        chromiumIssue1092080WorkaroundOverlay.style.transform = `scaleX(${Math.random()})` // Comment this to disable the workaround
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
 
@@ -257,6 +258,7 @@ export default function sketch(p5) {
           )
         }
 
+        chromiumIssue1092080WorkaroundOverlay.style.transform = `scaleX(${Math.random()})` // Comment this to disable the workaround
         paths[i].update()
       }
       currentIteration += 1
