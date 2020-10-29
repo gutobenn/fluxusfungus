@@ -1,13 +1,20 @@
 import alea from 'seedrandom'
+import {
+  isWindows,
+  isChrome,
+  isChromium,
+  browserVersion
+} from 'react-device-detect'
 
 export default function sketch(p5) {
+  let DEBUG = false
+
   let maxIterations = Math.min(
     Math.floor(window.innerWidth * window.innerHeight * 0.12),
     160000
   )
   let currentIteration = 1
   let paths = new Array(1)
-  let DEBUG = false
 
   var collisionGrid = new Set()
 
@@ -20,6 +27,9 @@ export default function sketch(p5) {
   var pathsCounter = 1
   let postsEveryNth = Math.floor(maxIterations / 400)
   var hasNextPage = false
+
+  const applyChromeAntialisingWorkaround =
+    isWindows && (isChrome || isChromium) && parseInt(browserVersion) >= 83
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (DEBUG) {
@@ -202,6 +212,12 @@ export default function sketch(p5) {
       let loc = paths[i].location
       let diam = paths[i].diameter
       let vel = paths[i].velocity
+
+      // Workaround to fix canvas flickering (enabling and disabling antialiasing).
+      // Very hard to reproduce. Seems related to https://bugs.chromium.org/p/chromium/issues/detail?id=1092080
+      if (applyChromeAntialisingWorkaround) {
+        let pixelColor = p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y)
+      }
 
       // Skip and remove path if a collision is detected or any coordinate is outside the canvas limits
       if (
