@@ -46,7 +46,7 @@ export default function Sketch({ posts }) {
         style={{ position: 'fixed', left: '0', bottom: '0' }}
         url="https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
       />
-      <div className="chromium-issue-1092080-workaround__wrapper">
+      <div className={'sketch-wrapper'}>
         <P5Wrapper
           sketch={myceliumSketch}
           posts={postsToDisplay}
@@ -55,7 +55,6 @@ export default function Sketch({ posts }) {
           nextPage={nextPage}
           key={'mycelium_sketch_posts_' + page}
         />
-        <div className="chromium-issue-1092080-workaround__overlay"></div>
       </div>
     </>
   )

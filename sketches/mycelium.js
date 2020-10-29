@@ -21,9 +21,7 @@ export default function sketch(p5) {
   let postsEveryNth = Math.floor(maxIterations / 400)
   var hasNextPage = false
 
-  var chromiumIssue1092080WorkaroundOverlay = document.querySelector(
-    '.chromium-issue-1092080-workaround__overlay'
-  )
+  var chromiumIssue1092080WorkaroundOverlay = null
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (DEBUG) {
@@ -181,6 +179,14 @@ export default function sketch(p5) {
       p5.noLoop()
       p5.addPostImagesToCanvas()
     }
+
+    // Chrome workaround
+    // https://stackoverflow.com/questions/64043191/html5-canvas-is-flickering-in-google-chrome/64075834
+    let xyz = p5.createDiv()
+    xyz.addClass('chromium-issue-1092080-workaround__overlay')
+    chromiumIssue1092080WorkaroundOverlay = document.querySelector(
+      '.chromium-issue-1092080-workaround__overlay'
+    )
   }
 
   p5.draw = () => {

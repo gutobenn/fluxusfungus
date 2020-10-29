@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Header() {
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-transparent p-3 flex fixed top-0 inset-x-0 items-center xl:h-full xl:w-1/5 xl:flex-row xl:items-stretch">
+    <nav className="flex items-center justify-between flex-wrap bg-transparent p-3 flex fixed top-0 inset-x-0 items-center xl:h-full xl:w-1/5 xl:flex-row xl:items-stretch z-10">
       <div className="flex container mx-auto xl:flex-col">
         <div className="flex items-center flex-shrink-0 text-black mr-6 xl:ml-8">
           <span className="font-semibold text-xl text-primary tracking-tight leading-tight font-mono xl:text-7xl xl:mt-20">
