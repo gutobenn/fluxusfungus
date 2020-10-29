@@ -43,7 +43,7 @@ h1 {
   }
 
   &.pulse {
-    animation: 2s pulse-red 0s infinite;
+    animation: 2.5s pulse-red 0s infinite;
   }
 }
 
@@ -56,6 +56,13 @@ h1 {
 
 .mycelium_next_button:hover {
   @apply text-black bg-white;
+}
+
+@media (min-width: 768px) {
+  .mycelium_next_button,
+  .mycelium_end_message {
+    bottom: 45%;
+  }
 }
 
 @keyframes pulse-red {

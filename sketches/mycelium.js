@@ -3,19 +3,18 @@ import alea from 'seedrandom'
 export default function sketch(p5) {
   let maxIterations = Math.min(
     Math.floor(p5.windowWidth * p5.windowHeight * 0.12),
-    130000
+    160000
   )
   let currentIteration = 1
-  let BG_ALPHA = 250 // For collision detection
   let paths = new Array(1)
   let DEBUG = false
 
   var collisionGrid = new Set()
 
   // Posts
-  let imgs = []
+  let blobs = []
   var posts = []
-  var postsPositions = []
+  var postsCount = 0
   let addedPostImagesToCanvas = false
   var myrng = alea(Math.random())
   var pathsCounter = 1
@@ -50,13 +49,13 @@ export default function sketch(p5) {
         console.log(posts)
       }
       posts.forEach(function (element) {
-        let img = p5.createSpan('')
-        img.addClass('mycelium_blob')
-        img.addClass('invisible')
-        img.attribute('postId', element['id'])
-        img.position(0, 0)
-        img.mouseClicked(() => p5.openImage(img))
-        imgs.push(img)
+        let blob = p5.createSpan('')
+        blob.addClass('mycelium_blob')
+        blob.addClass('invisible')
+        blob.attribute('postId', element['id'])
+        blob.position(0, 0)
+        blob.mouseClicked(() => p5.openImage(blob))
+        blobs.push(blob)
       })
       addedPostImagesToCanvas = true
       p5.loop()
@@ -66,17 +65,21 @@ export default function sketch(p5) {
   class Path {
     constructor(parent) {
       if (parent === undefined) {
+        // First element
         if (p5.windowWidth < 1280) {
+          // from small to large screens
           this.location = p5.createVector(
             (0.3 + 0.5 * myrng.quick()) * p5.width,
             (0.3 + 0.5 * myrng.quick()) * p5.height
           )
         } else {
+          // extra large screens
           this.location = p5.createVector(
             (0.6 + 0.2 * myrng.quick()) * p5.width,
             (0.3 + 0.5 * myrng.quick()) * p5.height
           )
         }
+
         this.velocity = p5
           .createVector(
             p5.width / 2 - this.location.x,
@@ -87,6 +90,7 @@ export default function sketch(p5) {
         this.level = 1
         this.iterationCounter = 1
       } else {
+        // child elements
         this.location = parent.location.copy()
         this.velocity = parent.velocity
           .copy()
@@ -99,10 +103,13 @@ export default function sketch(p5) {
 
     update() {
       this.location.add(this.velocity)
+
+      // rotate randomly between [-1, 1] rad
       let bump = p5.createVector(-1 + 2 * myrng.quick(), -1 + 2 * myrng.quick())
       bump.mult(0.012 * Math.log(this.iterationCounter))
       this.velocity.add(bump)
       this.velocity.normalize()
+
       if (
         myrng.quick() / Math.log(this.iterationCounter) < 0.015 ||
         (this.iterationCounter <= 36 && this.iterationCounter % 7 === 0)
@@ -115,29 +122,29 @@ export default function sketch(p5) {
         }
         if (
           pathsCounter % postsEveryNth === 0 &&
-          postsPositions.length < posts.length &&
+          postsCount < posts.length &&
           this.location.x > 15 &&
           this.location.y > 15 &&
           this.location.x < p5.width - 15 &&
           this.location.y < p5.height - 15
         ) {
-          postsPositions.push({ x: this.location.x, y: this.location.y })
-
-          let element = imgs[postsPositions.length - 1]
-          element.position(this.location.x - 6, this.location.y - 6)
-          element.removeClass('invisible')
-          element.addClass('pulse')
-
+          // Display the blob
+          let blob = blobs[postsCount]
+          blob.position(this.location.x - 6, this.location.y - 6)
+          blob.removeClass('invisible')
+          postsCount++
         }
         paths.push(newPath)
         pathsCounter++
       }
 
+      // Decrement diameter
       if (this.diameter > 2) {
         this.diameter = this.diameter * 0.98
       } else {
         this.diameter = this.diameter * 0.9986
       }
+
       this.iterationCounter = this.iterationCounter + 1
     }
   }
@@ -145,22 +152,24 @@ export default function sketch(p5) {
   p5.setup = () => {
     if (DEBUG) console.log('p5.setup()')
 
+    // Setup p5 configs
     p5.frameRate(60)
     p5.pixelDensity(1)
     p5.createCanvas(p5.windowWidth, p5.windowHeight)
-    p5.background(p5.color(235, 235, 235, BG_ALPHA))
+    p5.background(p5.color(235, 235, 235))
     p5.ellipseMode(p5.CENTER)
     p5.noStroke()
     p5.smooth()
-    paths[0] = new Path()
 
+    // Create first element
+    paths[0] = new Path()
     p5.fill('#000')
     p5.ellipse(
       paths[0].location.x - paths[0].velocity.x * paths[0].diameter,
       paths[0].location.y - paths[0].velocity.y * paths[0].diameter,
       5,
       6
-    ) // deixar cifa meio separada
+    )
     p5.fill('#666')
 
     // Prevent race condition
@@ -182,6 +191,7 @@ export default function sketch(p5) {
       )
 
     let pathsLength = paths.length
+
     for (
       let i = pathsLength - 1;
       i >= 0 && currentIteration < maxIterations;
@@ -193,12 +203,13 @@ export default function sketch(p5) {
       let diam = paths[i].diameter
       let vel = paths[i].velocity
 
+      // Skip and remove path if a collision is detected or any coordinate is outside the canvas limits
       if (
         collisionGrid.has(
           Math.round(loc.x + diam * vel.x) +
             '_' +
             Math.round(loc.y + diam * vel.y)
-        ) || // collision detection
+        ) ||
         diam <= 0.45 ||
         loc.x <= 0 ||
         loc.y <= 0 ||
@@ -208,7 +219,10 @@ export default function sketch(p5) {
         paths[i] = null
       } else {
         p5.ellipse(loc.x, loc.y, diam, diam)
+
         collisionGrid.add(Math.round(loc.x) + '_' + Math.round(loc.y))
+
+        // If diameter > 1px, mark all near pixels for collision detection
         if (diam >= 1) {
           for (
             let i = Math.round(loc.x - diam / p5.PI);
@@ -223,6 +237,12 @@ export default function sketch(p5) {
               collisionGrid.add(i + '_' + j)
             }
           }
+        } else {
+          collisionGrid.add(
+            Math.round(loc.x - (diam * vel.x) / p5.PI) +
+              '_' +
+              Math.round(loc.y - (diam * vel.y) / p5.PI)
+          )
         }
 
         paths[i].update()
@@ -230,12 +250,13 @@ export default function sketch(p5) {
       currentIteration += 1
     }
 
-    if (pathsLength < 15 || pathsLength % 10 === 0) {
+    if (pathsLength < 8 || pathsLength % 10 === 0) {
       paths = paths.filter(function (el) {
         return el != null
       })
     }
 
+    // Stop when maxIterations limit is reached or there are no more paths available
     if (currentIteration === maxIterations || pathsLength === 0) {
       if (DEBUG) {
         if (currentIteration === maxIterations) {
@@ -246,27 +267,23 @@ export default function sketch(p5) {
         }
       }
 
+      // Stop and cleanup
       paths = []
       p5.noLoop()
 
       console.log('noLoop')
 
       if (DEBUG) {
-        console.log('imgs: ')
-        console.log(imgs)
+        console.log('blobs: ')
+        console.log(blobs)
       }
-      /*
-      imgs.forEach(function (element, index) {
-        if (DEBUG) console.log('setting timeout for index ' + index)
 
-        element.position(
-          postsPositions[index]['x'] - 6,
-          postsPositions[index]['y'] - 6
-        )
-        element.removeClass('invisible')
-        element.addClass('pulse')
+      // Start pulse effect
+      blobs.forEach(function (element, index) {
+        setTimeout(() => {
+          element.addClass('pulse')
+        }, 200 * index)
       })
-      */
 
       currentIteration++
     }
