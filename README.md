@@ -15,6 +15,7 @@ Then set each variable on `.env.local`:
 
 Now let's run the project. Make sure that the local Strapi server ([API](https://github.com/gutobenn/fluxusfungus-api)) is running at http://localhost:1337.
 
+
 ```bash
 npm install
 npm run dev
