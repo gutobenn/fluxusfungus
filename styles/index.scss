@@ -55,8 +55,8 @@ h1 {
 }
 
 .mycelium_end_message {
-  @apply bg-white text-black fixed right-0 font-mono;
-  bottom: 50px;
+  @apply bg-white text-black fixed right-0 font-mono text-right;
+  bottom: 15px;
   padding: 5px 15px;
   cursor: default;
   margin-bottom: 34px;

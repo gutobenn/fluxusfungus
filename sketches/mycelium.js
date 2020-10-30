@@ -39,8 +39,6 @@ export default function sketch(p5) {
 
     if (props.posts) {
       posts = props.posts
-      console.log("mycelium")
-      console.log(posts)
       p5.addPostImagesToCanvas()
     }
     if (props.showPost) {
@@ -319,13 +317,13 @@ export default function sketch(p5) {
 
     if (p5.selectAll('.unvisited').length === 0) {
       if (hasNextPage) {
-        let nextButton = p5.createButton('ver mais »')
+        let nextButton = p5.createButton('mais fluxus »')
         nextButton.addClass('mycelium_next_button')
         nextButton.mousePressed(() => p5.nextPage())
       } else {
-        let endMessage = p5.createButton('você já viu todos os conteúdos')
+        let endMessage = p5.createDiv('o micélio parou por aqui')
         endMessage.addClass('mycelium_end_message')
-        let firstPageButton = p5.createButton('recarregar')
+        let firstPageButton = p5.createButton('rever fluxus')
         firstPageButton.addClass('mycelium_first_page_button')
         firstPageButton.mousePressed(() => p5.goToFirstPage())
       }
