@@ -14,8 +14,8 @@ export default function GalleryModal(props) {
       backgroundColor={'#111'}
       photos={item.content.Picture.map((picture) => {
         return {
-          photo: picture.image.formats.large.url,
-          thumbnail: picture.image.formats.thumbnail.url,
+          photo: picture.image.formats?.large?.url ?? picture.image.url, // For GIF images the 'formats' returned is an empty object, so we fallback to image.url
+          thumbnail: picture.image.formats?.thumbnail?.url ?? picture.image.url,
           caption: picture.caption,
           subcaption: picture.subcaption
         }
