@@ -3,7 +3,6 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: '"Playfair Display", serif',
         sans:
           '-apple-system, "Helvetica Neue", "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         mono: 'Consolas, "ConsolasRegular", "Courier New", monospace !important'

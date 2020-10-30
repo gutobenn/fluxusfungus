@@ -42,7 +42,7 @@ h1 {
     @apply opacity-0;
   }
 
-  &.pulse {
+  &.pulse.unvisited {
     animation: 2.5s pulse-red 0s infinite;
   }
 }
@@ -95,7 +95,14 @@ h1 {
 /* Gallery */
 .gallery-figcaption--info .photo-caption,
 .gallery-figcaption--info .photo-subcaption {
-  @apply font-serif;
+  @apply font-mono;
+}
+
+.gallery-figcaption--info .photo-caption {
+  color: rgb(255, 255, 255);
+}
+.gallery-figcaption--info .photo-subcaption {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .gallery-figcaption .gallery-figcaption--info .caption-right {
@@ -125,6 +132,6 @@ h1 {
 
 /* Quotes */
 .quote-author {
-  @apply mt-4 text-primary font-serif leading-relaxed2;
+  @apply mt-4 text-primary font-mono leading-relaxed2;
   font-size: 0.94rem;
 }

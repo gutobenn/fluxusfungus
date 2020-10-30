@@ -39,6 +39,8 @@ export default function sketch(p5) {
 
     if (props.posts) {
       posts = props.posts
+      console.log("mycelium")
+      console.log(posts)
       p5.addPostImagesToCanvas()
     }
     if (props.showPost) {
@@ -65,6 +67,7 @@ export default function sketch(p5) {
         let blob = p5.createSpan('')
         blob.addClass('mycelium_blob')
         blob.addClass('invisible')
+        blob.addClass('unvisited')
         blob.attribute('postId', element['id'])
         blob.position(0, 0)
         blob.mouseClicked(() => p5.openImage(blob))
@@ -309,11 +312,12 @@ export default function sketch(p5) {
     }
   }
 
-  p5.openImage = (img) => {
-    p5.showPost(img.attribute('postId'))
-    img.removeClass('pulse')
+  p5.openImage = (blob) => {
+    p5.showPost(blob.attribute('postId'))
+    blob.removeClass('pulse')
+    blob.removeClass('unvisited')
 
-    if (p5.selectAll('.pulse').length === 0) {
+    if (p5.selectAll('.unvisited').length === 0) {
       if (hasNextPage) {
         let nextButton = p5.createButton('ver mais »')
         nextButton.addClass('mycelium_next_button')

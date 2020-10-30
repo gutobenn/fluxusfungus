@@ -25,7 +25,7 @@ export default function Index({ allPosts, aboutPage, contaminationsPage }) {
         </Head>
         <Header />
         <div className="container m-0">
-          <Sketch posts={allPosts} />
+          <Sketch allPosts={allPosts} />
           {router.query.pId && (
             <ContentModal
               item={allPosts.find((post) => post.id === router.query.pId)}
