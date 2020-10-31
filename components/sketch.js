@@ -37,7 +37,7 @@ export default function Sketch({ allPosts }) {
     setCurrentPage(newPage)
 
     gtag.event({
-      action: 'next_currentPage',
+      action: 'next_page',
       category: 'Content',
       label: newPage
     })
@@ -49,7 +49,7 @@ export default function Sketch({ allPosts }) {
     shufflePosts()
 
     gtag.event({
-      action: 'back_to_first_currentPage',
+      action: 'back_to_first_page',
       category: 'Content',
       label: '0'
     })
