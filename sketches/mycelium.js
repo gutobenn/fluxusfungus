@@ -167,7 +167,7 @@ export default function sketch(p5) {
     if (DEBUG) console.log('p5.setup()')
 
     // Setup p5 configs
-    p5.frameRate(60)
+    p5.frameRate(50)
     p5.pixelDensity(1)
     p5.createCanvas(window.innerWidth, window.innerHeight)
     p5.background(p5.color(235, 235, 235))
