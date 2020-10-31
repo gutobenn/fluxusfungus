@@ -58,8 +58,8 @@ export default function Sketch({ allPosts }) {
   return (
     <>
       {acceptedMusic === null && (
-        <div className="font-mono text-center w-full h-full flex flex-row fixed items-center">
-          <div className="flex flex-col items-center mx-auto my-0 xl:pl-64 xl:pb-32">
+        <div className="flex items-center justify-center h-screen">
+          <div className="font-mono text-center xl:pl-64 xl:pb-32">
             <div className="px-6 bg-white py-2 px-6">
               quer experimentar o som de project mycelium?
             </div>

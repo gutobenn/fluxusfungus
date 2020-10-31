@@ -24,7 +24,7 @@ export default function Index({ allPosts, aboutPage, contaminationsPage }) {
           <title>{WEBSITE_NAME}</title>
         </Head>
         <Header />
-        <div className="container m-0">
+        <div className="my-0 mx-auto">
           <Sketch allPosts={allPosts} />
           {router.query.pId && (
             <ContentModal

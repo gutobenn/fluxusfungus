@@ -10,7 +10,7 @@ export default function SketchMusic({acceptedMusic}) {
     <>
       <div
         className={
-          'fixed z-2 text-primary bottom-0 left-0 ml-4 mb-2 xl:ml-10 xl:mb-6'
+          'fixed text-primary bottom-0 left-0 ml-4 mb-2 xl:ml-10 xl:mb-6'
         }
       >
         {isPlaying ? (
