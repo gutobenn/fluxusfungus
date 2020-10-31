@@ -57,30 +57,12 @@ export default function Sketch({ allPosts }) {
 
   return (
     <>
-      {acceptedMusic === null && (
-        <div className="flex items-center justify-center h-screen">
-          <div className="font-mono text-center xl:pl-64 xl:pb-32">
-            <div className="px-6 bg-white py-2 px-6">
-              quer experimentar o som de project mycelium?
-            </div>
-            <div className="inline-flex mt-4">
-              <button
-                onClick={() => setAcceptedMusic(false)}
-                className="bg-black hover:bg-white text-white hover:text-black py-1 px-6"
-              >
-                não
-              </button>
-              <button
-                onClick={() => setAcceptedMusic(true)}
-                className="bg-black hover:bg-white text-white hover:text-black py-1 px-6 ml-10"
-              >
-                sim
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {posts.length > 0 && acceptedMusic !== null && (
+      {acceptedMusic === null ? (
+        <AcceptMusicBox
+          onReject={() => setAcceptedMusic(false)}
+          onAccept={() => setAcceptedMusic(true)}
+        />
+      ) : (
         <>
           <SketchMusic acceptedMusic={acceptedMusic} />
           <P5Wrapper
@@ -98,5 +80,29 @@ export default function Sketch({ allPosts }) {
         </>
       )}
     </>
+  )
+}
+
+function AcceptMusicBox({ onAccept, onReject }) {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="font-mono text-center xl:pl-64 xl:pb-32">
+        <div className="px-6 bg-white py-2 px-6">quer som?</div>
+        <div className="inline-flex">
+          <button
+            onClick={onReject}
+            className="bg-black hover:bg-white text-white hover:text-black py-1 px-6"
+          >
+            não
+          </button>
+          <button
+            onClick={onAccept}
+            className="bg-black hover:bg-white text-white hover:text-black py-1 px-6 border-left-1px"
+          >
+            sim
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }

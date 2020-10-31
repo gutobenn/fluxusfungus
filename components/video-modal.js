@@ -1,18 +1,21 @@
 import { useRouter } from 'next/router'
 import Modal from 'react-modal'
 import ReactPlayer from 'react-player/lazy'
-import React from 'react'
+import React, {useState} from 'react'
 import CloseModal from '@/components/close-modal'
 
 export default function VideoModal(props) {
   const { item } = props
   const router = useRouter()
+  const [isModalOpen, setIsModalOpen] = useState(true)
 
   return (
     <>
       <Modal
-        isOpen={true}
-        onRequestClose={() => router.push('/')}
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        onAfterClose={() => router.push('/')}
+        closeTimeoutMS={400}
         contentLabel="Video modal"
         style={{
           overlay: {
@@ -45,7 +48,7 @@ export default function VideoModal(props) {
           />
         </div>
       </Modal>
-      <CloseModal />
+      <CloseModal isOpen={isModalOpen} onClick={() => setIsModalOpen(false)} />
     </>
   )
 }

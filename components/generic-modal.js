@@ -1,18 +1,21 @@
 import { useRouter } from 'next/router'
 import Modal from 'react-modal'
 import CloseModal from '@/components/close-modal'
-import React from 'react'
+import React, { useState } from 'react'
 import markdownStyles from '@/styles/markdown-styles.module.css'
 
 export default function GenericModal(props) {
   const { item } = props
   const router = useRouter()
+  const [isModalOpen, setIsModalOpen] = useState(true)
 
   return (
     <>
       <Modal
-        isOpen={true}
-        onRequestClose={() => router.push('/')}
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        onAfterClose={() => router.push('/')}
+        closeTimeoutMS={400}
         contentLabel="Post modal"
         style={{
           overlay: {
@@ -22,7 +25,7 @@ export default function GenericModal(props) {
             borderColor: '#e2e8f0',
             boxShadow:
               '0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05)',
-            maxWidth: '600px',
+            maxWidth: '680px',
             margin: '0 auto',
             transform: 'translateY(-40%)',
             maxHeight: '80%',
@@ -36,7 +39,7 @@ export default function GenericModal(props) {
       >
         {item?.id ? <PostContent item={item} /> : <PageContent item={item} />}
       </Modal>
-      <CloseModal />
+      <CloseModal isOpen={isModalOpen} onClick={() => setIsModalOpen(false)} />
     </>
   )
 }

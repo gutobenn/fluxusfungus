@@ -23,9 +23,14 @@
 }
 
 .markdown a {
-  color: #444;
+  background: linear-gradient(to bottom, theme('colors.primary') 0%, theme('colors.primary') 100%);
+  background-position: 0 100%;
+  background-size: 1px 1px;
+  transition: background-size .3s;
+  @apply text-black no-underline bg-repeat-x;
 }
 
 .markdown a:hover {
-  text-decoration: underline;
+  @apply no-underline;
+  background-size: 4px 50px;
 }
