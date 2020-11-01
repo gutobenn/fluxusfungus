@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import * as gtag from '@/lib/gtag'
 import shuffleArray from '@/lib/shuffle'
 import SketchMusic from '@/components/sketch-music'
+import { CSSTransition } from 'react-transition-group'
 
 const P5Wrapper = dynamic(import('react-p5-wrapper'), {
   ssr: false
@@ -84,25 +85,37 @@ export default function Sketch({ allPosts }) {
 }
 
 function AcceptMusicBox({ onAccept, onReject }) {
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    setIsLoaded(true)
+  }, [])
+
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="font-mono text-center xl:pl-64 xl:pb-32">
-        <div className="px-6 bg-white py-2 px-6 shadow-md">quer som?</div>
-        <div className="inline-flex shadow-md">
-          <button
-            onClick={onReject}
-            className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6"
-          >
-            não
-          </button>
-          <button
-            onClick={onAccept}
-            className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6 border-left-1px"
-          >
-            sim
-          </button>
+    <CSSTransition
+      in={isLoaded}
+      timeout={2100}
+      classNames="fluxus-fade-in-600-wait-1500"
+    >
+      <div className="flex items-center justify-center h-screen opacity-0">
+        <div className="font-mono text-center xl:pl-64 xl:pb-32">
+          <div className="px-6 bg-white py-2 px-6 shadow-md">quer som?</div>
+          <div className="inline-flex shadow-md">
+            <button
+              onClick={onReject}
+              className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6"
+            >
+              não
+            </button>
+            <button
+              onClick={onAccept}
+              className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6 border-left-1px"
+            >
+              sim
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </CSSTransition>
   )
 }
