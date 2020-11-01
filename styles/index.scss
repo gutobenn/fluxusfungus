@@ -144,7 +144,20 @@ h1 {
 }
 
 
-/* Modals */
+/* Gallery */
+.fluxus-close-modal svg,
+.gallery-modal--close button.gallery-close svg {
+  transition: ease-in-out 150ms;
+}
+
+.fluxus-close-modal svg:hover,
+.fluxus-close-modal svg:focus,
+.gallery-modal--close button.gallery-close svg:hover,
+.gallery-modal--close button.gallery-close svg:focus, {
+  fill: #000000 !important;
+}
+
+/* Generic Modal */
 .ReactModal__Overlay {
   opacity: 0;
   transition: opacity 0.4s ease-in-out;

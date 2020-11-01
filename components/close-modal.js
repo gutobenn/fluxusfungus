@@ -5,7 +5,7 @@ export default function CloseModal({ isOpen, onClick }) {
     <>
       {isOpen && (
         <div
-          className="cursor-pointer z-50 fixed top-0 right-0 mt-6 mr-6"
+          className="fluxus-close-modal cursor-pointer z-50 fixed top-0 right-0 mt-6 mr-6"
           onClick={onClick}
         >
           <svg
