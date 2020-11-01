@@ -14,16 +14,21 @@ export default function sketch(p5) {
     160000
   )
   let currentIteration = 1
+  let iterationsSincePathCleanUp = 0
   let paths = new Array(1)
 
   var collisionGrid = new Set()
 
   // Posts
-  let blobs = []
   var posts = []
   var postsCount = 0
   let addedPostImagesToCanvas = false
-  var myrng = alea(Math.random())
+  let blobs = []
+
+  let seed = Math.random()
+  var myrng = alea(seed)
+  console.debug(`Seed: ${seed}`)
+
   var pathsCounter = 1
   let postsEveryNth = Math.floor(maxIterations / 400)
   var hasNextPage = false
@@ -33,8 +38,8 @@ export default function sketch(p5) {
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (DEBUG) {
-      console.log('received props: ')
-      console.log(props)
+      console.debug('received props: ')
+      console.debug(props)
     }
 
     if (props.posts) {
@@ -58,8 +63,8 @@ export default function sketch(p5) {
   p5.addPostImagesToCanvas = () => {
     if (!addedPostImagesToCanvas && posts.length !== 0) {
       if (DEBUG) {
-        console.log('Add post images to canvas')
-        console.log(posts)
+        console.debug('Add post images to canvas')
+        console.debug(posts)
       }
       posts.forEach(function (element) {
         let blob = p5.createSpan('')
@@ -164,7 +169,7 @@ export default function sketch(p5) {
   }
 
   p5.setup = () => {
-    if (DEBUG) console.log('p5.setup()')
+    if (DEBUG) console.debug('p5.setup()')
 
     // Setup p5 configs
     p5.frameRate(50)
@@ -195,7 +200,7 @@ export default function sketch(p5) {
 
   p5.draw = () => {
     if (DEBUG)
-      console.log(
+      console.debug(
         'currentIteration: ' +
           currentIteration +
           ' maxIterations: ' +
@@ -271,20 +276,23 @@ export default function sketch(p5) {
       currentIteration += 1
     }
 
-    if (pathsLength < 8 || pathsLength % 10 === 0) {
+    iterationsSincePathCleanUp += 1
+
+    if (iterationsSincePathCleanUp > 20) {
       paths = paths.filter(function (el) {
         return el != null
       })
+      iterationsSincePathCleanUp = 0
     }
 
     // Stop when maxIterations limit is reached or there are no more paths available
     if (currentIteration === maxIterations || pathsLength === 0) {
       if (DEBUG) {
         if (currentIteration === maxIterations) {
-          console.log('currentIteration === maxIterations')
+          console.debug('currentIteration === maxIterations')
         }
         if (DEBUG && pathsLength === 0) {
-          console.log('pathsLength === 0')
+          console.debug('pathsLength === 0')
         }
       }
 
@@ -295,8 +303,8 @@ export default function sketch(p5) {
       console.log('noLoop')
 
       if (DEBUG) {
-        console.log('blobs: ')
-        console.log(blobs)
+        console.debug('blobs: ')
+        console.debug(blobs)
       }
 
       // Start pulse effect
