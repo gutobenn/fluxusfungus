@@ -18,7 +18,7 @@ export default function GalleryModal(props) {
       in={isLoaded}
       timeout={400}
       classNames="fluxus-gallery-animation"
-      onExit={() => router.push('/')}
+      onExited={() => router.push('/')}
     >
       <ReactBnbGallery
         show={true}
