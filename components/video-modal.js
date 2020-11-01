@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Modal from 'react-modal'
 import ReactPlayer from 'react-player/lazy'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import CloseModal from '@/components/close-modal'
 
 export default function VideoModal(props) {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '@/components/layout'
 import { getAbout, getContaminations, getAllItems } from '@/lib/api'
@@ -9,35 +9,42 @@ import ContentModal from '@/components/content-modal'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { WEBSITE_NAME } from '@/lib/constants'
 import * as gtag from '@/lib/gtag'
+import { CSSTransition } from 'react-transition-group'
 
 export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   const router = useRouter()
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
+    setIsLoaded(true)
     gtag.pageview('/')
-  })
+  }, [])
 
   return (
-    <>
-      <Layout>
-        <Head>
-          <title>{WEBSITE_NAME}</title>
-        </Head>
-        <Header />
-        <div className="my-0 mx-auto">
+    <Layout>
+      <Head>
+        <title>{WEBSITE_NAME}</title>
+      </Head>
+      <Header />
+      <div className="my-0 mx-auto">
+        <CSSTransition
+          in={isLoaded}
+          timeout={2100}
+          classNames="fluxus-fade-in-600-wait-1500"
+        >
           <Sketch allPosts={allPosts} />
-          {router.query.pId && (
-            <ContentModal
-              item={allPosts.find((post) => post.id === router.query.pId)}
-            />
-          )}
-          {router.query.page === 'sobre' && <ContentModal item={aboutPage} />}
-          {router.query.page === 'contaminacoes' && (
-            <ContentModal item={contaminationsPage} />
-          )}
-        </div>
-      </Layout>
-    </>
+        </CSSTransition>
+        {router.query.pId && (
+          <ContentModal
+            item={allPosts.find((post) => post.id === router.query.pId)}
+          />
+        )}
+        {router.query.page === 'sobre' && <ContentModal item={aboutPage} />}
+        {router.query.page === 'contaminacoes' && (
+          <ContentModal item={contaminationsPage} />
+        )}
+      </div>
+    </Layout>
   )
 }
 

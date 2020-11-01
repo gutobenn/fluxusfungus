@@ -56,13 +56,13 @@ h1 {
 
 .mycelium_next_button,
 .mycelium_first_page_button{
-  @apply bg-black text-white fixed right-0 font-mono;
+  @apply bg-black text-white fixed right-0 font-mono shadow-md;
   bottom: 15px;
   padding: 5px 15px;
 }
 
 .mycelium_end_message {
-  @apply bg-white text-black fixed right-0 font-mono text-right;
+  @apply bg-white text-black fixed right-0 font-mono text-right shadow-md;
   bottom: 15px;
   padding: 5px 15px;
   cursor: default;
@@ -71,7 +71,7 @@ h1 {
 
 .mycelium_next_button:hover,
 .mycelium_first_page_button:hover {
-  @apply text-black bg-white;
+  @apply text-black bg-white shadow-inner;
 }
 
 @media (min-width: 768px) {
@@ -158,3 +158,34 @@ h1 {
   opacity: 0;
 }
 
+
+/* Transitions */
+.fluxus-fade-in-600-enter {
+  opacity: 0;
+}
+.fluxus-fade-in-600-enter-active {
+  opacity: 1;
+  transition: opacity 600ms 300ms;
+}
+.fluxus-fade-in-600-exit {
+  opacity: 1;
+}
+.fluxus-fade-in-600-exit-active {
+  opacity: 0;
+  transition: opacity 600ms 300ms;
+}
+
+.fluxus-fade-in-600-wait-1500-enter {
+  opacity: 0;
+}
+.fluxus-fade-in-600-wait-1500-enter-active {
+  opacity: 1;
+  transition: opacity 600ms 1.5s;
+}
+.fluxus-fade-in-600-wait-1500-exit {
+  opacity: 1;
+}
+.fluxus-fade-in-600-wait-1500-exit-active {
+  opacity: 0;
+  transition: opacity 600ms 1.5s;
+}
