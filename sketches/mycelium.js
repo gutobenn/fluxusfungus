@@ -358,6 +358,7 @@ export default function sketch(p5) {
             p5.goToFirstPage()
           }, 1000)
           firstPageButton.addClass('hide-to-right')
+          endMessage.addClass('hide-to-right')
           blobs.forEach(function (element) {
             element.style('opacity', '0')
           })
