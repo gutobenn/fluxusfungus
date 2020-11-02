@@ -25,6 +25,8 @@ export default function sketch(p5) {
   let addedPostImagesToCanvas = false
   let blobs = []
 
+  let canvas = undefined
+
   let seed = Math.random()
   var myrng = alea(seed)
   console.debug(`Seed: ${seed}`)
@@ -77,7 +79,8 @@ export default function sketch(p5) {
         blobs.push(blob)
       })
       addedPostImagesToCanvas = true
-      p5.loop()
+      // Start loop after 600ms
+      setTimeout(() => p5.drawFirstPath(), 600)
     }
   }
 
@@ -174,12 +177,24 @@ export default function sketch(p5) {
     // Setup p5 configs
     p5.frameRate(50)
     p5.pixelDensity(1)
-    p5.createCanvas(window.innerWidth, window.innerHeight)
+    canvas = p5.createCanvas(window.innerWidth, window.innerHeight)
     p5.background(p5.color(235, 235, 235))
     p5.ellipseMode(p5.CENTER)
     p5.noStroke()
     p5.smooth()
 
+    p5.noLoop()
+
+    if (!addedPostImagesToCanvas) {
+      // Prevent race condition
+      p5.addPostImagesToCanvas()
+    } else {
+      // Start loop after 600ms
+      setTimeout(() => p5.drawFirstPath(), 600)
+    }
+  }
+
+  p5.drawFirstPath = () => {
     // Create first element
     paths[0] = new Path()
     p5.fill('#000')
@@ -190,15 +205,11 @@ export default function sketch(p5) {
       6
     )
     p5.fill('#666')
-
-    // Prevent race condition
-    if (!addedPostImagesToCanvas) {
-      p5.noLoop()
-      p5.addPostImagesToCanvas()
-    }
+    p5.loop()
   }
 
   p5.draw = () => {
+    console.log('loop')
     if (DEBUG)
       console.debug(
         'currentIteration: ' +
@@ -327,13 +338,31 @@ export default function sketch(p5) {
       if (hasNextPage) {
         let nextButton = p5.createButton('mais fluxus »')
         nextButton.addClass('mycelium_next_button')
-        nextButton.mousePressed(() => p5.nextPage())
+        nextButton.mousePressed(() => {
+          setTimeout(() => {
+            p5.nextPage()
+          }, 1000)
+          nextButton.addClass('show-from-right')
+          blobs.forEach(function (element) {
+            element.style('opacity', '0')
+          })
+          canvas.style('opacity', '0')
+        })
       } else {
         let endMessage = p5.createDiv('o micélio parou por aqui')
         endMessage.addClass('mycelium_end_message')
         let firstPageButton = p5.createButton('rever fluxus')
         firstPageButton.addClass('mycelium_first_page_button')
-        firstPageButton.mousePressed(() => p5.goToFirstPage())
+        firstPageButton.mousePressed(() => {
+          setTimeout(() => {
+            p5.goToFirstPage()
+          }, 1000)
+          firstPageButton.addClass('hide-to-right')
+          blobs.forEach(function (element) {
+            element.style('opacity', '0')
+          })
+          canvas.style('opacity', '0')
+        })
       }
     }
   }

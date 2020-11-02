@@ -29,10 +29,14 @@ h1 {
 }
 
 /* Mycelium sketch */
+.p5Canvas {
+  transition: opacity 1s ease-in-out;
+}
+
 .mycelium_blob {
   @apply bg-primary cursor-pointer rounded-full;
   border: 2px solid #fff;
-  transition: opacity 1s;
+  transition: opacity 1s ease-in-out;
   height: 10px;
   width: 10px;
 
@@ -69,6 +73,14 @@ h1 {
   margin-bottom: 34px;
 }
 
+.mycelium_next_button,
+.mycelium_first_page_button,
+.mycelium_end_message {
+  transform: translate(100vw);
+  animation: show-from-right 1s forwards ease-in-out;
+  animation-delay: .3s;
+}
+
 .mycelium_next_button:hover,
 .mycelium_first_page_button:hover {
   @apply text-black bg-white shadow-inner;
@@ -98,6 +110,20 @@ h1 {
   }
 }
 
+@keyframes show-from-right{
+  0% { transform: translate(100vw);}
+  100% { transform: translate(0);}
+}
+
+@keyframes hide-to-right{
+  0% { transform: translate(0);}
+  100% { transform: translate(100vw);}
+}
+
+.hide-to-right {
+  animation: hide-to-right 1s forwards ease-in-out;
+  animation-delay: .1s;
+}
 
 /* Gallery */
 .gallery-figcaption--info .photo-caption,
@@ -226,3 +252,6 @@ h1 {
 .fluxus-gallery-animation-exit-done {
   opacity: 0;
 }
+
+
+
