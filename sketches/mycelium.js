@@ -342,7 +342,7 @@ export default function sketch(p5) {
           setTimeout(() => {
             p5.nextPage()
           }, 1000)
-          nextButton.addClass('show-from-right')
+          nextButton.addClass('hide-to-right')
           blobs.forEach(function (element) {
             element.style('opacity', '0')
           })
