@@ -3,7 +3,6 @@ import Modal from 'react-modal'
 import GalleryModal from '@/components/gallery-modal'
 import VideoModal from '@/components/video-modal'
 import GenericModal from '@/components/generic-modal'
-import Link from 'next/link'
 import Loading from '@/components/loading'
 
 Modal.setAppElement('#__next')

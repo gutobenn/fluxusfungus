@@ -146,14 +146,14 @@ h1 {
 
 /* Gallery */
 .fluxus-close-modal svg,
-.gallery-modal--close button.gallery-close svg {
+.gallery-modal--close button.gallery-close svg,
+.gallery button.gallery-control svg {
   transition: ease-in-out 150ms;
 }
 
 .fluxus-close-modal svg:hover,
-.fluxus-close-modal svg:focus,
 .gallery-modal--close button.gallery-close svg:hover,
-.gallery-modal--close button.gallery-close svg:focus, {
+.gallery button.gallery-control:hover svg {
   fill: #000000 !important;
 }
 
