@@ -3,6 +3,8 @@ import Modal from 'react-modal'
 import GalleryModal from '@/components/gallery-modal'
 import VideoModal from '@/components/video-modal'
 import GenericModal from '@/components/generic-modal'
+import Link from 'next/link'
+import Loading from '@/components/loading'
 
 Modal.setAppElement('#__next')
 
@@ -20,6 +22,8 @@ export default function ContentModal(props) {
       case 'ContaminationsPage':
         return <GenericModal item={item} />
     }
+  } else {
+    return <Loading />
   }
 
   return null
