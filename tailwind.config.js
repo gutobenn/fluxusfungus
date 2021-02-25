@@ -10,7 +10,8 @@ module.exports = {
       colors: {
         primary: '#E1C0AF',
         tomato: '#FF6347',
-        grey1: 'rgba(235, 235, 235, 250)'
+        gray1: 'rgba(235, 235, 235, 250)',
+        brown1: '#302625'
       },
       spacing: {
         28: '7rem'
