@@ -30,15 +30,11 @@ export default function Header() {
               <div>
                 {router.locale === 'pt' ? (
                   <Link href={`/?page=sobre`} as={'/sobre'} scroll={false}>
-                    <a className="block mt-0 text-grey-800 hover:text-black mr-2">
-                      sobre
-                    </a>
+                    <a className="block mt-0 hover:text-black mr-2">sobre</a>
                   </Link>
                 ) : (
                   <Link href={`/?page=about`} as={'/about'} scroll={false}>
-                    <a className="block mt-0 text-grey-800 hover:text-black mr-2">
-                      about
-                    </a>
+                    <a className="block mt-0 hover:text-black mr-2">about</a>
                   </Link>
                 )}
               </div>
@@ -49,7 +45,7 @@ export default function Header() {
                     as={'/contaminacoes'}
                     scroll={false}
                   >
-                    <a className="block mt-0 text-grey-800 hover:text-black mr-2">
+                    <a className="block mt-0 hover:text-black mr-2">
                       contaminações
                     </a>
                   </Link>
@@ -59,18 +55,18 @@ export default function Header() {
                     as={'/contaminations'}
                     scroll={false}
                   >
-                    <a className="block mt-0 text-grey-800 hover:text-black mr-2">
+                    <a className="block mt-0 hover:text-black mr-2">
                       contaminations
                     </a>
                   </Link>
                 )}
               </div>
-              <div className="text-sm ml-5 xl:mt-5 xl:ml-0">
+              <div className="text-sm ml-5 xl:mt-6 xl:ml-0 fixed bottom-0 right-0 mb-3 mr-4 xl:relative xl:mb-0 xl:mr-0 text-gray-800">
                 {router.locale === 'pt' ? (
                   <>
                     [<span className="underline">pt</span>|
                     <Link href={`/`} locale="en">
-                      <a className="block mt-0 text-grey-800 hover:text-black inline-block">
+                      <a className="block mt-0 hover:text-black inline-block">
                         en
                       </a>
                     </Link>
@@ -80,7 +76,7 @@ export default function Header() {
                   <>
                     [
                     <Link href={`/`} locale="pt">
-                      <a className="block mt-0 text-grey-800 hover:text-black inline-block">
+                      <a className="block mt-0 hover:text-black inline-block">
                         pt
                       </a>
                     </Link>

@@ -6,7 +6,6 @@ import {
   WEBSITE_DESCRIPTION_EN
 } from '@/lib/constants'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
 export default function Meta() {
   const router = useRouter()
