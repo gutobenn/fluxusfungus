@@ -2,10 +2,15 @@ import Head from 'next/head'
 import {
   HOME_OG_IMAGE_URL,
   WEBSITE_NAME,
-  WEBSITE_DESCRIPTION
+  WEBSITE_DESCRIPTION_PT,
+  WEBSITE_DESCRIPTION_EN
 } from '@/lib/constants'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 export default function Meta() {
+  const router = useRouter()
+
   return (
     <Head>
       <link
@@ -35,9 +40,18 @@ export default function Meta() {
         content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"
       />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-      <meta name="description" content={WEBSITE_DESCRIPTION} />
       <meta property="og:title" content={WEBSITE_NAME} />
-      <meta property="og:description" content={WEBSITE_DESCRIPTION} />
+      {router.locale === 'pt' ? (
+        <>
+          <meta property="og:description" content={WEBSITE_DESCRIPTION_PT} />
+          <meta name="description" content={WEBSITE_DESCRIPTION_PT} />
+        </>
+      ) : (
+        <>
+          <meta property="og:description" content={WEBSITE_DESCRIPTION_EN} />
+          <meta name="description" content={WEBSITE_DESCRIPTION_EN} />
+        </>
+      )}
       <meta property="og:image" content={HOME_OG_IMAGE_URL} />
     </Head>
   )
