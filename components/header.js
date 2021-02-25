@@ -68,8 +68,8 @@ export default function Header() {
               <div className="text-sm ml-5 xl:mt-5 xl:ml-0">
                 {router.locale === 'pt' ? (
                   <>
-                    [<b>pt</b>|
-                    <Link href={`/en`}>
+                    [<span className="underline">pt</span>|
+                    <Link href={`/`} locale="en">
                       <a className="block mt-0 text-grey-800 hover:text-black inline-block">
                         en
                       </a>
@@ -79,12 +79,12 @@ export default function Header() {
                 ) : (
                   <>
                     [
-                    <Link href={`/pt`}>
+                    <Link href={`/`} locale="pt">
                       <a className="block mt-0 text-grey-800 hover:text-black inline-block">
                         pt
                       </a>
                     </Link>
-                    |<b>en</b>]
+                    |<span className="underline">en</span>]
                   </>
                 )}
               </div>
