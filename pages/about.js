@@ -6,7 +6,7 @@ import markdownToHtml from '@/lib/markdownToHtml'
 import ContentModal from '@/components/content-modal'
 import { WEBSITE_NAME } from '@/lib/constants'
 
-export default function Sobre({ page }) {
+export default function About({ page }) {
   return (
     <>
       <Layout>
@@ -23,7 +23,7 @@ export default function Sobre({ page }) {
 }
 
 export async function getStaticProps() {
-  const page = await getAbout('pt')
+  const page = await getAbout('en')
   const content = await markdownToHtml(page.about.content || '')
 
   return {

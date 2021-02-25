@@ -1,12 +1,12 @@
 import Layout from '@/components/layout'
 import Head from 'next/head'
 import Header from '@/components/header'
-import { getAbout } from '@/lib/api'
+import { getContaminations } from '@/lib/api'
 import markdownToHtml from '@/lib/markdownToHtml'
 import ContentModal from '@/components/content-modal'
 import { WEBSITE_NAME } from '@/lib/constants'
 
-export default function Sobre({ page }) {
+export default function Contaminations({ page }) {
   return (
     <>
       <Layout>
@@ -23,8 +23,8 @@ export default function Sobre({ page }) {
 }
 
 export async function getStaticProps() {
-  const page = await getAbout('pt')
-  const content = await markdownToHtml(page.about.content || '')
+  const page = await getContaminations('en')
+  const content = await markdownToHtml(page.contamination.content || '')
 
   return {
     props: {

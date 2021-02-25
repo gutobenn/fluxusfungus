@@ -38,6 +38,21 @@ export default function sketch(p5) {
   const applyChromeAntialisingWorkaround =
     isWindows && (isChrome || isChromium) && parseInt(browserVersion) >= 83
 
+  const stringEndMessage = {
+    pt: 'o micélio parou por aqui',
+    en: 'the mycelium stopped here.'
+  }
+  const stringNextButton = {
+    pt: 'mais fluxus »',
+    en: 'more fluxus »'
+  }
+  const stringRestartButton = {
+    pt: 'rever fluxus »',
+    en: 'review fluxus »'
+  }
+
+  var currentLanguage = 'pt'
+
   p5.myCustomRedrawAccordingToNewPropsHandler = (props) => {
     if (DEBUG) {
       console.debug('received props: ')
@@ -59,6 +74,9 @@ export default function sketch(p5) {
     }
     if (props.hasNextPage === true) {
       hasNextPage = true
+    }
+    if (props.lang) {
+      currentLanguage = props.lang
     }
   }
 
@@ -209,7 +227,6 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
-    console.log('loop')
     if (DEBUG)
       console.debug(
         'currentIteration: ' +
@@ -336,7 +353,7 @@ export default function sketch(p5) {
 
     if (p5.selectAll('.unvisited').length === 0) {
       if (hasNextPage) {
-        let nextButton = p5.createButton('mais fluxus »')
+        let nextButton = p5.createButton(stringNextButton[currentLanguage])
         nextButton.addClass('mycelium_next_button')
         nextButton.mousePressed(() => {
           setTimeout(() => {
@@ -349,9 +366,11 @@ export default function sketch(p5) {
           canvas.style('opacity', '0')
         })
       } else {
-        let endMessage = p5.createDiv('o micélio parou por aqui')
+        let endMessage = p5.createDiv(stringEndMessage[currentLanguage])
         endMessage.addClass('mycelium_end_message')
-        let firstPageButton = p5.createButton('rever fluxus')
+        let firstPageButton = p5.createButton(
+          stringRestartButton[currentLanguage]
+        )
         firstPageButton.addClass('mycelium_first_page_button')
         firstPageButton.mousePressed(() => {
           setTimeout(() => {

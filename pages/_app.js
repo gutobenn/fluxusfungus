@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { appWithTranslation } from 'next-i18next'
 import * as gtag from '../lib/gtag'
 import 'react-bnb-gallery/dist/style.css'
 import '@/styles/index.scss'
@@ -34,4 +35,4 @@ const App = ({ Component, pageProps }) => {
   return <Component {...pageProps} />
 }
 
-export default App
+export default appWithTranslation(App)

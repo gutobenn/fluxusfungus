@@ -31,8 +31,8 @@ export default function Post({ item }) {
   )
 }
 
-export async function getStaticProps({ params }) {
-  const data = await getItem(params.id)
+export async function getStaticProps({ params, locale }) {
+  const data = await getItem(params.id, locale)
   const rendered_content = await markdownToHtml(
     data?.items[0]?.content[0].content || ''
   )
@@ -53,7 +53,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const allItems = await getAllItemsWithId()
+  const allItems = await getAllItemsWithId('en') // TODO
   return {
     paths: allItems?.map((item) => `/p/${item.id}`) || [],
     fallback: true

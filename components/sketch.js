@@ -6,6 +6,7 @@ import * as gtag from '@/lib/gtag'
 import shuffleArray from '@/lib/shuffle'
 import SketchMusic from '@/components/sketch-music'
 import { CSSTransition } from 'react-transition-group'
+import { useTranslation } from 'next-i18next'
 
 const P5Wrapper = dynamic(import('react-p5-wrapper'), {
   ssr: false
@@ -76,6 +77,7 @@ export default function Sketch({ allPosts }) {
             hasNextPage={posts.length > (currentPage + 1) * numberOfPosts}
             nextPage={nextPage}
             goToFirstPage={goToFirstPage}
+            lang={router.locale}
             key={'mycelium_sketch_posts_' + currentPage}
           />
         </>
@@ -86,6 +88,7 @@ export default function Sketch({ allPosts }) {
 
 function AcceptMusicBox({ onAccept, onReject }) {
   const [isLoaded, setIsLoaded] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setIsLoaded(true)
@@ -99,19 +102,21 @@ function AcceptMusicBox({ onAccept, onReject }) {
     >
       <div className="flex items-center justify-center h-screen opacity-0">
         <div className="font-mono text-center xl:pl-64 xl:pb-32">
-          <div className="px-6 bg-white py-2 px-6 shadow-md">quer som?</div>
+          <div className="px-6 bg-white py-2 px-6 shadow-md">
+            {t('want_sound_question')}
+          </div>
           <div className="inline-flex shadow-md">
             <button
               onClick={onReject}
               className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6"
             >
-              não
+              {t('no')}
             </button>
             <button
               onClick={onAccept}
               className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6 border-left-1px"
             >
-              sim
+              {t('yes')}
             </button>
           </div>
         </div>

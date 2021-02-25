@@ -9,6 +9,7 @@ import ContentModal from '@/components/content-modal'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { WEBSITE_NAME } from '@/lib/constants'
 import * as gtag from '@/lib/gtag'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   const router = useRouter()
@@ -30,8 +31,8 @@ export default function Index({ allPosts, aboutPage, contaminationsPage }) {
             item={allPosts.find((post) => post.id === router.query.pId)}
           />
         )}
-        {router.query.page === 'sobre' && <ContentModal item={aboutPage} />}
-        {router.query.page === 'contaminacoes' && (
+        {(router.query.page === 'sobre' || router.query.page === 'about') && <ContentModal item={aboutPage} />}
+        {(router.query.page === 'contaminacoes' || router.query.page === 'contaminations') && (
           <ContentModal item={contaminationsPage} />
         )}
       </div>
@@ -39,8 +40,8 @@ export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   )
 }
 
-export async function getStaticProps() {
-  const allPostsQuery = (await getAllItems()) || []
+export async function getStaticProps({ locale }) {
+  const allPostsQuery = (await getAllItems(locale)) || []
   const pArray = allPostsQuery.map(async (post) => {
     const rendered_content = await markdownToHtml(
       post.content[0]?.content || ''
@@ -61,11 +62,11 @@ export async function getStaticProps() {
   const allPosts = await Promise.all(pArray)
 
   // TODO get everything in one query?
-  const aboutPageQuery = await getAbout()
+  const aboutPageQuery = await getAbout(locale)
   const aboutContent = await markdownToHtml(aboutPageQuery.about.content || '')
   const aboutPage = { ...aboutPageQuery, content: aboutContent }
 
-  const contaminationsPageQuery = await getContaminations()
+  const contaminationsPageQuery = await getContaminations(locale)
   const contaminationsContent = await markdownToHtml(
     contaminationsPageQuery.contamination.content || ''
   )
@@ -75,6 +76,11 @@ export async function getStaticProps() {
   }
 
   return {
-    props: { allPosts, aboutPage, contaminationsPage }
+    props: {
+      allPosts,
+      aboutPage,
+      contaminationsPage,
+      ...await serverSideTranslations(locale, ['common'])
+    }
   }
 }

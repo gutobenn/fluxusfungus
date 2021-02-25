@@ -23,7 +23,7 @@ export default function Contaminacoes({ page }) {
 }
 
 export async function getStaticProps() {
-  const page = await getContaminations()
+  const page = await getContaminations('pt')
   const content = await markdownToHtml(page.contamination.content || '')
 
   return {
