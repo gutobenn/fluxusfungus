@@ -196,6 +196,8 @@ export default function sketch(p5) {
     p5.frameRate(50)
     p5.pixelDensity(1)
     canvas = p5.createCanvas(window.innerWidth, window.innerHeight)
+    canvas.style('z-index', '-10')
+    canvas.style('position', 'fixed')
     p5.background(p5.color(48, 38, 37))
     p5.ellipseMode(p5.CENTER)
     p5.noStroke()
