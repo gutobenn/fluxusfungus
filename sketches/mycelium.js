@@ -215,7 +215,7 @@ export default function sketch(p5) {
   p5.drawFirstPath = () => {
     // Create first element
     paths[0] = new Path()
-    p5.fill('#000')
+    p5.fill('#fff')
     p5.ellipse(
       paths[0].location.x - paths[0].velocity.x * paths[0].diameter,
       paths[0].location.y - paths[0].velocity.y * paths[0].diameter,

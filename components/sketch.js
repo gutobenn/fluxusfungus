@@ -102,7 +102,7 @@ function AcceptMusicBox({ onAccept, onReject }) {
     >
       <div className="flex items-center justify-center h-screen opacity-0">
         <div className="font-mono text-center xl:pl-64 xl:pb-32">
-          <div className="px-6 bg-white py-2 px-6 shadow-md">
+          <div className="py-2 px-6 shadow-md text-gray-300">
             {t('want_sound_question')}
           </div>
           <div className="inline-flex shadow-md">
@@ -114,7 +114,7 @@ function AcceptMusicBox({ onAccept, onReject }) {
             </button>
             <button
               onClick={onAccept}
-              className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6 border-left-1px"
+              className="bg-black hover:bg-white text-white hover:text-black hover:shadow-inner py-1 px-6 border-left-1px border-transparent"
             >
               {t('yes')}
             </button>

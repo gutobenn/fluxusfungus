@@ -25,7 +25,8 @@ h1 {
 }
 
 .border-left-1px {
-  border-left: 1px solid #ffffff;
+  border-left: 1px solid;
+  @apply border-brown1;
 }
 
 /* Mycelium sketch */
