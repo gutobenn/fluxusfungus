@@ -5,6 +5,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "eslint components lib pages sketches --max-warnings=0"
   },
   "husky": {
