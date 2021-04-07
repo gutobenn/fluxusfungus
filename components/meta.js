@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import {
+  baseURL,
   HOME_OG_IMAGE_URL,
   WEBSITE_NAME,
   WEBSITE_DESCRIPTION_PT,
@@ -16,30 +17,30 @@ export default function Meta() {
       <link
         rel="apple-touch-icon"
         sizes="180x180"
-        href="/favicon/apple-touch-icon.png"
+        href={ baseURL + "/favicon/apple-touch-icon.png" }
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="/favicon/favicon-32x32.png"
+        href={ baseURL + "/favicon/favicon-32x32.png" }
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="/favicon/favicon-16x16.png"
+        href={ baseURL + "/favicon/favicon-16x16.png" }
       />
-      <link rel="manifest" href="/favicon/site.webmanifest" />
-      <link rel="shortcut icon" href="/favicon/favicon.ico" />
+      <link rel="manifest" href={ baseURL + "/favicon/site.webmanifest" } />
+      <link rel="shortcut icon" href={ baseURL + "/favicon/favicon.ico" } />
       <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+      <meta name="msapplication-config" content={ baseURL + "/favicon/browserconfig.xml" } />
       <meta name="theme-color" content="#000" />
       <meta
         name="viewport"
         content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
+      <link rel="alternate" type="application/rss+xml" href={baseURL + "/feed.xml"} />
       <meta property="og:title" content={WEBSITE_NAME} />
       {router.locale === 'pt' ? (
         <>
