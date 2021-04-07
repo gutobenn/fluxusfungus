@@ -15,6 +15,7 @@ const P5Wrapper = dynamic(import('react-p5-wrapper'), {
 export default function Sketch({ allPosts }) {
   const numberOfPosts = 10
   const router = useRouter()
+  router.locale = 'pt'
   const [posts, setPosts] = useState(allPosts)
   const [currentPage, setCurrentPage] = useState(0)
   const [acceptedMusic, setAcceptedMusic] = useState(null)

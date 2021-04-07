@@ -19,3 +19,18 @@ Now let's run the project. Make sure the local Strapi server ([API](https://gith
 npm install
 npm run dev
 ```
+
+
+## Exportação MAC-PR
+Devido à incompatibilidade do 'next export' com o i18n nativo, optamos por fazer uma exportação para cada idioma e juntar todas no final.
+1. Editar os componentes header, meta e sketch para sobrescrever o valor de router.locale
+2. Gerar versão estática: `npm run build` seguido de `npm run export`
+3. Reunir em um único arquivo (`urls_to_download.txt`) as URLs de todos os assets externos (static.fluxusfungus.com e res.cloudinary.com) que devem passar a serem carregador localmente. Coloque uma por linha
+4. Para baixar os assets, crie um diretório (`mkdir 3rd-assets`) e execute `wget -x -i urls_to_download.txt -O 3rd-assets`
+5. Copiar a pasta 3rd-assets para a versão exportada: `cp 3rd-assets out/static -r`
+6. Ajustar as URLs de assets externos.
+```
+cd out
+find ./ -type f -exec sed -i -e 's@https://res.cloudinary@/static/3rd-assets/res.cloudinary@g' {} \;
+find ./ -type f -exec sed -i -e 's@https://static.fluxusfungus.com@/static/3rd-assets/static.fluxusfungus.com@g' {} \;
+```

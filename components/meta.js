@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 
 export default function Meta() {
   const router = useRouter()
+  router.locale = 'pt'	
 
   return (
     <Head>

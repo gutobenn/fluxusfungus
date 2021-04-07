@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 export default function Header() {
   const [isLoaded, setIsLoaded] = useState(false)
   const router = useRouter()
+  router.locale = 'pt' // force 
 
   useEffect(() => {
     setIsLoaded(true)
