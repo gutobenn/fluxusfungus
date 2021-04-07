@@ -40,7 +40,7 @@ export default function Index({ allPosts, aboutPage, contaminationsPage }) {
   )
 }
 
-export async function getStaticProps({ locale = 'pt'}) {
+export async function getStaticProps({ locale = 'en'}) {
   const allPostsQuery = (await getAllItems(locale)) || []
   const pArray = allPostsQuery.map(async (post) => {
     const rendered_content = await markdownToHtml(
