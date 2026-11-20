@@ -1,0 +1,5 @@
+# Next.js served the English pages also without the /en prefix, and the Portuguese ones with it.
+/about /en/about 301
+/contaminations /en/contaminations 301
+/en/sobre /sobre 301
+/en/contaminacoes /contaminacoes 301

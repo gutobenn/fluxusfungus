@@ -1,0 +1,149 @@
+# Pages CMS (https://pagescms.org): the editor of fluxusfungus.com.
+# Every save is a commit on main, and the Cloudflare build publishes it in about a minute.
+
+settings:
+  commit:
+    identity: user
+
+media:
+  - name: uploads
+    label: Imagens
+    input: src/assets/uploads
+    output: /src/assets/uploads
+    extensions: [jpg, jpeg, png, gif, webp]
+    rename: safe
+
+content:
+  - name: items
+    label: Itens do micélio
+    description: Cada item aparece como um nó do micélio na página inicial, em ordem aleatória.
+    type: collection
+    path: src/content/items
+    format: yaml
+    filename: "{primary}.yml"
+    view:
+      fields: [title, show_pt, show_en]
+      primary: title
+      search: [title]
+    fields:
+      - name: title
+        label: Nome
+        description: Só aparece aqui no editor. O nome de um item novo vira o endereço (fluxusfungus.com/p/<nome>).
+        type: string
+        required: true
+      - name: show_pt
+        label: Mostrar no site em português
+        type: boolean
+        default: true
+      - name: show_en
+        label: Mostrar no site em inglês
+        type: boolean
+        default: true
+      - name: content
+        label: Conteúdo
+        type: block
+        blockKey: type
+        blocks:
+          - name: gallery
+            label: Galeria de imagens
+            fields:
+              - name: pictures
+                label: Imagens
+                type: object
+                list: { min: 1 }
+                fields:
+                  - name: image
+                    label: Imagem
+                    type: image
+                    required: true
+                    options: { media: uploads }
+                  - name: caption_pt
+                    label: Legenda (pt)
+                    type: string
+                  - name: subcaption_pt
+                    label: Crédito (pt)
+                    description: "Por exemplo: Tuane Eggers, 2020"
+                    type: string
+                  - name: caption_en
+                    label: Legenda (en)
+                    type: string
+                  - name: subcaption_en
+                    label: Crédito (en)
+                    type: string
+          - name: quote
+            label: Citação
+            fields:
+              - name: text_pt
+                label: Texto (pt)
+                type: rich-text
+                options: { format: markdown }
+              - name: author_pt
+                label: Autoria (pt)
+                type: string
+              - name: text_en
+                label: Texto (en)
+                type: rich-text
+                options: { format: markdown }
+              - name: author_en
+                label: Autoria (en)
+                type: string
+          - name: video
+            label: Vídeo
+            fields:
+              - name: url
+                label: Link do Vimeo ou do YouTube
+                type: string
+                required: true
+          - name: audio
+            label: Áudio
+            fields:
+              - name: url
+                label: Link para o arquivo de áudio (MP3)
+                type: string
+                required: true
+
+  - name: sobre
+    label: Página "sobre"
+    type: file
+    path: src/content/pages/sobre.yml
+    format: yaml
+    fields:
+      - name: title_pt
+        label: Título (pt)
+        type: string
+        required: true
+      - name: content_pt
+        label: Texto (pt)
+        type: rich-text
+        options: { format: markdown }
+      - name: title_en
+        label: Título (en)
+        type: string
+        required: true
+      - name: content_en
+        label: Texto (en)
+        type: rich-text
+        options: { format: markdown }
+
+  - name: contaminacoes
+    label: Página "contaminações"
+    type: file
+    path: src/content/pages/contaminacoes.yml
+    format: yaml
+    fields:
+      - name: title_pt
+        label: Título (pt)
+        type: string
+        required: true
+      - name: content_pt
+        label: Texto (pt)
+        type: rich-text
+        options: { format: markdown }
+      - name: title_en
+        label: Título (en)
+        type: string
+        required: true
+      - name: content_en
+        label: Texto (en)
+        type: rich-text
+        options: { format: markdown }

@@ -1,0 +1,16 @@
+title: É nisso que agora quero me demorar
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/PXL_20201122_142305197_3a6fb07166.jpg
+      caption_pt: É nisso que agora quero me demorar
+      subcaption_pt: "[esporo enviado por Nathália Scherer - @nathalia.scherer]"
+      caption_en: This is where I want to linger now
+      subcaption_en: "[spore sent by Nathália Scherer - @nathalia.scherer]"
+    - image: /src/assets/uploads/PXL_20201122_142314413_8e0e276920.jpg
+      caption_pt: É nisso que agora quero me demorar
+      subcaption_pt: "[esporo enviado por Nathália Scherer - @nathalia.scherer]"
+      caption_en: This is where I want to linger now
+      subcaption_en: "[spore sent by Nathália Scherer - @nathalia.scherer]"

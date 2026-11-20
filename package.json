@@ -1,57 +1,24 @@
 {
   "name": "fluxusfungus",
-  "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint components lib pages sketches --max-warnings=0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*": [
-      "npm run lint --fix"
-    ]
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && wrangler dev",
+    "check": "astro check",
+    "import:live": "node scripts/import/from-live.mjs"
   },
   "dependencies": {
-    "classnames": "2.2.6",
-    "date-fns": "2.14.0",
-    "isomorphic-unfetch": "3.0.0",
-    "next": "10.0.2",
-    "next-i18next": "^8.0.0-beta.2",
-    "react": "^16.13.1",
-    "react-bnb-gallery": "^1.4.4",
-    "react-device-detect": "^1.14.0",
-    "react-dom": "^16.13.1",
-    "react-icons": "^3.11.0",
-    "react-modal": "^3.11.2",
-    "react-p5": "^1.3.6",
-    "react-p5-wrapper": "^2.3.0",
-    "react-player": "^2.6.2",
-    "react-spinners-kit": "^1.9.1",
-    "react-transition-group": "^4.4.1",
-    "remark": "12.0.0",
-    "remark-external-links": "^8.0.0",
-    "remark-html": "11.0.2",
-    "sass": "^1.26.11",
-    "seedrandom": "^3.0.5"
+    "astro": "7.4.7",
+    "marked": "18.1.3",
+    "p5": "1.11.13",
+    "seedrandom": "3.0.5",
+    "yaml": "2.9.1"
   },
   "devDependencies": {
-    "eslint": "^7.10.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.3",
-    "eslint-plugin-react-hooks": "^4.1.2",
-    "husky": "^4.3.0",
-    "lint-staged": "^10.4.0",
-    "postcss-flexbugs-fixes": "4.2.1",
-    "postcss-preset-env": "^6.7.0",
-    "prettier": "^2.1.2",
-    "tailwindcss": "^1.4.6"
-  },
-  "license": "MIT"
+    "sharp": "0.35.5",
+    "turndown": "7.2.4",
+    "wrangler": "4.158.0"
+  }
 }

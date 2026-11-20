@@ -1,0 +1,16 @@
+title: Lepista sp.
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/2_53f8e435b7.jpg
+      caption_pt: Lepista sp.
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Lepista sp.
+      subcaption_en: "[spore sent by André Benedito]"
+    - image: /src/assets/uploads/1_3ed0f0c7b6.jpg
+      caption_pt: Lepista sp.
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Lepista sp.
+      subcaption_en: "[spore sent by André Benedito]"

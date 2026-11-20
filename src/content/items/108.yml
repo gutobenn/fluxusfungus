@@ -1,0 +1,16 @@
+title: Cogumelo encontrado no Parque das Oito Cachoeiras, em São Francisco de Paula/RS, Brasil.
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/Paula_Tupinamba_5d4320c96c.jpg
+      caption_pt: Cogumelo encontrado no Parque das Oito Cachoeiras, em São Francisco de Paula/RS, Brasil.
+      subcaption_pt: "[esporo enviado por Paula Tupinambá]"
+      caption_en: Little mushroom found at Parque das Oito Cachoeiras, in São Francisco de Paula/RS, Brazil.
+      subcaption_en: "[spore sent by Paula Tupinambá]"
+    - image: /src/assets/uploads/Paula_Tupinamba_2_2f857dd2ed.jpg
+      caption_pt: Cogumelo encontrado no Parque das Oito Cachoeiras, em São Francisco de Paula/RS, Brasil.
+      subcaption_pt: "[esporo enviado por Paula Tupinambá]"
+      caption_en: Little mushroom found at Parque das Oito Cachoeiras, in São Francisco de Paula/RS, Brazil.
+      subcaption_en: "[spore sent by Paula Tupinambá]"

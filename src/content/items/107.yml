@@ -1,0 +1,21 @@
+title: Phallus indusiatus, encontrado em Uruçuca, Bahia, Brasil.
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/Augusto_Bennemann_041b92d2b4.jpg
+      caption_pt: Phallus indusiatus, encontrado em Uruçuca, Bahia, Brasil.
+      subcaption_pt: "[esporo enviado por Augusto Bennemann]"
+      caption_en: Phallus indusiatus, found at Uruçuca, Bahia, Brazil.
+      subcaption_en: "[spore sent by Augusto Bennemann]"
+    - image: /src/assets/uploads/Augusto_Bennemann_3_eb58d0d2ae.jpg
+      caption_pt: Phallus indusiatus, encontrado em Uruçuca, Bahia, Brasil.
+      subcaption_pt: "[esporo enviado por Augusto Bennemann]"
+      caption_en: Phallus indusiatus, found at Uruçuca, Bahia, Brazil.
+      subcaption_en: "[spore sent by Augusto Bennemann]"
+    - image: /src/assets/uploads/Augusto_Bennemann_4_2232ff1c06.jpg
+      caption_pt: Comunidade de cogumelos encontrada em Uruçuca, Bahia, Brasil.
+      subcaption_pt: "[esporo enviado por Augusto Bennemann]"
+      caption_en: Mushroom community found at Uruçuca, Bahia, Brazil.
+      subcaption_en: "[spore sent by Augusto Bennemann]"

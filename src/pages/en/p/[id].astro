@@ -1,0 +1,10 @@
+---
+import Home from "../../../components/Home.astro";
+import { itemsFor } from "../../../lib/content";
+
+export function getStaticPaths() {
+  return itemsFor("en").map(({ key }) => ({ params: { id: key } }));
+}
+const { id } = Astro.params;
+---
+<Home lang="en" open={{ kind: "item", id: id! }} />

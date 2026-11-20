@@ -1,0 +1,11 @@
+title: Pycnoporus sanguineus
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/Pycnoporus_sanguineus_9f1f91ea74.jpg
+      caption_pt: Pycnoporus sanguineus
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Pycnoporus sanguineus
+      subcaption_en: "[spore sent by André Benedito]"

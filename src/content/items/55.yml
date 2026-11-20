@@ -1,0 +1,11 @@
+title: Phaeolus sp.
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/Phaeolus_sp_5d955393d8.jpg
+      caption_pt: Phaeolus sp.
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Phaeolus sp.
+      subcaption_en: "[spore sent by André Benedito]"

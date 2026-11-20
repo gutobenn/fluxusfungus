@@ -1,0 +1,11 @@
+title: Há vida por todos os cantos
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/AAA_030_4_96ed45e6a5.jpg
+      caption_pt: Há vida por todos os cantos
+      subcaption_pt: Tuane Eggers, 2014
+      caption_en: There is life everywhere
+      subcaption_en: Tuane Eggers, 2014

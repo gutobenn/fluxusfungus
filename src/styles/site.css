@@ -1,0 +1,695 @@
+/*
+ * fluxus fungus. Ported from the Next.js site (Tailwind 1 utilities + styles/index.scss).
+ * Colors: primary #E1C0AF, tomato #FF6347, brown1 #302625.
+ */
+
+@font-face {
+  font-family: "ConsolasRegular";
+  src: url("/fonts/consolas-webfont.woff") format("woff"), url("/fonts/consolas-webfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --primary: #e1c0af;
+  --tomato: #ff6347;
+  --brown: #302625;
+  --gray-300: #e2e8f0;
+  --gray-400: #cbd5e0;
+  --mono: Consolas, "ConsolasRegular", "Courier New", monospace;
+  --sans: -apple-system, "Helvetica Neue", "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border: 0 solid #e2e8f0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family: var(--sans);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--brown);
+  overflow: hidden;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+/*
+ * Header: on the left column on large screens, a top bar on small ones.
+ */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  opacity: 0;
+  transition: opacity 600ms 300ms;
+  pointer-events: none;
+}
+
+.site-nav.is-visible {
+  opacity: 1;
+}
+
+.site-nav a,
+.site-nav button {
+  pointer-events: auto;
+}
+
+.site-nav__inner {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.site-nav__brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 1.5rem;
+}
+
+.site-title {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--primary);
+}
+
+.site-nav__links {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  font-family: var(--mono);
+  color: var(--gray-300);
+}
+
+.site-nav__spacer {
+  flex-grow: 1;
+  font-size: 0.875rem;
+}
+
+.site-nav__links a {
+  display: block;
+  margin-right: 0.5rem;
+}
+
+.site-nav__links a:hover {
+  color: #fff;
+}
+
+.site-nav__lang {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  margin: 0 1rem 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--gray-400);
+}
+
+.site-nav__lang a {
+  display: inline-block;
+  margin: 0;
+}
+
+.site-nav__lang .current {
+  text-decoration: underline;
+}
+
+@media (min-width: 1280px) {
+  .site-nav {
+    height: 100%;
+    width: 20%;
+    align-items: stretch;
+  }
+
+  .site-nav__inner {
+    flex-direction: column;
+  }
+
+  .site-nav__brand {
+    margin-left: 2rem;
+  }
+
+  .site-title {
+    font-size: 4rem;
+    margin-top: 5rem;
+  }
+
+  .site-nav__links {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 0 5rem 2rem;
+  }
+
+  .site-nav__lang {
+    position: relative;
+    margin: 1.5rem 0 0;
+  }
+}
+
+/*
+ * "quer som?"
+ */
+.sound-question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  opacity: 0;
+  transition: opacity 600ms 1.5s;
+}
+
+.sound-question.is-visible {
+  opacity: 1;
+}
+
+.sound-question__box {
+  font-family: var(--mono);
+  text-align: center;
+}
+
+.sound-question__text {
+  padding: 0.5rem 1.5rem;
+  color: var(--gray-300);
+}
+
+.sound-question__buttons {
+  display: inline-flex;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.sound-question__buttons button {
+  background: #000;
+  color: #fff;
+  padding: 0.25rem 1.5rem;
+}
+
+.sound-question__buttons button + button {
+  border-left: 1px solid var(--brown);
+}
+
+.sound-question__buttons button:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+@media (min-width: 1280px) {
+  .sound-question__box {
+    padding: 0 0 8rem 16rem;
+  }
+}
+
+.sound-toggle {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  margin: 0 0 0.5rem 1rem;
+  color: var(--primary);
+  z-index: 20;
+}
+
+.sound-toggle svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
+.sound-toggle .icon-on {
+  display: none;
+}
+
+.sound-toggle.is-playing .icon-on {
+  display: block;
+}
+
+.sound-toggle.is-playing .icon-off {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .sound-toggle {
+    margin: 0 0 1.5rem 2.5rem;
+    padding-left: 0.25rem;
+  }
+}
+
+/*
+ * Mycelium sketch
+ */
+#sketch canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -10;
+  transition: opacity 1s ease-in-out;
+}
+
+.mycelium_blob {
+  position: absolute;
+  display: block;
+  height: 10px;
+  width: 10px;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  background: var(--primary);
+  cursor: pointer;
+  transition: opacity 1s ease-in-out;
+}
+
+.mycelium_blob.invisible {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mycelium_blob.unvisited {
+  background: var(--tomato);
+}
+
+.mycelium_blob.pulse.unvisited {
+  animation: 2.5s pulse-red 0s infinite;
+}
+
+.mycelium_blob:hover {
+  background: #444 !important;
+  box-shadow: 0 0 7px -3px #333;
+}
+
+.mycelium_next_button,
+.mycelium_first_page_button,
+.mycelium_end_message {
+  position: fixed;
+  right: 0;
+  bottom: 15px;
+  padding: 5px 15px;
+  font-family: var(--mono);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translate(100vw);
+  animation: show-from-right 1s forwards ease-in-out;
+  animation-delay: 0.3s;
+}
+
+.mycelium_next_button,
+.mycelium_first_page_button {
+  background: #000;
+  color: #fff;
+}
+
+.mycelium_next_button:hover,
+.mycelium_first_page_button:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.mycelium_end_message {
+  background: #fff;
+  color: #000;
+  text-align: right;
+  cursor: default;
+  margin-bottom: 34px;
+}
+
+@media (min-width: 768px) {
+  .mycelium_next_button,
+  .mycelium_first_page_button,
+  .mycelium_end_message {
+    bottom: 45%;
+  }
+}
+
+.hide-to-right {
+  animation: hide-to-right 1s forwards ease-in-out;
+  animation-delay: 0.1s;
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 99, 71, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 9px rgba(255, 99, 71, 0);
+  }
+}
+
+@keyframes show-from-right {
+  0% {
+    transform: translate(100vw);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes hide-to-right {
+  0% {
+    transform: translate(0);
+  }
+  100% {
+    transform: translate(100vw);
+  }
+}
+
+/*
+ * Modals: text (quotes, pages) and video. Same values as react-modal on the old site.
+ */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.modal.is-open {
+  opacity: 1;
+}
+
+.modal--text {
+  background: rgba(17, 17, 17, 0.35);
+}
+
+.modal--video {
+  background: rgba(17, 17, 17, 0.7);
+}
+
+.modal__content {
+  position: absolute;
+  top: 40%;
+  left: 10%;
+  right: 10%;
+  width: 80%;
+  max-height: 80%;
+  margin: 0 auto;
+  transform: translateY(-40%);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+}
+
+.modal--text .modal__content {
+  max-width: 680px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.modal--video .modal__content {
+  height: 700px;
+  max-width: 80%;
+  overflow: hidden;
+}
+
+.modal--video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.modal-close {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  margin: 1.5rem 1.5rem 0 0;
+  color: #fff;
+}
+
+.modal-close svg {
+  width: 2em;
+  height: 2em;
+  fill: currentColor;
+  transition: ease-in-out 150ms;
+}
+
+.modal-close:hover svg {
+  fill: #000;
+}
+
+.page-title {
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.markdown {
+  font-family: var(--mono);
+  line-height: 1.75;
+  font-size: 0.94rem;
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown blockquote {
+  margin: 1rem 0;
+}
+
+.markdown > p:first-child {
+  margin-top: 0.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.875rem;
+  margin: 3rem 0 1rem;
+  line-height: 1.375;
+}
+
+.markdown h3 {
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem;
+  line-height: 1.375;
+}
+
+.markdown a {
+  color: #000;
+  text-decoration: none;
+  background: linear-gradient(to bottom, var(--primary) 0%, var(--primary) 100%);
+  background-position: 0 100%;
+  background-repeat: repeat-x;
+  background-size: 1px 1px;
+  transition: background-size 0.3s;
+}
+
+.markdown a:hover {
+  background-size: 4px 50px;
+}
+
+.quote-author {
+  margin-top: 1rem;
+  color: var(--primary);
+  font-family: var(--mono);
+  line-height: 1.75;
+  font-size: 0.94rem;
+}
+
+/*
+ * Gallery: a dark lightbox, as react-bnb-gallery on the old site.
+ */
+.gallery {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: rgba(17, 17, 17, 0.7); /* react-bnb-gallery: #111 at 0.7 */
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.gallery:focus,
+.modal:focus {
+  outline: none;
+}
+
+.gallery.is-open {
+  opacity: 1;
+}
+
+.gallery__stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 4.5rem 0 1rem;
+}
+
+.gallery__figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 66%;
+  max-height: 100%;
+}
+
+.gallery__image {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 12rem);
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.gallery__caption {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  min-height: 2.6rem;
+}
+
+.gallery__caption .caption {
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.gallery__caption .subcaption {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.gallery__control {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5%;
+  min-width: 48px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.gallery__control svg {
+  width: 2.25rem;
+  height: 2.25rem;
+  fill: currentColor;
+  transition: ease-in-out 150ms;
+}
+
+.gallery__control:hover svg {
+  fill: #000;
+}
+
+.gallery__control--prev {
+  left: 0;
+}
+
+.gallery__control--next {
+  right: 0;
+}
+
+.gallery__thumbs {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 0.5rem 0.75rem 1rem;
+  overflow-x: auto;
+}
+
+.gallery__thumbs button {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gallery__thumbs button.is-current {
+  opacity: 1;
+  outline: 2px solid #fff;
+}
+
+.gallery__thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 767px) {
+  .gallery__figure {
+    max-width: 100%;
+    padding: 0 0.75rem;
+  }
+
+  .gallery__image {
+    max-height: calc(100vh - 14rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery__thumbs {
+    display: none;
+  }
+
+  .gallery__control.is-enabled {
+    display: flex;
+  }
+
+  /* Large photos scale up, as on the old site. */
+  .gallery__image {
+    min-width: min(100%, 60vw);
+  }
+}
+
+.noscript {
+  position: relative;
+  max-width: 680px;
+  margin: 8rem auto 2rem;
+  padding: 20px;
+  background: #fff;
+}

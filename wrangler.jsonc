@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fluxusfungus",
+  // Cloudflare account "Fluxus Fungus".
+  "account_id": "19380d1fddb5fb716405a2c50d6197e4",
+  "compatibility_date": "2026-11-01",
+  // Static site only: no Worker code runs, so requests are free and unlimited.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "workers_dev": true
+}

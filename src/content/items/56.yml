@@ -1,0 +1,11 @@
+title: Marasmius sp.
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/Marasmius_sp_420a96b269.jpg
+      caption_pt: Marasmius sp.
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Marasmius sp.
+      subcaption_en: "[spore sent by André Benedito]"

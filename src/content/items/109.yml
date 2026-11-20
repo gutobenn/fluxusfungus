@@ -1,0 +1,16 @@
+title: Cogumelos encontrados em Uruçuca, Bahia, Brasil.
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/Duda_Appel_e4102a9ee6.jpg
+      caption_pt: Cogumelos encontrados em Uruçuca, Bahia, Brasil.
+      subcaption_pt: "[esporo enviado por Maria Eduarda Appel]"
+      caption_en: Mushrooms found at Uruçuca, Bahia, Brazil.
+      subcaption_en: "[spore sent by Maria Eduarda Appel]"
+    - image: /src/assets/uploads/Duda_Appel_2_4ed5b1626e.jpg
+      caption_pt: Cogumelos encontrados em Uruçuca, Bahia, Brasil.
+      subcaption_pt: "[esporo enviado por Maria Eduarda Appel]"
+      caption_en: Mushrooms found at Uruçuca, Bahia, Brazil.
+      subcaption_en: "[spore sent by Maria Eduarda Appel]"
