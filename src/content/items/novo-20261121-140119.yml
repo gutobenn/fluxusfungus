@@ -1,0 +1,24 @@
+title: Cogumelos encontrados por Monique II
+date: 2026-11-21
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/fungorendinha.jpg
+      caption_pt: Fungo encontrado em 2019, numa matinha que visito desde a infância,
+        em Estrela, RS
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Fungus found in 2019 in a small patch of woods—a place I’ve been
+        visiting since childhood—in Estrela, RS.
+      subcaption_en: "[spore sent by Monique Bruxel]"
+    - image: /src/assets/uploads/fungomaos.jpg
+      caption_pt: Fungo encontrado no quintal de casa, em Estrela, RS (2019)
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Fungus found in my backyard in Estrela, RS (2019)
+      subcaption_en: "[spore sent by Monique Bruxel]"
+    - image: /src/assets/uploads/fungoestrela.jpg
+      caption_pt: Estrela da terra, encontrada em Serra Grande, Bahia (2021)
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Earth star, found in Serra Grande, Bahia (2021)
+      subcaption_en: "[spore sent by Monique Bruxel]"
