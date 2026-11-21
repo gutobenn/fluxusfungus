@@ -1,0 +1,12 @@
+title: Pleurotus sp.
+date: 2026-11-21
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/1-pleorotus-sp.jpg
+      caption_pt: Pleurotus sp.
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Pleurotus sp.
+      subcaption_en: "[spore sent by André Benedito]"
