@@ -450,6 +450,7 @@ button {
 
 .modal--audio .modal__content {
   height: auto;
+  max-width: 500px;
 }
 
 .modal--audio audio {
