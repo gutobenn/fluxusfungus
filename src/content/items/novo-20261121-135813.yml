@@ -1,0 +1,40 @@
+title: Cogumelos encontrados por Monique
+date: 2026-11-21
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/fungomamilo.jpg
+      caption_pt: Cogumelo encontrado em Estrela/RS (2019)
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Mushroom found in Estrela/RS (2019)
+      subcaption_en: "[spore sent by Monique Bruxel]"
+    - image: /src/assets/uploads/fungoleque.jpg
+      caption_pt: Cogumelos encontrados no quintal de casa em Estrela/RS (2020)
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Mushrooms found in my home garden in Estrela/RS (2020)
+      subcaption_en: "[spore sent by Monique Bruxel]"
+    - image: /src/assets/uploads/fungodancante.jpg
+      caption_pt: Cogumelos encontrados na trilha que levava à horta que cultivei
+        durante a pandemia, em Estrela, RS. Eram dezenas, encantadores e
+        expressivos de diferentes formas ao longo de todo o ciclo, que
+        acompanhei por dias (2021).
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Mushrooms found on the path leading to the vegetable garden I
+        cultivated during the pandemic, in Estrela, RS. There were dozens of
+        them—charming and expressive, taking on various forms throughout their
+        entire life cycle, which I observed over the course of several days
+        (2021).
+      subcaption_en: "[spore sent by Monique Bruxel]"
+    - image: /src/assets/uploads/fungosmicelio.jpg
+      caption_pt: Micélio encontrado em Estrela, RS (2020)
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Mycelium found in Estrela, RS (2020)
+      subcaption_en: "[spore sent by Monique Bruxel]"
+    - image: /src/assets/uploads/fungoveludo.jpg
+      caption_pt: Fungo encontrado no pátio da casa onde morava, em Lajeado, RS (2018)
+      subcaption_pt: "[esporo enviado por Monique Bruxel]"
+      caption_en: Fungus found in the yard of the house where he lived, in Lajeado, RS
+        (2018)
+      subcaption_en: "[spore sent by Monique Bruxel]"
