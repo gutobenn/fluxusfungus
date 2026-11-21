@@ -149,8 +149,11 @@ async function clientPicture(picture: Picture, lang: Lang): Promise<ClientPictur
 export async function clientPost(key: string, item: ItemFile, lang: Lang): Promise<ClientPost> {
   const content = item.content;
   switch (content.type) {
-    case "gallery":
-      return { id: key, type: "gallery", pictures: await Promise.all(content.pictures.map((picture) => clientPicture(picture, lang))) };
+    case "gallery": {
+      // Pages CMS can save an empty gallery row ("- {}") even though `image` is required. Skip it.
+      const pictures = content.pictures.filter((picture) => picture?.image);
+      return { id: key, type: "gallery", pictures: await Promise.all(pictures.map((picture) => clientPicture(picture, lang))) };
+    }
     case "quote": {
       const text = (lang === "pt" ? content.text_pt : content.text_en) || content.text_pt || content.text_en;
       const author = (lang === "pt" ? content.author_pt : content.author_en) || content.author_pt || content.author_en;
