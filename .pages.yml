@@ -25,10 +25,17 @@ content:
     # The file name is the id in the URL: never rename an existing item.
     operations: { create: true, rename: false, delete: true }
     view:
-      fields: [title, link, show_pt, show_en]
+      fields: [id, title, link, show_pt, show_en]
       primary: title
+      sort: [id, title]
       search: [title]
+      default: { sort: id, order: asc }
     fields:
+      - name: id
+        label: ID
+        description: Preenchido sozinho, até 2 minutos depois de salvar um item novo. É o número do endereço (fluxusfungus.com/p/<ID>).
+        type: number
+        readonly: true
       - name: title
         label: Nome
         description: Só aparece aqui no editor.

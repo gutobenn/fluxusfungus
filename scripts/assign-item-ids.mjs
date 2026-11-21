@@ -1,6 +1,6 @@
 /**
  * Gives every new item a numeric id (the highest id + 1, in the order the files were added) and
- * writes its public link into the file, so Pages CMS shows it.
+ * writes its id and public link into the file, so Pages CMS can show and sort by them.
  *
  *   node scripts/assign-item-ids.mjs
  *
@@ -35,23 +35,19 @@ for (const name of files.filter((name) => !isNumeric(name)).sort((a, b) => added
   next += 1;
 }
 
-// 2. The read-only "link" field: https://fluxusfungus.com/p/<id>.
-let linked = 0;
+// 2. The read-only "id" and "link" fields, so Pages CMS can show and sort by them.
+let updatedCount = 0;
 for (const name of readdirSync(DIR).filter(isNumeric)) {
   const path = join(DIR, name);
+  const id = Number.parseInt(name, 10);
   const text = readFileSync(path, "utf8");
-  const line = `link: ${SITE}/p/${Number.parseInt(name, 10)}`;
-  let updated;
-  if (/^link:.*$/m.test(text)) {
-    updated = text.replace(/^link:.*$/m, line);
-  } else if (/^title:.*$/m.test(text)) {
-    updated = text.replace(/^(title:.*)$/m, `$1\n${line}`);
-  } else {
-    updated = `${line}\n${text}`;
-  }
+  const lines = text.split("\n").filter((line) => !/^(id|link):/.test(line));
+  const titleIndex = lines.findIndex((line) => /^title:/.test(line));
+  lines.splice(titleIndex + 1, 0, `link: ${SITE}/p/${id}`);
+  const updated = [`id: ${id}`, ...lines].join("\n");
   if (updated !== text) {
     writeFileSync(path, updated);
-    linked += 1;
+    updatedCount += 1;
   }
 }
-console.log(linked ? `Link written in ${linked} item(s).` : "Every item already has its numeric id and link.");
+console.log(updatedCount ? `id and link written in ${updatedCount} item(s).` : "Every item already has its numeric id and link.");
