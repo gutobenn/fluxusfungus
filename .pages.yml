@@ -1,5 +1,5 @@
 # Pages CMS (https://pagescms.org): the editor of fluxusfungus.com.
-# Every save is a commit on main, and the Cloudflare build publishes it in about a minute.
+# Every save is a commit on main, and the Cloudflare build publishes it in up to 2 minutes.
 
 settings:
   commit:
@@ -25,15 +25,20 @@ content:
     # The file name is the id in the URL: never rename an existing item.
     operations: { create: true, rename: false, delete: true }
     view:
-      fields: [title, show_pt, show_en]
+      fields: [title, link, show_pt, show_en]
       primary: title
       search: [title]
     fields:
       - name: title
         label: Nome
-        description: Só aparece aqui no editor. O endereço do item é um número (fluxusfungus.com/p/<número>). Um item novo recebe o próximo número cerca de 1 minuto depois de salvo, e só então aparece no site.
+        description: Só aparece aqui no editor.
         type: string
         required: true
+      - name: link
+        label: Link no site
+        description: "Preenchido sozinho. Um item novo recebe um número e este link até 2 minutos depois de salvo, e só então aparece no site. Em inglês, o endereço é o mesmo com /en antes de /p/. Se o item não estiver marcado para uma língua, o link dá erro nessa língua."
+        type: string
+        readonly: true
       - name: show_pt
         label: Mostrar no site em português
         type: boolean

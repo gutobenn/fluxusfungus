@@ -25,6 +25,8 @@ type ItemContent =
 
 interface ItemFile {
   title: string;
+  /** Written by scripts/assign-item-ids.mjs, shown read-only in Pages CMS. */
+  link?: string;
   show_pt?: boolean;
   show_en?: boolean;
   content: ItemContent;
