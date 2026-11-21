@@ -35,19 +35,25 @@ for (const name of files.filter((name) => !isNumeric(name)).sort((a, b) => added
   next += 1;
 }
 
-// 2. The read-only "id" and "link" fields, so Pages CMS can show and sort by them.
+// 2. The read-only "id" and "link" fields, so Pages CMS can show and sort by them, and a "date"
+// (today, São Paulo time) for an item saved without one. An existing date is never changed.
+const today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 let updatedCount = 0;
 for (const name of readdirSync(DIR).filter(isNumeric)) {
   const path = join(DIR, name);
   const id = Number.parseInt(name, 10);
   const text = readFileSync(path, "utf8");
-  const lines = text.split("\n").filter((line) => !/^(id|link):/.test(line));
+  let lines = text.split("\n").filter((line) => !/^(id|link):/.test(line));
+  const dated = lines.some((line) => /^date:\s*["']?\d{4}-\d{2}-\d{2}/.test(line));
+  if (!dated) {
+    lines = lines.filter((line) => !/^date:/.test(line));
+  }
   const titleIndex = lines.findIndex((line) => /^title:/.test(line));
-  lines.splice(titleIndex + 1, 0, `link: ${SITE}/p/${id}`);
+  lines.splice(titleIndex + 1, 0, `link: ${SITE}/p/${id}`, ...(dated ? [] : [`date: ${today}`]));
   const updated = [`id: ${id}`, ...lines].join("\n");
   if (updated !== text) {
     writeFileSync(path, updated);
     updatedCount += 1;
   }
 }
-console.log(updatedCount ? `id and link written in ${updatedCount} item(s).` : "Every item already has its numeric id and link.");
+console.log(updatedCount ? `id, link or date written in ${updatedCount} item(s).` : "Every item already has its numeric id, link and date.");

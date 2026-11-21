@@ -25,7 +25,7 @@ content:
     # The file name is the id in the URL: never rename an existing item.
     operations: { create: true, rename: false, delete: true }
     view:
-      fields: [id, title, link, show_pt, show_en]
+      fields: [id, title, date, link, show_pt, show_en]
       primary: title
       sort: [id, title]
       search: [title]
@@ -46,6 +46,11 @@ content:
         description: "Preenchido sozinho. Um item novo recebe um número e este link até 2 minutos depois de salvo, e só então aparece no site. Em inglês, o endereço é o mesmo com /en antes de /p/. Se o item não estiver marcado para uma língua, o link dá erro nessa língua."
         type: string
         readonly: true
+      - name: date
+        label: Data
+        description: Dia em que o item entrou no site. Um item novo começa com a data de hoje, e você pode mudar.
+        type: date
+        options: { format: yyyy-MM-dd }
       - name: show_pt
         label: Mostrar no site em português
         type: boolean

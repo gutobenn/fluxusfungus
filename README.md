@@ -25,6 +25,7 @@ Desde 2026-11 o site é estático, na Cloudflare, sem custo. Ele substitui o Nex
 3. **Itens do micélio:** cada item é uma galeria de imagens, uma citação, um vídeo (Vimeo ou YouTube) ou um áudio (MP3). Os campos `(pt)` e `(en)` são as duas línguas. Desmarque "Mostrar no site em …" para esconder um item numa língua.
 4. **Salvar** publica o site em até 2 minutos.
 5. **Endereço:** cada item tem um número, como no site antigo (`fluxusfungus.com/p/26`). Um item novo é salvo com um nome provisório, e a GitHub Action "Assign item ids" (`scripts/assign-item-ids.mjs`) dá a ele o próximo número e preenche o campo "Link no site". Isso leva até 2 minutos, e só então o item aparece no site. Não renomeie os arquivos: o nome é o endereço.
+6. **Data:** o dia em que o item entrou no site. Um item novo começa com a data de hoje, e dá para mudar. Os itens antigos têm a data de criação no Strapi, tirada do backup do banco de 2026-11-20. Se um item ficar sem data, a mesma Action coloca a data do dia. Por enquanto, o site não mostra a data.
 
 Imagens grandes não são problema: o build gera as versões menores. Prefira JPEG.
 
