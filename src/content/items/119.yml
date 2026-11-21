@@ -7,3 +7,7 @@ show_en: true
 content:
   type: audio
   file: /audio/luiz-bruno-os-fungos.mp3
+  caption_pt: Música Os Fungos, de Luiz Bruno
+  subcaption_pt: esporo enviado por Luiz Bruno
+  caption_en: Os Fungos song, by Luiz Bruno
+  subcaption_en: spore sent by Luiz Bruno
