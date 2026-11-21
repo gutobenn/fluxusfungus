@@ -12,6 +12,15 @@ media:
     output: /src/assets/uploads
     extensions: [jpg, jpeg, png, gif, webp]
     rename: safe
+  # Served as is from the site root (public/audio/x.mp3 -> fluxusfungus.com/audio/x.mp3).
+  # app.pagescms.org rejects uploads over ~4.5 MB (Vercel body limit, hunvreus/pagescms#393),
+  # so a bigger MP3 is uploaded on GitHub into public/audio and then picked here.
+  - name: audios
+    label: Áudios
+    input: public/audio
+    output: /audio
+    extensions: [mp3]
+    rename: safe
 
 content:
   - name: items
@@ -114,13 +123,43 @@ content:
                 label: Link do Vimeo ou do YouTube
                 type: string
                 required: true
+              - name: caption_pt
+                label: Legenda (pt)
+                type: string
+              - name: subcaption_pt
+                label: Crédito (pt)
+                description: "Por exemplo: [esporo enviado por Fulana]"
+                type: string
+              - name: caption_en
+                label: Legenda (en)
+                type: string
+              - name: subcaption_en
+                label: Crédito (en)
+                description: "Por exemplo: [spore sent by Fulana]"
+                type: string
           - name: audio
             label: Áudio
             fields:
-              - name: url
-                label: Link para o arquivo de áudio (MP3)
-                type: string
+              - name: file
+                label: Arquivo de áudio (MP3)
+                description: "Um MP3 de até 3 MB pode ser enviado aqui. Um arquivo maior, até 25 MB, vai pelo GitHub: abra a pasta public/audio do repositório, clique em Add file → Upload files e confirme. Depois, escolha o arquivo aqui."
+                type: file
                 required: true
+                options: { media: audios }
+              - name: caption_pt
+                label: Legenda (pt)
+                type: string
+              - name: subcaption_pt
+                label: Crédito (pt)
+                description: "Por exemplo: [esporo enviado por Fulana]"
+                type: string
+              - name: caption_en
+                label: Legenda (en)
+                type: string
+              - name: subcaption_en
+                label: Crédito (en)
+                description: "Por exemplo: [spore sent by Fulana]"
+                type: string
 
   - name: sobre
     label: Página "sobre"

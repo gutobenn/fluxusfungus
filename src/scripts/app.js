@@ -128,7 +128,7 @@ function show(target, { push }) {
   }
   if (post.type === "gallery") closeModal = openGallery(post.pictures, options);
   else if (post.type === "quote") closeModal = openText({ html: post.html, author: post.author }, options);
-  else closeModal = openMedia(post.url, options);
+  else closeModal = openMedia(post, options);
 }
 
 function openItem(id) {

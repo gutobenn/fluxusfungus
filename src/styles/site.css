@@ -439,15 +439,27 @@ button {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+/* A column: the player takes the free height, and the caption (if any) sits below it. */
 .modal--video .modal__content {
+  display: flex;
+  flex-direction: column;
   height: 700px;
   max-width: 80%;
   overflow: hidden;
 }
 
-.modal--video iframe {
+.modal--audio .modal__content {
+  height: auto;
+}
+
+.modal--audio audio {
   width: 100%;
-  height: 100%;
+}
+
+.modal--video iframe {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
   border: 0;
 }
 
@@ -583,19 +595,22 @@ button {
   -webkit-user-drag: none;
 }
 
-.gallery__caption {
+.gallery__caption,
+.media__caption {
   margin-top: 0.5rem;
   font-family: var(--mono);
   min-height: 2.6rem;
 }
 
-.gallery__caption .caption {
+.gallery__caption .caption,
+.media__caption .caption {
   color: #fff;
   font-size: 0.95rem;
   line-height: 1.4;
 }
 
-.gallery__caption .subcaption {
+.gallery__caption .subcaption,
+.media__caption .subcaption {
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.8rem;
   line-height: 1.4;

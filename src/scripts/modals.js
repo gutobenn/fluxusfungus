@@ -78,21 +78,25 @@ function embedUrl(url) {
   return null;
 }
 
-/** Video (or audio) item. */
-export function openMedia(url, { closeLabel, onClosed }) {
+/** Video or audio item, with its caption and credit below the player. */
+export function openMedia({ type, url, caption, subcaption }, { closeLabel, onClosed }) {
   const modal = document.createElement("div");
-  modal.className = "modal modal--video";
+  modal.className = `modal modal--video${type === "audio" ? " modal--audio" : ""}`;
   modal.tabIndex = -1;
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
-  const embed = embedUrl(url);
-  if (embed) {
-    modal.innerHTML = `<div class="modal__content"><iframe src="${escapeHtml(embed)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="video"></iframe></div>`;
-  } else if (/\.(mp3|ogg|wav|m4a)(\?|$)/i.test(url)) {
-    modal.innerHTML = `<div class="modal__content" style="height:auto;display:flex;align-items:center;justify-content:center"><audio controls autoplay src="${escapeHtml(url)}" style="width:100%"></audio></div>`;
-  } else {
-    modal.innerHTML = `<div class="modal__content"><iframe src="${escapeHtml(url)}" allow="autoplay" title="media"></iframe></div>`;
-  }
+  const embed = type === "video" ? embedUrl(url) : null;
+  const player =
+    type === "audio"
+      ? `<audio controls autoplay src="${escapeHtml(url)}"></audio>`
+      : embed
+        ? `<iframe src="${escapeHtml(embed)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="video"></iframe>`
+        : `<iframe src="${escapeHtml(url)}" allow="autoplay" title="media"></iframe>`;
+  const captions =
+    caption || subcaption
+      ? `<div class="media__caption"><div class="caption">${escapeHtml(caption)}</div><div class="subcaption">${escapeHtml(subcaption)}</div></div>`
+      : "";
+  modal.innerHTML = `<div class="modal__content">${player}${captions}</div>`;
   return mount(modal, { closeLabel, onClosed });
 }
 

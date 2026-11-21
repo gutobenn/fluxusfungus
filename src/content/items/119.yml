@@ -6,4 +6,4 @@ show_pt: true
 show_en: true
 content:
   type: audio
-  url: https://drive.google.com/file/d/1dgNwMAMcZ2zNJmUQzvS9UROVDQdLliVR/view?usp=sharing
+  file: /audio/luiz-bruno-os-fungos.mp3

@@ -9,19 +9,24 @@ import { parse } from "yaml";
 
 export type Lang = "pt" | "en";
 
-interface Picture {
-  image: string;
+/** Caption and credit ("[esporo enviado por …]") in both languages. */
+interface Captions {
   caption_pt?: string;
   subcaption_pt?: string;
   caption_en?: string;
   subcaption_en?: string;
 }
 
+interface Picture extends Captions {
+  image: string;
+}
+
 type ItemContent =
   | { type: "gallery"; pictures: Picture[] }
   | { type: "quote"; text_pt?: string; author_pt?: string; text_en?: string; author_en?: string }
-  | { type: "video"; url: string }
-  | { type: "audio"; url: string };
+  | ({ type: "video"; url: string } & Captions)
+  /** `file` is the public path of an MP3 in public/audio, like /audio/x.mp3. */
+  | ({ type: "audio"; file: string } & Captions);
 
 interface ItemFile {
   title: string;
@@ -57,6 +62,8 @@ export interface ClientPost {
   author?: string;
   pictures?: ClientPicture[];
   url?: string;
+  caption?: string;
+  subcaption?: string;
 }
 
 export interface ClientPage {
@@ -122,10 +129,17 @@ function imageMeta(path: string): ImageMetadata {
   return found.default;
 }
 
+/** Caption and credit in one language; an English one left blank falls back to Portuguese. */
+function captionsFor(source: Captions, lang: Lang): { caption: string; subcaption: string } {
+  return {
+    caption: (lang === "pt" ? source.caption_pt : source.caption_en) || source.caption_pt || "",
+    subcaption: (lang === "pt" ? source.subcaption_pt : source.subcaption_en) || source.subcaption_pt || "",
+  };
+}
+
 async function clientPicture(picture: Picture, lang: Lang): Promise<ClientPicture> {
   const meta = imageMeta(picture.image);
-  const caption = (lang === "pt" ? picture.caption_pt : picture.caption_en) || picture.caption_pt || "";
-  const subcaption = (lang === "pt" ? picture.subcaption_pt : picture.subcaption_en) || picture.subcaption_pt || "";
+  const { caption, subcaption } = captionsFor(picture, lang);
   if (meta.format === "gif") {
     // Keep animated GIFs as they are.
     return { src: meta.src, srcset: "", width: meta.width, height: meta.height, thumb: meta.src, caption, subcaption };
@@ -160,8 +174,9 @@ export async function clientPost(key: string, item: ItemFile, lang: Lang): Promi
       return { id: key, type: "quote", html: markdown(text), author: author || undefined };
     }
     case "video":
+      return { id: key, type: "video", url: content.url, ...captionsFor(content, lang) };
     case "audio":
-      return { id: key, type: content.type, url: content.url };
+      return { id: key, type: "audio", url: content.file, ...captionsFor(content, lang) };
   }
 }
 

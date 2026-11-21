@@ -3,3 +3,6 @@
 /contaminations /en/contaminations 301
 /en/sobre /sobre 301
 /en/contaminacoes /contaminacoes 301
+
+# The Luiz Bruno MP3 moved from the root (the old static.fluxusfungus.com address) to public/audio, where Pages CMS lists it.
+/Luiz%20Bruno%20-%20Os%20Fungos.mp3 /audio/luiz-bruno-os-fungos.mp3 301
