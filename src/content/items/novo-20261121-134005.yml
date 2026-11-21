@@ -1,0 +1,12 @@
+title: Fungo ninho de pássaro
+date: 2026-11-21
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/1-20210619113228.jpg
+      caption_pt: Fungo ninho de pássaro (Nidulariaceae)
+      subcaption_pt: "[esporo enviado por Jordano Tavares]"
+      caption_en: Bird's nest fungus (Nidulariaceae)
+      subcaption_en: "[spore sent by Jordano Tavares]"
