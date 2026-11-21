@@ -29,7 +29,7 @@ content:
       primary: title
       sort: [id, title]
       search: [title]
-      default: { sort: id, order: asc }
+      default: { sort: id, order: desc }
     fields:
       - name: id
         label: ID
