@@ -1,0 +1,12 @@
+title: Amanita muscaria
+date: 2026-11-21
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/1-amanita-muscaria01.jpg
+      caption_pt: Amanita muscaria
+      subcaption_pt: "[esporo enviado por André Benedito]"
+      caption_en: Amanita muscaria
+      subcaption_en: "[spore sent by André Benedito]"
