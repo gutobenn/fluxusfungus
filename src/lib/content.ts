@@ -78,6 +78,12 @@ const marked = new Marked({
       const attrs = external ? ' target="_blank" rel="nofollow noopener"' : "";
       return `<a href="${href}"${title ? ` title="${title}"` : ""}${attrs}>${text}</a>`;
     },
+    // An image added in the Pages CMS text editor points to /src/assets/uploads/…: serve the built file.
+    image({ href, title, text }) {
+      const src = href.startsWith("/src/assets/uploads/") ? imageMeta(href).src : href;
+      const attr = (value: string) => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+      return `<img src="${attr(src)}" alt="${attr(text)}"${title ? ` title="${attr(title)}"` : ""}>`;
+    },
   },
 });
 
