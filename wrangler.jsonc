@@ -10,5 +10,11 @@
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
   },
-  "workers_dev": true
+  "workers_dev": true,
+  // The site, and static.fluxusfungus.com (PDF and MP3 at the root). Custom domains create their DNS records.
+  "routes": [
+    { "pattern": "fluxusfungus.com", "custom_domain": true },
+    { "pattern": "www.fluxusfungus.com", "custom_domain": true },
+    { "pattern": "static.fluxusfungus.com", "custom_domain": true }
+  ]
 }
