@@ -1,0 +1,23 @@
+title: Fungos encontrados por Augusto, na Tailândia
+date: 2026-11-21
+show_pt: true
+show_en: true
+content:
+  type: gallery
+  pictures:
+    - image: /src/assets/uploads/img6891-copiar.jpg
+      caption_pt: Fungos encontrados em Chiang Mai, Tailândia (2023)
+      subcaption_pt: "[esporo enviado por Augusto Bennemann]"
+      caption_en: Fungi found in Chiang Mai, Thailand (2023)
+      subcaption_en: "[spore sent by Augusto Bennemann]"
+    - image: /src/assets/uploads/img6899-copiar.jpg
+      caption_pt: Fungos encontrados em Chiang Mai, Tailândia (2023)
+      subcaption_pt: "[esporo enviado por Augusto Bennemann]"
+      caption_en: Fungi found in Chiang Mai, Thailand (2023)
+      subcaption_en: "[spore sent by Augusto Bennemann]"
+    - image: /src/assets/uploads/img6893-copiar.jpg
+      caption_pt: Fungos encontrados em Chiang Mai, Tailândia (2023)
+      subcaption_pt: "[esporo enviado por Augusto Bennemann]"
+      caption_en: Fungi found in Chiang Mai, Thailand (2023)
+      subcaption_en: "[spore sent by Augusto Bennemann]"
+    - {}
