@@ -24,6 +24,7 @@ Desde 2026-11 o site é estático, na Cloudflare, sem custo. Ele substitui o Nex
 2. Abra o repositório `fluxusfungus`.
 3. **Itens do micélio:** cada item é uma galeria de imagens, uma citação, um vídeo (Vimeo ou YouTube) ou um áudio (MP3). Os campos `(pt)` e `(en)` são as duas línguas. Desmarque "Mostrar no site em …" para esconder um item numa língua.
 4. **Salvar** publica o site em cerca de um minuto.
+5. **Endereço:** cada item tem um número, como no site antigo (`fluxusfungus.com/p/26`). Um item novo é salvo com um nome provisório, e a GitHub Action "Assign item ids" (`scripts/assign-item-ids.mjs`) dá a ele o próximo número em cerca de 1 minuto. Só então ele aparece no site. Não renomeie os arquivos: o nome é o endereço.
 
 Imagens grandes não são problema: o build gera as versões menores. Prefira JPEG.
 

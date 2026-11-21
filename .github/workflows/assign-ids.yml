@@ -1,0 +1,38 @@
+# Pages CMS saves a new item under a temporary name; this gives it the next numeric id
+# (the URL is fluxusfungus.com/p/<id>). The Cloudflare build publishes the renamed commit.
+name: Assign item ids
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/content/items/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: assign-item-ids
+  cancel-in-progress: false
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Rename new items to the next id
+        run: node scripts/assign-item-ids.mjs
+      - name: Commit the renames
+        run: |
+          if [ -n "$(git status --porcelain src/content/items)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A src/content/items
+            git commit -m "Give new items a numeric id"
+            git push
+          fi

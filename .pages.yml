@@ -20,7 +20,10 @@ content:
     type: collection
     path: src/content/items
     format: yaml
-    filename: "{primary}.yml"
+    # Temporary name; the "Assign item ids" GitHub Action renames it to the next number.
+    filename: "novo-{year}{month}{day}-{hour}{minute}{second}.yml"
+    # The file name is the id in the URL: never rename an existing item.
+    operations: { create: true, rename: false, delete: true }
     view:
       fields: [title, show_pt, show_en]
       primary: title
@@ -28,7 +31,7 @@ content:
     fields:
       - name: title
         label: Nome
-        description: Só aparece aqui no editor. O nome de um item novo vira o endereço (fluxusfungus.com/p/<nome>).
+        description: Só aparece aqui no editor. O endereço do item é um número (fluxusfungus.com/p/<número>). Um item novo recebe o próximo número cerca de 1 minuto depois de salvo, e só então aparece no site.
         type: string
         required: true
       - name: show_pt

@@ -87,8 +87,17 @@ function keyOf(path: string): string {
   return path.split("/").pop()!.replace(/\.yml$/, "");
 }
 
+/**
+ * Items with a numeric file name (the id in /p/<id>). A new item saved by Pages CMS has a
+ * temporary name until the "Assign item ids" GitHub Action renames it, so it is skipped here.
+ */
 export function allItems(): { key: string; item: ItemFile }[] {
   return Object.entries(itemFiles)
+    .filter(([path]) => {
+      const numeric = /^\d+$/.test(keyOf(path));
+      if (!numeric) console.warn(`Skipping ${path}: waiting for a numeric id (scripts/assign-item-ids.mjs).`);
+      return numeric;
+    })
     .map(([path, raw]) => ({ key: keyOf(path), item: parse(raw) as ItemFile }))
     .sort((a, b) => a.key.localeCompare(b.key, undefined, { numeric: true }));
 }
