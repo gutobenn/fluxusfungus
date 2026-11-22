@@ -135,7 +135,10 @@ button {
   color: #fff;
 }
 
-.site-nav__lang {
+.site-nav__preferences {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   position: fixed;
   right: 0;
   bottom: 0;
@@ -179,7 +182,7 @@ button {
     margin: 0 0 5rem 2rem;
   }
 
-  .site-nav__lang {
+  .site-nav__preferences {
     position: relative;
     margin: 1.5rem 0 0;
   }
@@ -711,10 +714,15 @@ button {
 }
 
 /* RSS stays a normal feed link without JavaScript; enhancement opens an explanation. */
+.site-nav__preferences .rss-link {
+  display: inline-flex;
+  margin: 0;
+}
+
 .rss-link svg {
   display: block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .rss-link:focus-visible,
@@ -759,10 +767,6 @@ button {
   padding: 0.55rem 0.8rem;
   border: 1px solid currentColor;
   border-radius: 2px;
-}
-
-.rss-actions a {
-  text-decoration: underline;
 }
 
 .rss-feedback {

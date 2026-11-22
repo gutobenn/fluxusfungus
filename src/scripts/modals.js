@@ -89,7 +89,7 @@ export function openRSS(content, { closeLabel, onClosed }) {
     <div class="markdown"><p>${escapeHtml(content.description)}</p><p>${escapeHtml(content.instruction)}</p></div>
     <label class="rss-address-label" for="rss-address">${escapeHtml(content.addressLabel)}</label>
     <input id="rss-address" class="rss-address" type="text" readonly value="${escapeHtml(content.url)}" />
-    <div class="rss-actions"><button type="button" data-rss-copy>${escapeHtml(content.copy)}</button><a href="${escapeHtml(content.url)}" target="_blank" rel="noopener">${escapeHtml(content.openFeed)}</a></div>
+    <div class="rss-actions"><button type="button" data-rss-copy>${escapeHtml(content.copy)}</button></div>
     <p class="rss-feedback" role="status" aria-live="polite"></p>
   </div>`;
   const address = modal.querySelector(".rss-address");
