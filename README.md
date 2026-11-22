@@ -4,7 +4,7 @@ Site do [fluxusfungus.com](https://fluxusfungus.com), projeto da artista visual 
 
 ## Como funciona
 
-- **Astro** gera HTML estático (`src/`). A página inicial anima o crescimento do micélio em p5 (`src/scripts/mycelium.js`), com ramificações, filamentos afilados e encontros entre hifas. Cada nó abre um item numa janela. Os cinco estudos visuais e as instruções para reproduzi-los ficam em `docs/mycelium-studies/`.
+- **Astro** gera HTML estático (`src/`). A página inicial mantém o desenho original do micélio em p5 (`src/scripts/mycelium.js`). Cada nó abre um item numa janela. Os cinco estudos visuais experimentais, disponíveis para comparação, ficam em `docs/mycelium-studies/`.
 - **Conteúdo em arquivos:** um YAML por item em `src/content/items/`, e as páginas "sobre" e "contaminações" em `src/content/pages/`. As imagens ficam em `src/assets/uploads/`, e o Astro gera as versões WebP no build.
 - **Editor:** [Pages CMS](https://app.pagescms.org), configurado em `.pages.yml`. Cada edição salva vira um commit na `main`.
 - **Publicação:** a Cloudflare (Workers Builds) faz o build a cada push na `main` e publica o Worker `fluxusfungus`. O Worker só serve arquivos estáticos.
