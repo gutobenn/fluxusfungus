@@ -2,8 +2,6 @@
 
 Site do [fluxusfungus.com](https://fluxusfungus.com), projeto da artista visual Tuane Eggers.
 
-Desde 2026-11 o site é estático, na Cloudflare, sem custo. Ele substitui o Next.js na Vercel, o Strapi no Northflank ([gutobenn/fluxusfungus-api](https://github.com/gutobenn/fluxusfungus-api)) e as imagens no Cloudinary. O histórico deste repositório guarda a versão Next.js (2020–2022).
-
 ## Como funciona
 
 - **Astro** gera HTML estático (`src/`). A página inicial anima o crescimento do micélio em p5 (`src/scripts/mycelium.js`), com ramificações, filamentos afilados e encontros entre hifas. Cada nó abre um item numa janela. Os cinco estudos visuais e as instruções para reproduzi-los ficam em `docs/mycelium-studies/`.
@@ -46,7 +44,3 @@ pnpm dev          # http://localhost:4321
 pnpm preview      # build + o servidor da Cloudflare, em http://localhost:8787
 node --test test/rss.test.mjs  # regressões da geração do feed (Node 24)
 ```
-
-## Importação do site antigo
-
-`scripts/import/from-live.mjs` leu o site publicado em 2026-11-20, porque a API do Strapi já estava fora do ar. O script converteu o HTML das citações de volta para Markdown e baixou os originais do Cloudinary. Ele não precisa rodar de novo.
