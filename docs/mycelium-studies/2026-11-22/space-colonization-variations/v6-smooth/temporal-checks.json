@@ -1,0 +1,15 @@
+{
+  "sampledFrames": 549,
+  "stepMs": 16.6667,
+  "maximumChannelChange": 2,
+  "maximumMeanChannelChange": 0.02477366255144033,
+  "boundaryPeak": 0,
+  "sampleResolution": [
+    360,
+    225
+  ],
+  "canvasResolution": [
+    1440,
+    900
+  ]
+}

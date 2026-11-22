@@ -1,0 +1,374 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Micélio · origens e ritmos</title><style>
+:root{color-scheme:dark;background:#302625;color:#e1c0af;font:14px ui-monospace,Consolas,monospace}*{box-sizing:border-box}body{margin:0;padding:20px}header,main,footer{max-width:1440px;margin:auto}h1{font-size:22px;font-weight:500;margin:0 0 9px}p{margin:0 0 15px}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0}button,select,input{font:inherit;padding:9px 12px;border:1px solid #876e60;background:#241d1c;color:#eee}button{cursor:pointer}#generate{background:#e1c0af;color:#302625}button:disabled{opacity:.5;cursor:wait}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #ff6347;outline-offset:3px}#status{font-size:12px;color:#b9a69a}#zoom{width:130px;padding:0;accent-color:#e1c0af}#zoom-value{min-width:36px}#zoom-reset{padding:5px 8px}canvas{display:block;background:#302625;width:100%;height:auto;border:1px solid #53423d}.palette-note{font-size:12px;line-height:1.65;color:#b9a69a;margin:10px 0 14px}.palette-note a{color:#e1c0af;text-underline-offset:3px}.palette-note small{font-size:11px;color:#aa9689}details{font-size:12px;margin:14px 0}summary{cursor:pointer}label{display:inline-flex;gap:8px;align-items:center}input{width:360px;max-width:100%;margin:10px 5px 5px 0}footer{color:#b5a498;font-size:12px;margin-top:15px}.note{max-width:1000px;font-size:12px;line-height:1.65;margin-top:12px}@media(max-width:600px){body{padding:12px}h1{font-size:18px}.controls{gap:8px}button,select,input{padding:8px}.note{font-size:11px}}
+</style></head><body><header><h1>Micélio · estilos de crescimento</h1><p>Um esporo branco, diferentes tramas e cordões que amadurecem.</p></header><main><div class="controls"><button type="button" id="generate">Gerar outra</button><button type="button" id="replay">Rever crescimento</button><label>Estilo <select id="style"><option value="auto">Automático (sortear)</option><option value="clean">Hifas abertas</option><option value="fuzzy">Felpudo e cordado</option><option value="fans">Leques rizomórficos</option><option value="mesh">Malha com fusões</option><option value="tufts">Emaranhado em profundidade</option></select></label><label>Cor <select id="palette"><option value="ivory">Marfim</option><option value="amber">Âmbar suave</option><option value="teal">Azul-esverdeado</option><option value="yellow">Amarelo-dourado</option><option value="pink">Rosa</option><option value="coral">Coral-avermelhado</option><option value="lilac">Lilás</option><option value="violet">Violeta</option></select></label><label>Escala <input id="zoom" type="range" min="1" max="3" step="0.1" value="1" aria-label="Escala do desenho"><output id="zoom-value" for="zoom">1×</output></label><button id="zoom-reset" type="button" aria-label="Restaurar escala 1×">1×</button><span id="status" role="status" aria-live="polite">Preparando…</span></div><canvas id="drawing" width="1440" height="900" role="img" aria-label="Crescimento de micélio a partir de um esporo branco, com ritmos variados e dez marcadores vermelhos"></canvas><p id="style-note" class="palette-note"></p><p id="palette-note" class="palette-note" aria-live="polite"></p><details><summary>Reproduzir este desenho</summary><input id="seed" aria-label="Semente do desenho" autocomplete="off" spellcheck="false"><button type="button" id="reproduce">Reproduzir</button><button type="button" id="copy">Copiar semente e cor</button><p id="parameters" class="note"></p></details><details><summary>Sobre as cores</summary><p class="note">Marfim é o padrão. As alternativas são aproximações artísticas inspiradas em micélios reais. As oito cores são selecionadas manualmente. O ponto inicial permanece branco em todas as cores. A cor não altera o desenho.</p></details></main><footer>Protótipo offline. O site publicado permanece igual.</footer><script>
+/** Offline space-colonization experiment: geometry and a parent-safe growth schedule. */
+const WIDTH=1440,HEIGHT=900,AREA={left:48,right:1392,top:156,bottom:846};
+const PALETTES={
+ ivory:{name:'Marfim',rgb:[243,238,226],species:'Chlorociboria aeruginascens',context:'micélio claro não pigmentado',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6617353/'},
+ amber:{name:'Âmbar suave',rgb:[220,139,85],species:'Pycnoporus cinnabarinus',context:'cinabarina alaranjada nas paredes das hifas',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10709268/'},
+ teal:{name:'Azul-esverdeado',rgb:[99,168,157],species:'Chlorociboria aeruginascens',context:'pigmento azul-esverdeado xilindeína',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6617353/'},
+ yellow:{name:'Amarelo-dourado',rgb:[224,190,82],species:'Piloderma croceum',context:'pigmento micelial amarelo corticrocin',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC12441137/'},
+ pink:{name:'Rosa',rgb:[221,152,180],species:'Limonomyces roseipellis',context:'micélio rosado e felpudo',source:'https://extension.psu.edu/turfgrass-diseases-pink-patch-causal-fungus-limonomyces-roseipellis'},
+ coral:{name:'Coral-avermelhado',rgb:[218,111,111],species:'Laetisaria fuciformis',context:'massas de hifas de tons rosa-coral a vermelho',source:'https://ipm.illinois.edu/diseases/rpds/413.pdf'},
+ lilac:{name:'Lilás',rgb:[181,160,208],species:'Lepista sordida',context:'isolados A1/A4 em cultivo, com hifas lilases',source:'https://researchers-admin.westernsydney.edu.au/ws/portalfiles/portal/94793243/uws_495.pdf#page=151'},
+ violet:{name:'Violeta',rgb:[162,139,198],species:'Lepista spp.',context:'isolados A2/A3 em cultivo, com hifas violetas; espécie não conclusiva',source:'https://researchers-admin.westernsydney.edu.au/ws/portalfiles/portal/94793243/uws_495.pdf#page=151'},
+};
+function rng(seed){let state=2166136261;for(const c of String(seed))state=Math.imul(state^c.charCodeAt(0),16777619);return()=>{state+=0x6D2B79F5;let t=Math.imul(state^state>>>15,state|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function spatialGrid(size){const cells=new Map();return{add(p){const key=`${Math.floor(p.x/size)},${Math.floor(p.y/size)}`;if(!cells.has(key))cells.set(key,[]);cells.get(key).push(p);},near(p,radius=1){const x=Math.floor(p.x/size),y=Math.floor(p.y/size),found=[];for(let dx=-radius;dx<=radius;dx++)for(let dy=-radius;dy<=radius;dy++)found.push(...(cells.get(`${x+dx},${y+dy}`)??[]));return found;}};}
+function settings(seed){
+ const random=rng(seed+':settings');
+ // Extent and thickness are independent, so a dense drawing can still have fine hyphae.
+ return{
+  origin:{x:360+random()*710,y:310+random()*340},
+  nutrientCount:Math.round(1800+random()*2400),
+  influence:70+random()*21,consumption:7.2+random()*2.8,step:5.3+random()*.9,
+  trunk:2.1+random()*3.2,fine:.18+random()*.28,
+  extentX:.67+random()*.33,extentY:.72+random()*.28,
+  preferred:random()*Math.PI*2,
+ };
+}
+function makeBaseline(seed){
+ const config=settings(seed),random=rng(seed+':nutrients'),{origin}=config;
+ const nodes=[{...origin,parent:-1}],grid=spatialGrid(70);grid.add({...nodes[0],index:0});
+
+ let left=AREA.left+(1-config.extentX)*(AREA.right-AREA.left)*random(),right=left+config.extentX*(AREA.right-AREA.left);
+ let top=AREA.top+(1-config.extentY)*(AREA.bottom-AREA.top)*random(),bottom=top+config.extentY*(AREA.bottom-AREA.top);
+ left=Math.max(AREA.left,Math.min(left,origin.x-100));right=Math.min(AREA.right,Math.max(right,origin.x+100));
+ top=Math.max(AREA.top,Math.min(top,origin.y-100));bottom=Math.min(AREA.bottom,Math.max(bottom,origin.y+100));
+ const patches=Array.from({length:5},()=>({x:left+random()*(right-left),y:top+random()*(bottom-top),rx:95+random()*200,ry:65+random()*160,weight:.6+random()*.8}));
+ const voids=Array.from({length:3},()=>({x:left+random()*(right-left),y:top+random()*(bottom-top),r:65+random()*110}));
+ let nutrients=[];
+ for(let attempt=0;nutrients.length<config.nutrientCount&&attempt<config.nutrientCount*35;attempt++){
+  const point={x:left+random()*(right-left),y:top+random()*(bottom-top)};
+  const patch=patches.reduce((sum,p)=>sum+p.weight*Math.exp(-(((point.x-p.x)/p.rx)**2+((point.y-p.y)/p.ry)**2)),0);
+  const hole=voids.reduce((sum,p)=>sum+Math.exp(-((dist(point,p)/p.r)**2)),0);
+  const weight=clamp(.22+patch*.48-hole*.35,.035,.97);
+  if(random()<weight)nutrients.push(point);
+ }
+ // A small local nutrient bed starts one connected colony, even near a sparse pocket.
+ for(let index=0;index<45;index++){const angle=random()*Math.PI*2,r=18+random()*65;nutrients.push({x:origin.x+Math.cos(angle)*r,y:origin.y+Math.sin(angle)*r});}
+ for(let round=0;round<360&&nutrients.length&&nodes.length<16000;round++){
+  const forces=new Map(),remaining=[];
+  for(const nutrient of nutrients){
+   let closest=null,minimum=config.influence;
+   for(const node of grid.near(nutrient,2)){const distance=dist(node,nutrient);if(distance<minimum){minimum=distance;closest=node;}}
+   if(minimum<config.consumption)continue;
+   remaining.push(nutrient);
+   if(closest){if(!forces.has(closest.index))forces.set(closest.index,{x:0,y:0});const f=forces.get(closest.index);f.x+=(nutrient.x-closest.x)/minimum;f.y+=(nutrient.y-closest.y)/minimum;}
+  }
+  nutrients=remaining;if(!forces.size)break;let added=0;
+  for(const[index,f]of forces){
+   const parent=nodes[index],length=Math.hypot(f.x,f.y);if(length<.01)continue;
+   const next={x:parent.x+f.x/length*config.step,y:parent.y+f.y/length*config.step,parent:index};
+   if(next.x<AREA.left||next.x>AREA.right||next.y<AREA.top||next.y>AREA.bottom||grid.near(next).some(p=>dist(p,next)<config.step*.52))continue;
+   nodes.push(next);grid.add({...next,index:nodes.length-1});added++;
+  }
+  if(!added)break;
+ }
+ const children=nodes.map(()=>[]),loads=new Float64Array(nodes.length).fill(1);
+ nodes.forEach((node,index)=>{if(node.parent>=0)children[node.parent].push(index);});
+ for(let i=nodes.length-1;i>0;i--)loads[nodes[i].parent]+=loads[i];
+ const timing=rng(seed+':smooth-rhythm'),segments=[],speeds=new Float64Array(nodes.length),ends=new Float64Array(nodes.length),fronts=new Int32Array(nodes.length);
+ const principal=children.map(branches=>branches.reduce((best,index)=>best<0||loads[index]>loads[best]?index:best,-1));
+ const activation=new Array(6),cohortOrder=[0,5,1,4,2,3],cohortTimes=[400,1600,2800,3900,4800,5700];
+ cohortOrder.forEach((sector,rank)=>{activation[sector]=cohortTimes[rank]+timing()*180;});
+ speeds[0]=75;ends[0]=0;fronts[0]=-1;
+ for(let index=1;index<nodes.length;index++){
+  const node=nodes[index],parent=nodes[node.parent],heading=Math.atan2(node.y-origin.y,node.x-origin.x);
+  const continuation=node.parent>0&&principal[node.parent]===index;
+  // A major front is born near the spore, then inherited along its whole branch.
+  // Turning across an angular boundary never reapplies a start gate.
+  const newFront=node.parent===0||(!continuation&&dist(parent,origin)<70);
+  fronts[index]=newFront?index:fronts[node.parent];
+  const alignment=(1+Math.cos(heading-config.preferred))/2;
+  const localTarget=64+24*alignment+5*Math.sin(node.x*.006+node.y*.004);
+  if(newFront)speeds[index]=62+28*alignment;
+  else speeds[index]=clamp(speeds[node.parent]*.98+localTarget*.02+(timing()-.5)*.45,53,96);
+  const birthLag=continuation?0:80+timing()*100;
+  let start=ends[node.parent]+birthLag;
+  if(newFront){const relative=(heading-config.preferred+Math.PI*4)%(Math.PI*2);const sector=Math.min(5,Math.floor(relative/(Math.PI*2)*6));start=Math.max(start,activation[sector]);}
+  const end=start+config.step/speeds[index]*1000;ends[index]=end;
+  segments.push({x:parent.x,y:parent.y,nx:node.x,ny:node.y,parent:node.parent-1,node:index,
+   width:config.fine+Math.pow(loads[index]/loads[0],.38)*config.trunk,
+   alpha:.48+Math.min(.32,loads[index]/35),start,end,speed:speeds[index],continuation,front:fronts[index]});
+ }
+ // Scale continuous travel and the handful of branch-birth delays together.
+ // The first actual front always starts at 400ms; the full colony takes 22.5s.
+ const first=Math.min(...segments.map(s=>s.start)),last=Math.max(...segments.map(s=>s.end)),factor=(22500-400)/(last-first);
+ segments.forEach(s=>{s.start=Math.min(22500,400+(s.start-first)*factor);s.end=Math.min(22500,400+(s.end-first)*factor);s.speed/=factor;});
+ const duration=22500;
+ const candidates=nodes.map((node,index)=>({...node,index})).filter(node=>dist(node,origin)>70&&node.x>AREA.left+15&&node.x<AREA.right-15&&node.y>AREA.top+15&&node.y<AREA.bottom-15);
+ const markers=[];
+ for(let index=0;index<10;index++){
+  let best=null,score=-1;
+  for(let i=0;i<candidates.length;i+=Math.max(1,Math.floor(candidates.length/1800))){const node=candidates[i];const d=markers.length?Math.min(...markers.map(other=>dist(node,other))):dist(node,origin);if(d>score){score=d;best=node;}}
+  if(best)markers.push({...best,at:segments[best.index-1].end});
+ }
+ return{seed,config,nodes,segments,markers,duration,bounds:{left,right,top,bottom}};
+}
+function drawSeed(context,origin){
+ context.save();context.fillStyle='rgba(255,252,242,.13)';context.beginPath();context.ellipse(origin.x,origin.y,9,10,0,0,Math.PI*2);context.fill();
+ context.fillStyle='#fffdf5';context.shadowColor='#fff8dc';context.shadowBlur=5;context.beginPath();context.ellipse(origin.x,origin.y,3.8,4.8,-.15,0,Math.PI*2);context.fill();context.restore();
+}
+/** A cheap translucent outer stroke suggests emitted light only for the luminous palette. */
+function strokeSegment(context,s,amount=1,palette='ivory'){
+ const p=PALETTES[palette]??PALETTES.ivory,rgb=p.rgb.join(',');
+ context.lineCap='round';context.beginPath();context.moveTo(s.x,s.y);context.lineTo(s.x+(s.nx-s.x)*amount,s.y+(s.ny-s.y)*amount);
+ if(p.emission){context.strokeStyle=`rgba(${rgb},${s.alpha*.12})`;context.lineWidth=s.width+2.4;context.stroke();}
+ context.strokeStyle=`rgba(${rgb},${s.alpha})`;context.lineWidth=s.width;context.stroke();
+}
+function paintFrame(context,growth,time,palette='ivory'){
+ context.fillStyle='#302625';context.fillRect(0,0,WIDTH,HEIGHT);
+ for(const s of growth.segments){if(s.start>time)continue;strokeSegment(context,s,clamp((time-s.start)/(s.end-s.start),0,1),palette);}
+ for(const marker of growth.markers)if(marker.at<=time){context.beginPath();context.arc(marker.x,marker.y,5,0,Math.PI*2);context.fillStyle='#ff6347';context.fill();context.strokeStyle='#f4eee4';context.lineWidth=1.3;context.stroke();}
+ drawSeed(context,growth.config.origin);
+}
+
+/** Five independent generative drawing families, inspired by inspected visual references. */
+const STYLES={
+ clean:{name:'Hifas abertas',description:'Colonização do espaço, com corredores leves e áreas vazias.',species:'Phanerochaete velutina',context:'redes exploratórias de cordões em solo e serapilheira',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6976561/'},
+ fuzzy:{name:'Felpudo e cordado',description:'Exploradores finos, tufos curvos ramificados e cordões que engrossam com a idade.',species:'Phallus impudicus',context:'filamentos finos e felpudos que se agregam em feixes',source:'https://www.youtube.com/watch?v=BuI8StesF74'},
+ mesh:{name:'Malha com fusões',description:'Pontas exploram, ramificam e se conectam: surgem ciclos e corredores irregulares.',species:'Modelo de ramificação e fusão',context:'anastomoses e conexões locais; estudo generativo independente inspirado em Mycorust e no modelo mínimo de redes',source:'https://arxiv.org/html/2601.03877v1'},
+ tufts:{name:'Emaranhado em profundidade',description:'Filamentos secundários sobem, arqueiam e se enredam em tufos sobre uma rede rasteira.',species:'Modelo de filamentos em 2,5D',context:'ramificação secundária aérea; referências visuais Cyberfungi e Pycelium, sem reproduzir seu modelo de vizinhança',source:'https://davidmoore.org.uk/CyberWEB/Cyber06.htm'},
+ fans:{name:'Leques rizomórficos',description:'Feixes de filamentos paralelos e franjas finas; a região antiga se adensa.',species:'Hypholoma fasciculare',context:'setores de crescimento em leque em resposta a um novo recurso',source:'https://www.davidmoore.org.uk/21st_century_guidebook_to_fungi_platinum/REPRINT_collection/Dowson_etal_mycelia_cord-forming_basidiomycetes.pdf'},
+};
+const bound=(n,min,max)=>Math.max(min,Math.min(max,n));
+const inside=(p)=>p.x>AREA.left&&p.x<AREA.right&&p.y>AREA.top&&p.y<AREA.bottom;
+const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function pickStyle(seed){const keys=Object.keys(STYLES);return keys[Math.floor(rng(seed+':family')()*keys.length)];}
+function addNode(nodes,parent,x,y,role,width,alpha=.5){if(!inside({x,y}))return-1;nodes.push({x,y,parent,role,width,alpha});return nodes.length-1;}
+function wisp(nodes,parent,heading,length,width,random,branch=true){
+ if(nodes.length>=63000)return;
+ let previous=parent,angle=heading,curve=0;const count=Math.ceil(length/2.8),splitAt=Math.floor(count*(.4+random()*.25));
+ for(let step=0;step<count;step++){
+  curve=curve*.87+(random()-.5)*.06;angle+=curve;
+  const last=nodes[previous],index=addNode(nodes,previous,last.x+Math.cos(angle)*2.8,last.y+Math.sin(angle)*2.8,'hair',width*(1-step/count*.6),.26+random()*.28);
+  if(index<0)break;previous=index;
+  if(branch&&step===splitAt&&random()<.8)wisp(nodes,index,angle+(random()<.5?-1:1)*(.25+random()*.4),length*(.25+random()*.3),width*.7,random,false);
+ }
+}
+function fuzzyGeometry(seed){
+ const base=makeBaseline(seed),random=rng(seed+':felted'),nodes=base.nodes.map((node,index)=>({...node,role:'cord',width:index?base.segments[index-1].width*2.1:5,alpha:.85}));
+ const originalLength=nodes.length,patches=Array.from({length:4},()=>nodes[Math.floor(random()*originalLength)]);
+ for(let index=5;index<originalLength;index+=12){
+  const node=nodes[index],parent=nodes[node.parent];if(!parent)continue;
+  const density=.2+.75*Math.max(...patches.map(p=>Math.exp(-((distance(node,p)/220)**2))));
+  if(random()>density)continue;
+  const heading=Math.atan2(node.y-parent.y,node.x-parent.x),strands=3+Math.floor(random()*5);
+  for(let strand=0;strand<strands;strand++)wisp(nodes,index,heading+(random()-.5)*1.65,30+random()*75,.36+random()*.32,random,true);
+ }
+ // Curved, branching fiber mats connect nearby corridors in patchy older regions.
+ const cells=new Map();for(let i=1;i<originalLength;i++){const p=nodes[i],key=`${Math.floor(p.x/75)},${Math.floor(p.y/75)}`;if(!cells.has(key))cells.set(key,[]);cells.get(key).push(i);}
+ for(let anchor=12;anchor<originalLength&&nodes.length<68000;anchor+=19){
+  const a=nodes[anchor],proximity=distance(a,base.config.origin);
+  if(random()>.15+.75*Math.exp(-((proximity/430)**2)))continue;
+  const cx=Math.floor(a.x/75),cy=Math.floor(a.y/75),near=[];
+  for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)near.push(...(cells.get(`${cx+dx},${cy+dy}`)??[]));
+  const choices=near.filter(i=>i!==anchor&&distance(a,nodes[i])>25&&distance(a,nodes[i])<95);if(!choices.length)continue;
+  const b=nodes[choices[Math.floor(random()*choices.length)]],length=distance(a,b),heading=Math.atan2(a.y-nodes[a.parent].y,a.x-nodes[a.parent].x),normal={x:-(b.y-a.y)/length,y:(b.x-a.x)/length};
+  for(let fiber=0;fiber<12+Math.floor(random()*9)&&nodes.length<68000;fiber++){
+   let previous=anchor;const bow=(random()-.5)*22,steps=Math.ceil(length/3.5),c1={x:a.x+Math.cos(heading)*length*.35,y:a.y+Math.sin(heading)*length*.35};
+   for(let step=1;step<=steps;step++){
+    const t=step/steps,q=1-t,offset=Math.sin(t*Math.PI)*bow;
+    const x=q*q*a.x+2*q*t*c1.x+t*t*b.x+normal.x*offset,y=q*q*a.y+2*q*t*c1.y+t*t*b.y+normal.y*offset;
+    const index=addNode(nodes,previous,x,y,'hair',.32+random()*.3,.2+random()*.24);if(index<0)break;previous=index;
+   }
+  }
+ }
+ return{nodes,config:base.config,markerIndices:base.markers.map(m=>m.index),bounds:base.bounds};
+}
+function fanGeometry(seed){
+ const config=settings(seed),{origin}=config,random=rng(seed+':fans'),nodes=[{...origin,parent:-1,role:'cord',width:8,alpha:.95}],queue=[];
+ const roots=6+Math.floor(random()*2);
+ for(let index=0;index<roots;index++)queue.push({parent:0,heading:index/roots*Math.PI*2+(random()-.5)*.35,length:115+random()*70,width:5+random()*3,depth:0});
+ let shoots=0;
+ while(queue.length&&shoots++<360&&nodes.length<43000){
+  const shoot=queue.shift(),steps=Math.ceil(shoot.length/4.4),path=[],anchor=shoot.parent;
+  let previous=anchor,angle=shoot.startHeading??shoot.heading,curve=0;
+  const births=(shoot.depth<2?[.12,.3,.5,.73]:[.2,.6]).map(value=>Math.floor(steps*value));
+  for(let step=0;step<steps;step++){
+   curve=curve*.91+(random()-.5)*.018;const turn=Math.atan2(Math.sin(shoot.heading-angle),Math.cos(shoot.heading-angle));angle+=turn*.065+curve;
+   const p=nodes[previous],index=addNode(nodes,previous,p.x+Math.cos(angle)*4.4,p.y+Math.sin(angle)*4.4,'cord',shoot.width*(1-step/steps*.72),.72);
+   if(index<0)break;previous=index;path.push(index);
+   if(shoot.depth<3&&births.includes(step)){
+    const sign=(births.indexOf(step)+shoots)%2?1:-1;
+    queue.push({parent:index,startHeading:angle,heading:angle+sign*(.2+random()*.32),length:shoot.length*(.73+random()*.32),width:shoot.width*(.59+random()*.16),depth:shoot.depth+1});
+   }
+  }
+  // Thin strands share the same base and curve alongside a cord, producing a bundle.
+  const strands=shoot.depth===0?6:shoot.depth===1?5:shoot.depth===2?4:3;
+  for(let strand=0;strand<strands;strand++){
+   let last=anchor;const offset=(strand-(strands-1)/2)*(1.8+random()*2.2);
+   for(let step=0;step<path.length;step++){
+    const p=nodes[path[step]],before=nodes[step?path[step-1]:anchor],heading=Math.atan2(p.y-before.y,p.x-before.x),q=(step+1)/(path.length+1);
+    const lateral=Math.sin(q*Math.PI)*offset+Math.sin(q*9+strand)*.4;
+    const index=addNode(nodes,last,p.x-Math.sin(heading)*lateral,p.y+Math.cos(heading)*lateral,'fiber',.2+random()*.28,.27+random()*.18);
+    if(index<0)break;last=index;
+   }
+   if(path.length&&shoot.depth>0){const end=nodes[last],before=nodes[end.parent],heading=Math.atan2(end.y-before.y,end.x-before.x);wisp(nodes,last,heading+(random()-.5)*.6,12+random()*25,.21,random,true);}
+  }
+ }
+ return{nodes,config};
+}
+/** Local tips follow a persistent heading, patchy nutrients and short-range avoidance.
+ * A tip that reaches an older, non-adjacent node closes an actual graph edge. */
+function meshGeometry(seed){
+ const config=settings(seed),random=rng(seed+':fusion-network'),origin=config.origin;
+ const nodes=[{...origin,parent:-1,role:'cord',width:3,alpha:.86}],tips=[],cells=new Map(),patches=Array.from({length:12},()=>({x:AREA.left+random()*(AREA.right-AREA.left),y:AREA.top+random()*(AREA.bottom-AREA.top),strength:.4+random()}));
+ const cell=24,key=(x,y)=>`${Math.floor(x/cell)},${Math.floor(y/cell)}`;
+ const register=index=>{const n=nodes[index],k=key(n.x,n.y);if(!cells.has(k))cells.set(k,[]);cells.get(k).push(index);};register(0);
+ const nearby=(x,y)=>{const list=[],cx=Math.floor(x/cell),cy=Math.floor(y/cell);for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)list.push(...(cells.get(`${cx+a},${cy+b}`)??[]));return list;};
+ for(let i=0;i<7;i++)tips.push({node:0,angle:i/7*Math.PI*2+random()*.4,curve:0,age:0,depth:0});
+ let cursor=0;
+ while(cursor<tips.length&&nodes.length<8500){
+  const tip=tips[cursor++];let previous=tip.node,angle=tip.angle,curve=tip.curve;
+  const steps=35+Math.floor(random()*70);
+  for(let step=0;step<steps&&nodes.length<8500;step++){
+   const p=nodes[previous];let gx=0,gy=0;
+   for(const patch of patches){const d=distance(p,patch),force=patch.strength*Math.exp(-((d/210)**2));gx+=(patch.x-p.x)*force;gy+=(patch.y-p.y)*force;}
+   const desired=Math.atan2(gy,gx),turn=Math.atan2(Math.sin(desired-angle),Math.cos(desired-angle));curve=curve*.84+(random()-.5)*.085;angle+=curve+turn*.005;
+   // Soft boundary steering avoids geometric clipping around the complete colony.
+   const margin=55;let bx=0,by=0;if(p.x<AREA.left+margin)bx=1;if(p.x>AREA.right-margin)bx=-1;if(p.y<AREA.top+margin)by=1;if(p.y>AREA.bottom-margin)by=-1;
+   if((bx||by)&&random()<.25)break;
+   const x=p.x+Math.cos(angle)*5.5,y=p.y+Math.sin(angle)*5.5;if(!inside({x,y}))break;
+   const neighbors=nearby(x,y);let target=-1,best=8.2;
+   for(const i of neighbors){if(i===previous||i===p.parent||nodes[i].parent===previous||i>previous-40)continue;let ancestor=previous,close=false;for(let back=0;back<14&&ancestor>=0;back++,ancestor=nodes[ancestor].parent)if(ancestor===i){close=true;break;}if(close)continue;const d=Math.hypot(nodes[i].x-x,nodes[i].y-y);if(d<best){best=d;target=i;}}
+   if(target>=0&&step>10){const q=nodes[target],index=addNode(nodes,previous,q.x,q.y,'cord',.6+random()*.65,.67);if(index>=0)nodes[index].fuseTo=target;break;}
+   const width=Math.max(.48,1.9-tip.depth*.18)*(1-step/steps*.4),index=addNode(nodes,previous,x,y,'cord',width,.57+random()*.17);if(index<0)break;register(index);previous=index;
+   if(step>8&&random()<.10&&tips.length<310)tips.push({node:index,angle:angle+(random()<.5?-1:1)*(.45+random()*.65),curve:0,depth:tip.depth+1});
+   if(step===steps-1&&tip.depth<8&&tips.length<310)tips.push({node:index,angle:angle+(random()-.5)*.35,curve,depth:tip.depth+1});
+  }
+ }
+ return{nodes,config};
+}
+/** A substrate network supports genuinely elevated secondary filaments. Each tip
+ * has 3D position/tangent and correlated curvature;
+ * projection y-z*0.72 and depth-dependent width/alpha give a 2.5D drawing. */
+function tuftGeometry(seed){
+ const baseline=makeBaseline(seed),config=baseline.config,random=rng(seed+':aerial-filaments');
+ const nodes=baseline.nodes.map((n,index)=>({...n,z:0,role:'cord',width:index?baseline.segments[index-1].width*1.18:4,alpha:.47})),baseCount=nodes.length,origin=config.origin;
+ const candidates=[];for(let i=8;i<baseCount;i+=13)if(distance(nodes[i],origin)<460)candidates.push(i);
+ const anchors=[];while(candidates.length&&anchors.length<35){const at=Math.floor(random()*candidates.length),index=candidates.splice(at,1)[0];if(anchors.every(j=>distance(nodes[index],nodes[j])>38))anchors.push(index);}
+ for(const anchor of anchors){
+  const base=nodes[anchor],mainHeading=Math.atan2(base.y-origin.y,base.x-origin.x)+(random()-.5)*1.4,tuftHeight=24+random()*65,strands=22+Math.floor(random()*25);
+  for(let strand=0;strand<strands;strand++){
+   let previous=anchor,x=base.x,y=base.y,z=0,heading=mainHeading+(random()-.5)*2.5,curve=(random()-.5)*.04;
+   const length=65+random()*125,steps=Math.ceil(length/3),phase=random()*Math.PI*2,height=tuftHeight*(.5+random()*.7),spread=(random()-.5)*1.4;
+   for(let step=1;step<=steps;step++){
+    const t=step/steps;curve=curve*.94+(random()-.5)*.055;heading+=curve+spread*.009;
+    x+=Math.cos(heading)*3;y+=Math.sin(heading)*3;z=Math.sin(t*Math.PI*.87)*height;
+    const projected={x,y:y-z*.72};if(!inside(projected))break;
+    const width=(.34+height/140)*(.95-t*.45),alpha=.16+.22*z/100+.12*(1-t);
+    const index=addNode(nodes,previous,projected.x,projected.y,'aerial',width,alpha);if(index<0)break;nodes[index].z=z;nodes[index].world={x,y,z};previous=index;
+    if(step===Math.floor(steps*.53)&&strand%3===0){
+     // Secondary curved shoots grow from an actual elevated parent, not painted ticks.
+     let last=index,tx=x,ty=y,tz=z,a=heading+(strand%2?1:-1)*.45;
+     for(let k=1;k<17;k++){a+=.025*Math.sin(k*.15+phase);tx+=Math.cos(a)*2.7;ty+=Math.sin(a)*2.7;tz=z+Math.sin(k/17*Math.PI)*13-k*.2;const child=addNode(nodes,last,tx,ty-tz*.72,'aerial',width*.65,.24);if(child<0)break;nodes[child].z=tz;last=child;}
+    }
+   }
+  }
+ }
+ return{nodes,config,markerIndices:baseline.markers.map(m=>m.index),bounds:baseline.bounds};
+}
+
+function selectMarkers(nodes,segments,origin){
+ const candidates=nodes.map((node,index)=>({...node,index})).filter(p=>p.role==='cord'&&p.index>0&&distance(p,origin)>75&&p.x>AREA.left+15&&p.x<AREA.right-15&&p.y>AREA.top+15&&p.y<AREA.bottom-15),markers=[];
+ for(let index=0;index<10;index++){
+  let best=null,score=-1;
+  for(let i=0;i<candidates.length;i+=Math.max(1,Math.floor(candidates.length/2200))){const p=candidates[i],d=markers.length?Math.min(...markers.map(m=>distance(m,p))):distance(p,origin);if(d>score){score=d;best=p;}}
+  if(best)markers.push({...best,at:segments[best.index-1].end});
+ }
+ return markers;
+}
+function schedule(seed,geometry,style){
+ const{nodes,config}=geometry,random=rng(seed+':age-and-flow'),children=nodes.map(()=>[]),loads=new Float64Array(nodes.length).fill(1);
+ nodes.forEach((n,index)=>{if(n.parent>=0)children[n.parent].push(index);});for(let i=nodes.length-1;i>0;i--)loads[nodes[i].parent]+=loads[i];
+ const principal=children.map(list=>list.reduce((best,index)=>best<0||((nodes[index].role==='cord'?1e6:0)+loads[index])>((nodes[best].role==='cord'?1e6:0)+loads[best])?index:best,-1));
+ const ends=new Float64Array(nodes.length),speeds=new Float64Array(nodes.length),fronts=new Int32Array(nodes.length);speeds[0]=65;
+ const phases=[400,1600,2800,3900,4800,5700],phaseOrder=[0,5,1,4,2,3],activation=[];phaseOrder.forEach((sector,rank)=>activation[sector]=phases[rank]+random()*150);
+ const segments=[];
+ for(let index=1;index<nodes.length;index++){
+  const n=nodes[index],parent=nodes[n.parent],heading=Math.atan2(n.y-config.origin.y,n.x-config.origin.x),continuation=n.parent>0&&principal[n.parent]===index;
+  const newFront=n.parent===0||(n.role==='cord'&&!continuation&&distance(parent,config.origin)<75);fronts[index]=newFront?index:fronts[n.parent];
+  const alignment=(1+Math.cos(heading-config.preferred))/2,target=(n.role==='cord'?65:43)+alignment*16;
+  speeds[index]=n.parent===0?target:bound(speeds[n.parent]*.97+target*.03+(random()-.5)*.35,34,90);
+  let start=ends[n.parent]+(continuation?0:n.role==='hair'?100+random()*550:70+random()*140);
+  if(newFront){const relative=(heading-config.preferred+Math.PI*4)%(Math.PI*2);start=Math.max(start,activation[Math.floor(relative/(Math.PI*2)*6)%6]);}
+  if(n.fuseTo!==undefined)start=Math.max(start,ends[n.fuseTo]);
+  const end=start+distance(n,parent)/speeds[index]*1000;ends[index]=end;
+  const matures=n.role==='cord'&&n.width>1.1;
+  segments.push({x:parent.x,y:parent.y,nx:n.x,ny:n.y,parent:n.parent-1,node:index,width:n.width,alpha:n.alpha,role:n.role,z:n.z??0,fuseTo:n.fuseTo,start,end,continuation,front:fronts[index],speed:speeds[index],initialWidth:matures?Math.max(.25,n.width*.18):n.width,matureAt:end+(matures?3000+random()*4500:0)});
+ }
+ const first=segments.reduce((value,s)=>Math.min(value,s.start),Infinity),last=segments.reduce((value,s)=>Math.max(value,s.matureAt),0),duration=style==='mesh'?27000:style==='tufts'?31000:style==='fuzzy'?29000:31000,factor=(duration-400)/(last-first);
+ segments.forEach(s=>{s.start=bound(400+(s.start-first)*factor,400,duration);s.end=bound(400+(s.end-first)*factor,400,duration);s.matureAt=bound(400+(s.matureAt-first)*factor,400,duration);s.speed/=factor;});
+ const markers=geometry.markerIndices?geometry.markerIndices.map(index=>({...nodes[index],index,at:segments[index-1].end})):selectMarkers(nodes,segments,config.origin);
+ return{seed,style,config,nodes,segments,markers,duration,bounds:geometry.bounds??AREA};
+}
+function makeGrowth(seed,requested='auto'){
+ const style=requested==='auto'?pickStyle(seed):requested;if(!STYLES[style])throw new Error('Unknown style');
+ if(style==='clean'){const g=makeBaseline(seed);return{...g,style,segments:g.segments.map(s=>({...s,role:'cord',initialWidth:s.width,matureAt:s.end})),markers:g.markers};}
+ return schedule(seed,style==='mesh'?meshGeometry(seed):style==='tufts'?tuftGeometry(seed):style==='fuzzy'?fuzzyGeometry(seed):fanGeometry(seed),style);
+}
+function strokeSegment(context,s,amount=1,palette='ivory',time=Infinity){
+ const rgb=(PALETTES[palette]??PALETTES.ivory).rgb.join(','),maturity=s.matureAt>s.end?bound((time-s.end)/(s.matureAt-s.end),0,1):1;
+ context.strokeStyle=`rgba(${rgb},${s.alpha*(.64+.36*maturity)})`;context.lineWidth=s.initialWidth+(s.width-s.initialWidth)*maturity;context.lineCap='round';context.beginPath();context.moveTo(s.x,s.y);context.lineTo(s.x+(s.nx-s.x)*amount,s.y+(s.ny-s.y)*amount);context.stroke();
+}
+
+const canvas=document.getElementById('drawing'),ctx=canvas.getContext('2d'),status=document.getElementById('status'),seedInput=document.getElementById('seed'),paletteSelect=document.getElementById('palette'),styleSelect=document.getElementById('style'),scaleInput=document.getElementById('zoom'),scaleOutput=document.getElementById('zoom-value');
+const buttons=[...document.querySelectorAll('button')];
+let zoomScale=1;
+let growth=null,token=0,animation=0,elapsed=0,started=0,paused=false,active=[],pending=[],pendingIndex=0,completed=[];
+const depthLayers=Array.from({length:4},()=>{const c=document.createElement('canvas');c.width=WIDTH;c.height=HEIGHT;return{canvas:c,ctx:c.getContext('2d')};});
+function plane(s){return growth.style==='tufts'?Math.min(3,Math.floor(Math.max(0,s.z)/25)):0;}
+function updateStyleNote(){
+ const style=STYLES[growth.style],note=document.getElementById('style-note'),species=document.createElement('i'),source=document.createElement('a'),qualifier=document.createElement('small');
+ species.textContent=style.species;source.href=style.source;source.textContent='Fonte';source.target='_blank';source.rel='noopener noreferrer';qualifier.textContent=' · Interpretação artística; a forma varia com as condições.';
+ note.replaceChildren(document.createTextNode('Desenho inspirado em '),species,document.createTextNode(` — ${style.context}. `),source,qualifier);
+}
+function updatePaletteNote(){
+ const p=PALETTES[paletteSelect.value]??PALETTES.ivory,note=document.getElementById('palette-note');
+ const species=document.createElement('i');species.textContent=p.species;
+ const reference=document.createElement('a');reference.href=p.source;reference.textContent='Referência';reference.target='_blank';reference.rel='noopener noreferrer';
+ const qualifier=document.createElement('small');qualifier.textContent=' · Aproximação artística da cor.';
+ note.replaceChildren(document.createTextNode('Cor inspirada em '),species,document.createTextNode(` — ${p.context}. `),reference,qualifier);
+}
+function freshSeed(){const n=new Uint32Array(1);crypto.getRandomValues(n);return `ff-colony-${Date.now().toString(36)}-${n[0].toString(36)}`;}
+function stroke(context,s,amount=1){strokeSegment(context,s,Math.min(1,amount),paletteSelect.value,elapsed);}
+function viewTransform(context){const origin=growth.config.origin;context.setTransform(zoomScale,0,0,zoomScale,origin.x*(1-zoomScale),origin.y*(1-zoomScale));}
+function resetLayers(){for(const layer of depthLayers){layer.ctx.setTransform(1,0,0,1,0,0);layer.ctx.clearRect(0,0,WIDTH,HEIGHT);viewTransform(layer.ctx);}active=[];pending=[...growth.segments].sort((a,b)=>a.start-b.start);pendingIndex=0;completed=[];}
+function renderAt(time){
+ if(!growth)return;elapsed=Math.max(0,Math.min(growth.duration,time));
+ // Finished segments are painted once into a transparent layer. Only growing tips redraw.
+ while(pendingIndex<pending.length&&pending[pendingIndex].start<=elapsed)active.push(pending[pendingIndex++]);
+ const remaining=[];for(const s of active){if(s.matureAt<=elapsed){stroke(depthLayers[plane(s)].ctx,s);completed.push(s);}else remaining.push(s);}active=remaining;
+ ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#302625';ctx.fillRect(0,0,WIDTH,HEIGHT);
+ for(let level=0;level<(growth.style==='tufts'?4:1);level++){ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(depthLayers[level].canvas,0,0);ctx.save();viewTransform(ctx);for(const s of active)if(plane(s)===level)stroke(ctx,s,(elapsed-s.start)/(s.end-s.start));ctx.restore();}
+ ctx.save();viewTransform(ctx);
+ let shown=0;for(const pin of growth.markers)if(pin.at<=elapsed){ctx.fillStyle='#ff6347';ctx.beginPath();ctx.arc(pin.x,pin.y,5,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#f4eee4';ctx.lineWidth=1.3;ctx.stroke();shown++;}
+ drawSeed(ctx,growth.config.origin);ctx.restore();window.currentGrowth={seed:growth.seed,style:growth.style,palette:paletteSelect.value,scale:zoomScale,origin:growth.config.origin,parameters:growth.config,segments:growth.segments.length,markers:shown,time:elapsed,finished:elapsed>=growth.duration};
+ status.textContent=elapsed>=growth.duration?'Desenho concluído · 10 marcadores':`Crescendo e adensando · ${shown} marcadores`;
+}
+function frame(now){if(paused||!growth)return;const before=performance.now();renderAt(now-started);window.frameStats.renders.push(performance.now()-before);window.frameStats.times.push(now);if(elapsed<growth.duration)animation=requestAnimationFrame(frame);}
+function replay(){cancelAnimationFrame(animation);window.frameStats={renders:[],times:[]};paused=false;resetLayers();renderAt(0);started=performance.now();animation=requestAnimationFrame(frame);}
+function start(seed,requestedStyle=styleSelect.value){
+ updatePaletteNote();
+ const request=++token;cancelAnimationFrame(animation);paused=true;buttons.forEach(b=>b.disabled=true);status.textContent='Preparando nutrientes…';seedInput.value=seed;window.currentGrowth={seed,finished:false};
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  if(request!==token)return;growth=makeGrowth(seed,requestedStyle);updateStyleNote();buttons.forEach(b=>b.disabled=false);
+  const p=growth.config;document.getElementById('parameters').textContent=`${p.nutrientCount} nutrientes em manchas · espessura ${p.fine.toFixed(2)}–${(p.fine+p.trunk).toFixed(1)} px · origem (${Math.round(p.origin.x)}, ${Math.round(p.origin.y)})`;
+  replay();
+ }));
+}
+document.getElementById('generate').onclick=()=>start(freshSeed());document.getElementById('replay').onclick=()=>{if(growth)replay();};
+document.getElementById('reproduce').onclick=()=>{const raw=seedInput.value.trim();if(!raw)return;try{const data=JSON.parse(raw);if(data.palette in PALETTES)paletteSelect.value=data.palette;if(data.style in STYLES)styleSelect.value=data.style;start(String(data.seed));}catch{start(raw);}};
+document.getElementById('copy').onclick=async()=>{const text=JSON.stringify({seed:growth.seed,style:growth.style,palette:paletteSelect.value});try{await navigator.clipboard.writeText(text);status.textContent='Semente e cor copiadas';}catch{seedInput.value=text;seedInput.select();status.textContent='Semente e cor selecionadas para copiar';}};
+function updateScale(){zoomScale=Number(scaleInput.value);scaleOutput.textContent=new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1}).format(zoomScale)+'×';if(growth){const at=elapsed;resetLayers();renderAt(at);}}
+scaleInput.oninput=updateScale;document.getElementById('zoom-reset').onclick=()=>{scaleInput.value='1';updateScale();};
+styleSelect.onchange=()=>{if(growth)start(growth.seed);};
+paletteSelect.onchange=()=>{updatePaletteNote();if(!growth)return;const at=elapsed;resetLayers();renderAt(at);};
+// Deterministic inspection uses the exact same renderer as the animation, without scaling.
+window.preview={start,get scale(){return zoomScale;}, get growth(){return growth;},get time(){return elapsed;},showAt(time){cancelAnimationFrame(animation);paused=true;resetLayers();renderAt(time);},replay};
+start(freshSeed());
+</script></body></html>

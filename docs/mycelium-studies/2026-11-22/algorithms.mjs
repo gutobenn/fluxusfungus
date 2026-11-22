@@ -1,0 +1,237 @@
+/** Five independent procedural algorithms. No integration with the published website. */
+export const WIDTH = 1440, HEIGHT = 900;
+export const AREA = { left: 48, right: 1392, top: 156, bottom: 846 };
+export const ORIGIN = { x: 820, y: 500 };
+export const SEED = 'fluxus-five-algorithms-2026-11-22';
+export function rng(seed) {
+  let state = 2166136261;
+  for (const c of String(seed)) state = Math.imul(state ^ c.charCodeAt(0), 16777619);
+  return () => { state += 0x6D2B79F5; let t = Math.imul(state ^ state >>> 15, state | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+const inside = (x, y) => x >= AREA.left && x <= AREA.right && y >= AREA.top && y <= AREA.bottom;
+const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const line = (a, b, width, alpha = .66) => ({ x: a.x, y: a.y, nx: b.x, ny: b.y, width, alpha });
+function pointGrid(size) {
+  const cells = new Map();
+  return {
+    add(point) { const key = `${Math.floor(point.x / size)},${Math.floor(point.y / size)}`; if (!cells.has(key)) cells.set(key, []); cells.get(key).push(point); },
+    around(point, radius = 1) { const x = Math.floor(point.x / size), y = Math.floor(point.y / size), result = []; for (let dx = -radius; dx <= radius; dx++) for (let dy = -radius; dy <= radius; dy++) result.push(...(cells.get(`${x + dx},${y + dy}`) ?? [])); return result; },
+  };
+}
+function treeLines(nodes, base = .3, max = 3.1) {
+  const loads = new Float64Array(nodes.length).fill(1);
+  for (let index = nodes.length - 1; index > 0; index--) if (nodes[index].parent >= 0) loads[nodes[index].parent] += loads[index];
+  const largest = Math.max(...loads);
+  return nodes.flatMap((node, index) => node.parent >= 0 ? [line(nodes[node.parent], node, Math.min(max, base + Math.pow(loads[index] / largest, .37) * max), .5 + Math.min(.28, loads[index] / 25))] : []);
+}
+
+/** 1. Persistent random walkers; local tip age, curvature and width drive branching. */
+export function persistentBranching(seed = SEED) {
+  const random = rng(seed), segments = [], nodes = [], occupied = pointGrid(5);
+  let id = 0;
+  function newTip(x, y, heading, width, age = 0) { return { x, y, heading, width, age, id: id++, curve: 0, branch: 20 + random() * 45, life: 130 + random() * 360 }; }
+  let tips = Array.from({ length: 8 }, (_, index) => newTip(ORIGIN.x, ORIGIN.y, index / 8 * Math.PI * 2 + (random() - .5) * .8, 1.8 + random()));
+  for (let round = 0; tips.length && round < 1200 && segments.length < 65000; round++) {
+    const next = [];
+    for (const tip of tips) {
+      if (tip.width < .2 || tip.age > tip.life) continue;
+      tip.curve = tip.curve * .9 + (random() - .5) * .04;
+      tip.heading += tip.curve;
+      const end = { x: tip.x + Math.cos(tip.heading) * 2.2, y: tip.y + Math.sin(tip.heading) * 2.2 };
+      if (!inside(end.x, end.y)) continue;
+      const join = tip.age > 12 && occupied.around(end).find(node => node.owner !== tip.id && distance(node, end) < 1.8);
+      segments.push(line(tip, join || end, tip.width, Math.min(.85, .4 + tip.width * .18)));
+      tip.x = end.x; tip.y = end.y; tip.age++;
+      if (tip.age % 3 === 0) { const node = { ...end, owner: tip.id }; nodes.push(node); occupied.add(node); }
+      if (join) continue;
+      if (tip.age > tip.branch && tip.width > .4) {
+        const side = random() < .5 ? -1 : 1;
+        next.push(newTip(tip.x, tip.y, tip.heading + side * (.5 + random() * .65), tip.width * (.7 + random() * .17)));
+        tip.branch += 23 + random() * 35;
+        tip.heading -= side * .07;
+      }
+      tip.width *= tip.age > tip.life * .7 ? .978 : .999;
+      next.push(tip);
+    }
+    tips = next;
+  }
+  return { segments, nodes, detail: '8 pontas iniciais · curvatura persistente · ramificação local por idade' };
+}
+
+/** 2. Stochastic grammar rewrites symbols; a stack-based turtle interprets the result. */
+export function lSystem(seed = SEED) {
+  const random = rng(seed), segments = [], nodes = [];
+  const productions = ['F[+X]F[-X]', 'FF[+X]X', 'F[+X]FX', 'F[-X]FX'];
+  const roots = 6;
+  for (let root = 0; root < roots; root++) {
+    let program = 'X';
+    for (let generation = 0; generation < 7; generation++) {
+      let expanded = '';
+      for (const symbol of program) expanded += symbol === 'X' ? productions[Math.floor(random() * productions.length)] : symbol === 'F' ? 'F' : symbol;
+      program = expanded;
+    }
+    let turtle = { x: ORIGIN.x, y: ORIGIN.y, heading: root / roots * Math.PI * 2 + (random() - .5) * .7, width: 2.2, alive: true };
+    const stack = [];
+    for (const symbol of program) {
+      if (symbol === '[') stack.push({ ...turtle });
+      else if (symbol === ']') turtle = stack.pop();
+      else if (symbol === '+') turtle.heading += .38 + random() * .4;
+      else if (symbol === '-') turtle.heading -= .38 + random() * .4;
+      else if ((symbol === 'F' || symbol === 'X') && turtle.alive) {
+        turtle.heading += (random() - .5) * .13;
+        const end = { x: turtle.x + Math.cos(turtle.heading) * 30, y: turtle.y + Math.sin(turtle.heading) * 23 };
+        if (!inside(end.x, end.y)) { turtle.alive = false; continue; }
+        segments.push(line(turtle, end, Math.max(.22, turtle.width), .56)); nodes.push(end);
+        turtle.x = end.x; turtle.y = end.y; turtle.width *= .996;
+      }
+      if (symbol === '[') { turtle.width *= .72; turtle.heading += (random() - .5) * .15; }
+    }
+  }
+  return { segments, nodes, detail: 'Gramática estocástica · 7 reescritas · tartaruga com pilha de ramos' };
+}
+
+/** Narrow seeded variation keeps the selected family coherent. Default remains exact. */
+export function spaceColonizationParameters(seed = SEED, varied = false) {
+  if (!varied) return { nutrientCount: 3000, influence: 76, consumption: 8, step: 5.5 };
+  const random = rng(`${seed}:subtle-parameters`);
+  return {
+    nutrientCount: Math.round(3000 * (.94 + random() * .12)),
+    influence: 76 * (.94 + random() * .12),
+    consumption: 8 * (.94 + random() * .12),
+    step: 5.5 * (.96 + random() * .08),
+  };
+}
+
+export function spaceColonizationVariation(seed = SEED) {
+  return spaceColonization(seed, { variation: true });
+}
+
+/** 3. Space colonization: attraction to nearby nutrient points; consume points on arrival. */
+export function spaceColonization(seed = SEED, options = {}) {
+  const parameters = spaceColonizationParameters(seed, options.variation === true);
+  const random = rng(seed), nodes = [{ ...ORIGIN, parent: -1 }], grid = pointGrid(70);
+  grid.add({ ...nodes[0], index: 0 });
+  let nutrients = Array.from({ length: parameters.nutrientCount }, () => ({ x: AREA.left + random() * (AREA.right - AREA.left), y: AREA.top + random() * (AREA.bottom - AREA.top) }));
+  for (let round = 0; round < 330 && nutrients.length && nodes.length < 12000; round++) {
+    const forces = new Map(), remaining = [];
+    for (const nutrient of nutrients) {
+      let best = null, bestDistance = parameters.influence;
+      for (const node of grid.around(nutrient, 2)) { const d = distance(node, nutrient); if (d < bestDistance) { bestDistance = d; best = node; } }
+      if (bestDistance < parameters.consumption) continue;
+      remaining.push(nutrient);
+      if (best) {
+        if (!forces.has(best.index)) forces.set(best.index, { x: 0, y: 0, count: 0 });
+        const force = forces.get(best.index); force.x += (nutrient.x - best.x) / bestDistance; force.y += (nutrient.y - best.y) / bestDistance; force.count++;
+      }
+    }
+    nutrients = remaining;
+    if (!forces.size) break;
+    let added = 0;
+    for (const [index, force] of forces) {
+      const parent = nodes[index], length = Math.hypot(force.x, force.y);
+      if (length < .01) continue;
+      const next = { x: parent.x + force.x / length * parameters.step, y: parent.y + force.y / length * parameters.step, parent: index };
+      if (!inside(next.x, next.y) || grid.around(next).some(node => distance(node, next) < 2.9)) continue;
+      nodes.push(next); grid.add({ ...next, index: nodes.length - 1 }); added++;
+    }
+    if (!added) break;
+  }
+  return { segments: treeLines(nodes, .25, 3.6), nodes, parameters, detail: '3.000 atratores · raio de influência 76 px · nutrientes consumidos a 8 px' };
+}
+
+/** 4. DLA: unbiased Brownian particles attach on contact with the existing aggregate. */
+export function diffusionLimitedAggregation(seed = SEED) {
+  const random = rng(seed), scaleX = 1.75, nodes = [{ x: 0, y: 0, parent: -1 }], grid = pointGrid(5);
+  grid.add({ x: 0, y: 0, index: 0 });
+  let radius = 5;
+  const toCanvas = point => ({ x: ORIGIN.x + point.x * scaleX, y: ORIGIN.y + point.y });
+  for (let particle = 0; particle < 9000; particle++) {
+    let angle = random() * Math.PI * 2;
+    let point = { x: Math.cos(angle) * (radius + 12), y: Math.sin(angle) * (radius + 12) };
+    for (let step = 0; step < 5500; step++) {
+      const candidate = grid.around(point).find(node => distance(node, point) < 4.1);
+      if (candidate) {
+        const canvas = toCanvas(point);
+        if (inside(canvas.x, canvas.y)) { const node = { ...point, parent: candidate.index }; nodes.push(node); grid.add({ ...node, index: nodes.length - 1 }); radius = Math.max(radius, Math.hypot(point.x, point.y)); }
+        break;
+      }
+      const r = Math.hypot(point.x, point.y);
+      if (r > radius + 75 || !inside(toCanvas(point).x, toCanvas(point).y)) {
+        angle = random() * Math.PI * 2;
+        point = { x: Math.cos(angle) * (radius + 10), y: Math.sin(angle) * (radius + 10) };
+      }
+      // Larger isotropic Brownian steps far from the cluster avoid empty-space work.
+      const stride = r > radius + 10 ? 7 : 3;
+      angle = random() * Math.PI * 2;
+      point.x += Math.cos(angle) * stride; point.y += Math.sin(angle) * stride;
+    }
+  }
+  const canvasNodes = nodes.map(node => ({ ...toCanvas(node), parent: node.parent }));
+  return { segments: treeLines(canvasNodes, .45, 3.3), nodes: canvasNodes, detail: '9.000 partículas · movimento browniano · adesão ao primeiro contato' };
+}
+
+/** Binary heap keeps graph shortest-path computation deterministic and economical. */
+class Heap {
+  constructor() { this.data = []; }
+  push(value) { const a = this.data; a.push(value); let i = a.length - 1; while (i > 0) { const parent = (i - 1) >> 1; if (a[parent].cost <= value.cost) break; a[i] = a[parent]; i = parent; } a[i] = value; }
+  pop() { const a = this.data, result = a[0], tail = a.pop(); if (!a.length) return result; let i = 0; while (true) { let child = i * 2 + 1; if (child >= a.length) break; if (child + 1 < a.length && a[child + 1].cost < a[child].cost) child++; if (tail.cost <= a[child].cost) break; a[i] = a[child]; i = child; } a[i] = tail; return result; }
+}
+
+/** 5. A substrate graph, Dijkstra nutrient routes and reinforcement, with cross-links. */
+export function nutrientGraph(seed = SEED) {
+  const random = rng(seed), nodes = [{ ...ORIGIN }], grid = pointGrid(45);
+  const spacing = 22;
+  for (let y = AREA.top + 12, row = 0; y < AREA.bottom; y += spacing, row++) for (let x = AREA.left + 12 + (row % 2) * spacing / 2; x < AREA.right; x += spacing) {
+    const point = { x: x + (random() - .5) * 13, y: y + (random() - .5) * 13 };
+    if (inside(point.x, point.y)) nodes.push(point);
+  }
+  nodes.forEach((point, index) => grid.add({ ...point, index }));
+  const neighbors = nodes.map(() => []), edges = [];
+  const edgeKeys = new Set();
+  nodes.forEach((point, index) => {
+    const nearest = grid.around(point).filter(other => other.index !== index).sort((a, b) => distance(a, point) - distance(b, point)).slice(0, 6);
+    for (const other of nearest) {
+      const key = [index, other.index].sort((a, b) => a - b).join(','); if (edgeKeys.has(key)) continue;
+      edgeKeys.add(key);
+      const cost = distance(point, other) * (.75 + random() * .85);
+      const edge = { a: index, b: other.index, cost }; edges.push(edge);
+      neighbors[index].push({ index: other.index, cost }); neighbors[other.index].push({ index, cost });
+    }
+  });
+  const distances = new Float64Array(nodes.length).fill(Infinity), parents = new Int32Array(nodes.length).fill(-1), heap = new Heap();
+  distances[0] = 0; heap.push({ index: 0, cost: 0 });
+  while (heap.data.length) {
+    const current = heap.pop(); if (current.cost !== distances[current.index]) continue;
+    for (const next of neighbors[current.index]) { const cost = current.cost + next.cost; if (cost < distances[next.index]) { distances[next.index] = cost; parents[next.index] = current.index; heap.push({ index: next.index, cost }); } }
+  }
+  const flow = new Float64Array(nodes.length), terminals = new Set();
+  while (terminals.size < 330) terminals.add(1 + Math.floor(random() * (nodes.length - 1)));
+  for (let index of terminals) { let guard = 0; while (index >= 0 && guard++ < nodes.length) { flow[index]++; index = parents[index]; } }
+  const segments = [], used = [];
+  for (let index = 1; index < nodes.length; index++) if (flow[index] > 0 && parents[index] >= 0) { segments.push(line(nodes[parents[index]], nodes[index], .32 + Math.pow(flow[index] / terminals.size, .4) * 3, .63)); used.push(nodes[index]); }
+  for (const edge of edges) if (flow[edge.a] && flow[edge.b] && parents[edge.a] !== edge.b && parents[edge.b] !== edge.a && random() < .14) segments.push(line(nodes[edge.a], nodes[edge.b], .3 + random() * .35, .4));
+  return { segments, nodes: used, detail: 'Grafo de substrato · Dijkstra para 330 nutrientes · reforço e ligações laterais' };
+}
+
+export const ALGORITHMS = [
+  { id: '01-persistent-branching', name: 'Pontas com memória', method: 'Caminhantes persistentes + ramificação estocástica', run: persistentBranching },
+  { id: '02-stochastic-lsystem', name: 'Gramática ramificada', method: 'L-system estocástico + interpretação por tartaruga', run: lSystem },
+  { id: '03-space-colonization', name: 'Colonização do espaço', method: 'Crescimento orientado por atratores de nutrientes', run: spaceColonization },
+  { id: '04-diffusion-aggregation', name: 'Agregação por difusão', method: 'Partículas brownianas aderem a uma colônia existente', run: diffusionLimitedAggregation },
+  { id: '05-reinforced-graph', name: 'Rede de transporte', method: 'Caminhos mínimos em grafo + reforço de trajetos', run: nutrientGraph },
+];
+
+export function markerPositions(nodes, count = 10) {
+  const candidates = nodes.filter(point => inside(point.x, point.y) && point.y > AREA.top + 15 && point.x > AREA.left + 10 && point.x < AREA.right - 10 && point.y < AREA.bottom - 10);
+  const chosen = [];
+  for (let index = 0; index < count; index++) {
+    let best, score = -1;
+    for (let sample = 0; sample < candidates.length; sample += Math.max(1, Math.floor(candidates.length / 2000))) {
+      const point = candidates[sample];
+      const value = chosen.length ? Math.min(...chosen.map(other => distance(point, other))) : distance(point, ORIGIN);
+      if (value > score) { score = value; best = point; }
+    }
+    if (best) chosen.push(best);
+  }
+  return chosen;
+}

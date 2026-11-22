@@ -1,0 +1,97 @@
+{
+  "commit": "2fd578d8adbb749dbb7b609291b9e9112b5968cc",
+  "frames": [
+    "745A6193",
+    "745A6216",
+    "745A6239",
+    "745A6262",
+    "745A6285",
+    "745A6308",
+    "745A6331",
+    "745A6354",
+    "745A6377",
+    "745A6398"
+  ],
+  "files": [
+    {
+      "file": "spatial_745A6193-results.csv",
+      "bytes": 1312
+    },
+    {
+      "file": "edges_745A6193-results.csv",
+      "bytes": 17659
+    },
+    {
+      "file": "spatial_745A6216-results.csv",
+      "bytes": 1632
+    },
+    {
+      "file": "edges_745A6216-results.csv",
+      "bytes": 21536
+    },
+    {
+      "file": "spatial_745A6239-results.csv",
+      "bytes": 4066
+    },
+    {
+      "file": "edges_745A6239-results.csv",
+      "bytes": 56554
+    },
+    {
+      "file": "spatial_745A6262-results.csv",
+      "bytes": 7302
+    },
+    {
+      "file": "edges_745A6262-results.csv",
+      "bytes": 108400
+    },
+    {
+      "file": "spatial_745A6285-results.csv",
+      "bytes": 10412
+    },
+    {
+      "file": "edges_745A6285-results.csv",
+      "bytes": 161564
+    },
+    {
+      "file": "spatial_745A6308-results.csv",
+      "bytes": 14473
+    },
+    {
+      "file": "edges_745A6308-results.csv",
+      "bytes": 228376
+    },
+    {
+      "file": "spatial_745A6331-results.csv",
+      "bytes": 19331
+    },
+    {
+      "file": "edges_745A6331-results.csv",
+      "bytes": 309581
+    },
+    {
+      "file": "spatial_745A6354-results.csv",
+      "bytes": 40083
+    },
+    {
+      "file": "edges_745A6354-results.csv",
+      "bytes": 664352
+    },
+    {
+      "file": "spatial_745A6377-results.csv",
+      "bytes": 49440
+    },
+    {
+      "file": "edges_745A6377-results.csv",
+      "bytes": 822517
+    },
+    {
+      "file": "spatial_745A6398-results.csv",
+      "bytes": 56494
+    },
+    {
+      "file": "edges_745A6398-results.csv",
+      "bytes": 938296
+    }
+  ]
+}

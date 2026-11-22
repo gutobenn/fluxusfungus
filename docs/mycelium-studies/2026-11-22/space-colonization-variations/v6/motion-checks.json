@@ -1,0 +1,13 @@
+{
+  "frames": 2161,
+  "p95RenderMs": 0.5,
+  "final": {
+    "time": 36000,
+    "playing": true,
+    "palette": "ivory",
+    "scale": 1,
+    "frame": "745A6398",
+    "next": null,
+    "transition": 0
+  }
+}

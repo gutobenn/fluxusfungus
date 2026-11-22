@@ -1,0 +1,173 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Micélio · origens e ritmos</title><style>
+:root{color-scheme:dark;background:#302625;color:#e1c0af;font:14px ui-monospace,Consolas,monospace}*{box-sizing:border-box}body{margin:0;padding:20px}header,main,footer{max-width:1440px;margin:auto}h1{font-size:22px;font-weight:500;margin:0 0 9px}p{margin:0 0 15px}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0}button,select,input{font:inherit;padding:9px 12px;border:1px solid #876e60;background:#241d1c;color:#eee}button{cursor:pointer}#generate{background:#e1c0af;color:#302625}button:disabled{opacity:.5;cursor:wait}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #ff6347;outline-offset:3px}#status{font-size:12px;color:#b9a69a}canvas{display:block;background:#302625;width:100%;height:auto;border:1px solid #53423d}.palette-note{font-size:12px;line-height:1.65;color:#b9a69a;margin:10px 0 14px}.palette-note a{color:#e1c0af;text-underline-offset:3px}.palette-note small{font-size:11px;color:#aa9689}details{font-size:12px;margin:14px 0}summary{cursor:pointer}label{display:inline-flex;gap:8px;align-items:center}input{width:360px;max-width:100%;margin:10px 5px 5px 0}footer{color:#b5a498;font-size:12px;margin-top:15px}.note{max-width:1000px;font-size:12px;line-height:1.65;margin-top:12px}@media(max-width:600px){body{padding:12px}h1{font-size:18px}.controls{gap:8px}button,select,input{padding:8px}.note{font-size:11px}}
+</style></head><body><header><h1>Colonização do espaço · origens e ritmos</h1><p>Um esporo branco inicia cada desenho. Os ramos avançam em ritmos diferentes.</p></header><main><div class="controls"><button type="button" id="generate">Gerar outra</button><button type="button" id="replay">Rever crescimento</button><label>Cor <select id="palette"><option value="ivory">Marfim</option><option value="amber">Âmbar suave</option><option value="teal">Azul-esverdeado</option><option value="yellow">Amarelo-dourado</option><option value="pink">Rosa</option><option value="coral">Coral-avermelhado</option><option value="lilac">Lilás</option><option value="violet">Violeta</option><option value="luminous">Verde luminoso</option></select></label><span id="status" role="status" aria-live="polite">Preparando…</span></div><canvas id="drawing" width="1440" height="900" role="img" aria-label="Crescimento de micélio a partir de um esporo branco, com ritmos variados e dez marcadores vermelhos"></canvas><p id="palette-note" class="palette-note" aria-live="polite"></p><details><summary>Reproduzir este desenho</summary><input id="seed" aria-label="Semente do desenho" autocomplete="off" spellcheck="false"><button type="button" id="reproduce">Reproduzir</button><button type="button" id="copy">Copiar semente e cor</button><p id="parameters" class="note"></p></details><details><summary>Sobre as cores</summary><p class="note">Marfim é o padrão. As alternativas são aproximações artísticas inspiradas em micélios reais. O verde luminoso representa luz emitida por bioluminescência, com halo discreto; as outras cores não emitem luz. O ponto inicial permanece branco em todas as cores. A cor não altera o desenho.</p></details></main><footer>Protótipo offline. O site publicado permanece igual.</footer><script>
+/** Offline space-colonization experiment: geometry and a parent-safe growth schedule. */
+const WIDTH=1440,HEIGHT=900,AREA={left:48,right:1392,top:156,bottom:846};
+const PALETTES={
+ ivory:{name:'Marfim',rgb:[243,238,226],species:'Chlorociboria aeruginascens',context:'micélio claro não pigmentado',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6617353/'},
+ amber:{name:'Âmbar suave',rgb:[220,139,85],species:'Pycnoporus cinnabarinus',context:'cinabarina alaranjada nas paredes das hifas',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10709268/'},
+ teal:{name:'Azul-esverdeado',rgb:[99,168,157],species:'Chlorociboria aeruginascens',context:'pigmento azul-esverdeado xilindeína',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6617353/'},
+ yellow:{name:'Amarelo-dourado',rgb:[224,190,82],species:'Piloderma croceum',context:'pigmento micelial amarelo corticrocin',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC12441137/'},
+ pink:{name:'Rosa',rgb:[221,152,180],species:'Limonomyces roseipellis',context:'micélio rosado e felpudo',source:'https://extension.psu.edu/turfgrass-diseases-pink-patch-causal-fungus-limonomyces-roseipellis'},
+ coral:{name:'Coral-avermelhado',rgb:[218,111,111],species:'Laetisaria fuciformis',context:'massas de hifas de tons rosa-coral a vermelho',source:'https://ipm.illinois.edu/diseases/rpds/413.pdf'},
+ lilac:{name:'Lilás',rgb:[181,160,208],species:'Lepista sordida',context:'isolados A1/A4 em cultivo, com hifas lilases',source:'https://researchers-admin.westernsydney.edu.au/ws/portalfiles/portal/94793243/uws_495.pdf#page=151'},
+ violet:{name:'Violeta',rgb:[162,139,198],species:'Lepista spp.',context:'isolados A2/A3 em cultivo, com hifas violetas; espécie não conclusiva',source:'https://researchers-admin.westernsydney.edu.au/ws/portalfiles/portal/94793243/uws_495.pdf#page=151'},
+ luminous:{name:'Verde luminoso',rgb:[152,220,108],species:'Neonothopanus gardneri',context:'luz verde emitida pelo micélio (bioluminescência, não pigmento)',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4382382/',emission:true},
+};
+function rng(seed){let state=2166136261;for(const c of String(seed))state=Math.imul(state^c.charCodeAt(0),16777619);return()=>{state+=0x6D2B79F5;let t=Math.imul(state^state>>>15,state|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function spatialGrid(size){const cells=new Map();return{add(p){const key=`${Math.floor(p.x/size)},${Math.floor(p.y/size)}`;if(!cells.has(key))cells.set(key,[]);cells.get(key).push(p);},near(p,radius=1){const x=Math.floor(p.x/size),y=Math.floor(p.y/size),found=[];for(let dx=-radius;dx<=radius;dx++)for(let dy=-radius;dy<=radius;dy++)found.push(...(cells.get(`${x+dx},${y+dy}`)??[]));return found;}};}
+function settings(seed){
+ const random=rng(seed+':settings');
+ // Extent and thickness are independent, so a dense drawing can still have fine hyphae.
+ return{
+  origin:{x:360+random()*710,y:310+random()*340},
+  nutrientCount:Math.round(1800+random()*2400),
+  influence:70+random()*21,consumption:7.2+random()*2.8,step:5.3+random()*.9,
+  trunk:2.1+random()*3.2,fine:.18+random()*.28,
+  extentX:.67+random()*.33,extentY:.72+random()*.28,
+  preferred:random()*Math.PI*2,
+ };
+}
+function makeGrowth(seed){
+ const config=settings(seed),random=rng(seed+':nutrients'),{origin}=config;
+ const nodes=[{...origin,parent:-1}],grid=spatialGrid(70);grid.add({...nodes[0],index:0});
+
+ let left=AREA.left+(1-config.extentX)*(AREA.right-AREA.left)*random(),right=left+config.extentX*(AREA.right-AREA.left);
+ let top=AREA.top+(1-config.extentY)*(AREA.bottom-AREA.top)*random(),bottom=top+config.extentY*(AREA.bottom-AREA.top);
+ left=Math.max(AREA.left,Math.min(left,origin.x-100));right=Math.min(AREA.right,Math.max(right,origin.x+100));
+ top=Math.max(AREA.top,Math.min(top,origin.y-100));bottom=Math.min(AREA.bottom,Math.max(bottom,origin.y+100));
+ const patches=Array.from({length:5},()=>({x:left+random()*(right-left),y:top+random()*(bottom-top),rx:95+random()*200,ry:65+random()*160,weight:.6+random()*.8}));
+ const voids=Array.from({length:3},()=>({x:left+random()*(right-left),y:top+random()*(bottom-top),r:65+random()*110}));
+ let nutrients=[];
+ for(let attempt=0;nutrients.length<config.nutrientCount&&attempt<config.nutrientCount*35;attempt++){
+  const point={x:left+random()*(right-left),y:top+random()*(bottom-top)};
+  const patch=patches.reduce((sum,p)=>sum+p.weight*Math.exp(-(((point.x-p.x)/p.rx)**2+((point.y-p.y)/p.ry)**2)),0);
+  const hole=voids.reduce((sum,p)=>sum+Math.exp(-((dist(point,p)/p.r)**2)),0);
+  const weight=clamp(.22+patch*.48-hole*.35,.035,.97);
+  if(random()<weight)nutrients.push(point);
+ }
+ // A small local nutrient bed starts one connected colony, even near a sparse pocket.
+ for(let index=0;index<45;index++){const angle=random()*Math.PI*2,r=18+random()*65;nutrients.push({x:origin.x+Math.cos(angle)*r,y:origin.y+Math.sin(angle)*r});}
+ for(let round=0;round<360&&nutrients.length&&nodes.length<16000;round++){
+  const forces=new Map(),remaining=[];
+  for(const nutrient of nutrients){
+   let closest=null,minimum=config.influence;
+   for(const node of grid.near(nutrient,2)){const distance=dist(node,nutrient);if(distance<minimum){minimum=distance;closest=node;}}
+   if(minimum<config.consumption)continue;
+   remaining.push(nutrient);
+   if(closest){if(!forces.has(closest.index))forces.set(closest.index,{x:0,y:0});const f=forces.get(closest.index);f.x+=(nutrient.x-closest.x)/minimum;f.y+=(nutrient.y-closest.y)/minimum;}
+  }
+  nutrients=remaining;if(!forces.size)break;let added=0;
+  for(const[index,f]of forces){
+   const parent=nodes[index],length=Math.hypot(f.x,f.y);if(length<.01)continue;
+   const next={x:parent.x+f.x/length*config.step,y:parent.y+f.y/length*config.step,parent:index};
+   if(next.x<AREA.left||next.x>AREA.right||next.y<AREA.top||next.y>AREA.bottom||grid.near(next).some(p=>dist(p,next)<config.step*.52))continue;
+   nodes.push(next);grid.add({...next,index:nodes.length-1});added++;
+  }
+  if(!added)break;
+ }
+ const children=nodes.map(()=>[]),loads=new Float64Array(nodes.length).fill(1);
+ nodes.forEach((node,index)=>{if(node.parent>=0)children[node.parent].push(index);});
+ for(let i=nodes.length-1;i>0;i--)loads[nodes[i].parent]+=loads[i];
+ const timing=rng(seed+':smooth-rhythm'),segments=[],speeds=new Float64Array(nodes.length),ends=new Float64Array(nodes.length),fronts=new Int32Array(nodes.length);
+ const principal=children.map(branches=>branches.reduce((best,index)=>best<0||loads[index]>loads[best]?index:best,-1));
+ const activation=new Array(6),cohortOrder=[0,5,1,4,2,3],cohortTimes=[400,1600,2800,3900,4800,5700];
+ cohortOrder.forEach((sector,rank)=>{activation[sector]=cohortTimes[rank]+timing()*180;});
+ speeds[0]=75;ends[0]=0;fronts[0]=-1;
+ for(let index=1;index<nodes.length;index++){
+  const node=nodes[index],parent=nodes[node.parent],heading=Math.atan2(node.y-origin.y,node.x-origin.x);
+  const continuation=node.parent>0&&principal[node.parent]===index;
+  // A major front is born near the spore, then inherited along its whole branch.
+  // Turning across an angular boundary never reapplies a start gate.
+  const newFront=node.parent===0||(!continuation&&dist(parent,origin)<70);
+  fronts[index]=newFront?index:fronts[node.parent];
+  const alignment=(1+Math.cos(heading-config.preferred))/2;
+  const localTarget=64+24*alignment+5*Math.sin(node.x*.006+node.y*.004);
+  if(newFront)speeds[index]=62+28*alignment;
+  else speeds[index]=clamp(speeds[node.parent]*.98+localTarget*.02+(timing()-.5)*.45,53,96);
+  const birthLag=continuation?0:80+timing()*100;
+  let start=ends[node.parent]+birthLag;
+  if(newFront){const relative=(heading-config.preferred+Math.PI*4)%(Math.PI*2);const sector=Math.min(5,Math.floor(relative/(Math.PI*2)*6));start=Math.max(start,activation[sector]);}
+  const end=start+config.step/speeds[index]*1000;ends[index]=end;
+  segments.push({x:parent.x,y:parent.y,nx:node.x,ny:node.y,parent:node.parent-1,node:index,
+   width:config.fine+Math.pow(loads[index]/loads[0],.38)*config.trunk,
+   alpha:.48+Math.min(.32,loads[index]/35),start,end,speed:speeds[index],continuation,front:fronts[index]});
+ }
+ // Scale continuous travel and the handful of branch-birth delays together.
+ // The first actual front always starts at 400ms; the full colony takes 22.5s.
+ const first=Math.min(...segments.map(s=>s.start)),last=Math.max(...segments.map(s=>s.end)),factor=(22500-400)/(last-first);
+ segments.forEach(s=>{s.start=Math.min(22500,400+(s.start-first)*factor);s.end=Math.min(22500,400+(s.end-first)*factor);s.speed/=factor;});
+ const duration=22500;
+ const candidates=nodes.map((node,index)=>({...node,index})).filter(node=>dist(node,origin)>70&&node.x>AREA.left+15&&node.x<AREA.right-15&&node.y>AREA.top+15&&node.y<AREA.bottom-15);
+ const markers=[];
+ for(let index=0;index<10;index++){
+  let best=null,score=-1;
+  for(let i=0;i<candidates.length;i+=Math.max(1,Math.floor(candidates.length/1800))){const node=candidates[i];const d=markers.length?Math.min(...markers.map(other=>dist(node,other))):dist(node,origin);if(d>score){score=d;best=node;}}
+  if(best)markers.push({...best,at:segments[best.index-1].end});
+ }
+ return{seed,config,nodes,segments,markers,duration,bounds:{left,right,top,bottom}};
+}
+function drawSeed(context,origin){
+ context.save();context.fillStyle='rgba(255,252,242,.13)';context.beginPath();context.ellipse(origin.x,origin.y,9,10,0,0,Math.PI*2);context.fill();
+ context.fillStyle='#fffdf5';context.shadowColor='#fff8dc';context.shadowBlur=5;context.beginPath();context.ellipse(origin.x,origin.y,3.8,4.8,-.15,0,Math.PI*2);context.fill();context.restore();
+}
+/** A cheap translucent outer stroke suggests emitted light only for the luminous palette. */
+function strokeSegment(context,s,amount=1,palette='ivory'){
+ const p=PALETTES[palette]??PALETTES.ivory,rgb=p.rgb.join(',');
+ context.lineCap='round';context.beginPath();context.moveTo(s.x,s.y);context.lineTo(s.x+(s.nx-s.x)*amount,s.y+(s.ny-s.y)*amount);
+ if(p.emission){context.strokeStyle=`rgba(${rgb},${s.alpha*.12})`;context.lineWidth=s.width+2.4;context.stroke();}
+ context.strokeStyle=`rgba(${rgb},${s.alpha})`;context.lineWidth=s.width;context.stroke();
+}
+function paintFrame(context,growth,time,palette='ivory'){
+ context.fillStyle='#302625';context.fillRect(0,0,WIDTH,HEIGHT);
+ for(const s of growth.segments){if(s.start>time)continue;strokeSegment(context,s,clamp((time-s.start)/(s.end-s.start),0,1),palette);}
+ for(const marker of growth.markers)if(marker.at<=time){context.beginPath();context.arc(marker.x,marker.y,5,0,Math.PI*2);context.fillStyle='#ff6347';context.fill();context.strokeStyle='#f4eee4';context.lineWidth=1.3;context.stroke();}
+ drawSeed(context,growth.config.origin);
+}
+
+const canvas=document.getElementById('drawing'),ctx=canvas.getContext('2d'),status=document.getElementById('status'),seedInput=document.getElementById('seed'),paletteSelect=document.getElementById('palette');
+const buttons=[...document.querySelectorAll('button')];
+let growth=null,token=0,animation=0,elapsed=0,started=0,paused=false,active=[],pending=[],pendingIndex=0,completed=[];
+const layer=document.createElement('canvas');layer.width=WIDTH;layer.height=HEIGHT;const layerCtx=layer.getContext('2d');
+function updatePaletteNote(){
+ const p=PALETTES[paletteSelect.value]??PALETTES.ivory,note=document.getElementById('palette-note');
+ const species=document.createElement('i');species.textContent=p.species;
+ const reference=document.createElement('a');reference.href=p.source;reference.textContent='Referência';reference.target='_blank';reference.rel='noopener noreferrer';
+ const qualifier=document.createElement('small');qualifier.textContent=' · Aproximação artística da cor.';
+ note.replaceChildren(document.createTextNode('Cor inspirada em '),species,document.createTextNode(` — ${p.context}. `),reference,qualifier);
+}
+function freshSeed(){const n=new Uint32Array(1);crypto.getRandomValues(n);return `ff-colony-${Date.now().toString(36)}-${n[0].toString(36)}`;}
+function stroke(context,s,amount=1){strokeSegment(context,s,amount,paletteSelect.value);}
+function resetLayers(){layerCtx.clearRect(0,0,WIDTH,HEIGHT);active=[];pending=[...growth.segments].sort((a,b)=>a.start-b.start);pendingIndex=0;completed=[];}
+function renderAt(time){
+ if(!growth)return;elapsed=Math.max(0,Math.min(growth.duration,time));
+ // Finished segments are painted once into a transparent layer. Only growing tips redraw.
+ while(pendingIndex<pending.length&&pending[pendingIndex].start<=elapsed)active.push(pending[pendingIndex++]);
+ const remaining=[];for(const s of active){if(s.end<=elapsed){stroke(layerCtx,s);completed.push(s);}else remaining.push(s);}active=remaining;
+ ctx.fillStyle='#302625';ctx.fillRect(0,0,WIDTH,HEIGHT);ctx.drawImage(layer,0,0);
+ for(const s of active)stroke(ctx,s,(elapsed-s.start)/(s.end-s.start));
+ let shown=0;for(const pin of growth.markers)if(pin.at<=elapsed){ctx.fillStyle='#ff6347';ctx.beginPath();ctx.arc(pin.x,pin.y,5,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#f4eee4';ctx.lineWidth=1.3;ctx.stroke();shown++;}
+ drawSeed(ctx,growth.config.origin);window.currentGrowth={seed:growth.seed,palette:paletteSelect.value,origin:growth.config.origin,parameters:growth.config,segments:growth.segments.length,markers:shown,time:elapsed,finished:elapsed>=growth.duration};
+ status.textContent=elapsed>=growth.duration?'Desenho concluído · 10 marcadores':`Crescendo em ritmos diferentes · ${shown} marcadores`;
+}
+function frame(now){if(paused||!growth)return;renderAt(now-started);if(elapsed<growth.duration)animation=requestAnimationFrame(frame);}
+function replay(){cancelAnimationFrame(animation);paused=false;resetLayers();renderAt(0);started=performance.now();animation=requestAnimationFrame(frame);}
+function start(seed){
+ updatePaletteNote();
+ const request=++token;cancelAnimationFrame(animation);paused=true;buttons.forEach(b=>b.disabled=true);status.textContent='Preparando nutrientes…';seedInput.value=seed;window.currentGrowth={seed,finished:false};
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  if(request!==token)return;growth=makeGrowth(seed);buttons.forEach(b=>b.disabled=false);
+  const p=growth.config;document.getElementById('parameters').textContent=`${p.nutrientCount} nutrientes em manchas · espessura ${p.fine.toFixed(2)}–${(p.fine+p.trunk).toFixed(1)} px · origem (${Math.round(p.origin.x)}, ${Math.round(p.origin.y)})`;
+  replay();
+ }));
+}
+document.getElementById('generate').onclick=()=>start(freshSeed());document.getElementById('replay').onclick=()=>{if(growth)replay();};
+document.getElementById('reproduce').onclick=()=>{const raw=seedInput.value.trim();if(!raw)return;try{const data=JSON.parse(raw);if(data.palette in PALETTES)paletteSelect.value=data.palette;start(String(data.seed));}catch{start(raw);}};
+document.getElementById('copy').onclick=async()=>{const text=JSON.stringify({seed:growth.seed,palette:paletteSelect.value});try{await navigator.clipboard.writeText(text);status.textContent='Semente e cor copiadas';}catch{seedInput.value=text;seedInput.select();status.textContent='Semente e cor selecionadas para copiar';}};
+paletteSelect.onchange=()=>{updatePaletteNote();if(!growth)return;const at=elapsed;resetLayers();renderAt(at);};
+// Deterministic inspection uses the exact same renderer as the animation, without scaling.
+window.preview={start, get growth(){return growth;},get time(){return elapsed;},showAt(time){cancelAnimationFrame(animation);paused=true;resetLayers();renderAt(time);},replay};
+start(freshSeed());
+</script></body></html>

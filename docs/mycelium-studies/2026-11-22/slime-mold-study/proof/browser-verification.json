@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "controlsPassed": true,
+  "geometryUnchangedByControls": true,
+  "pixelIdentical1xReturn": true,
+  "seedReproducible": true,
+  "mobileNoOverflow": true,
+  "frames": 2401,
+  "fps": 60.002448099882486,
+  "p95RenderMs": 1.100000023841858
+}

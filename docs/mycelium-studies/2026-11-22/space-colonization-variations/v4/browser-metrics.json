@@ -1,0 +1,20 @@
+[
+  {
+    "style": "mesh",
+    "duration": 27000,
+    "segments": 2548,
+    "frames": 1622,
+    "fps": 60.002657736474696,
+    "averageRenderMs": 0.38557336792698915,
+    "p95RenderMs": 0.8999999761581421
+  },
+  {
+    "style": "tufts",
+    "duration": 31000,
+    "segments": 59759,
+    "frames": 1862,
+    "fps": 60.00245039560993,
+    "averageRenderMs": 0.4083780887687757,
+    "p95RenderMs": 0.800000011920929
+  }
+]

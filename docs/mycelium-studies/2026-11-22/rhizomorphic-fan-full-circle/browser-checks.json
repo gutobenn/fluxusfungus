@@ -1,0 +1,22 @@
+{
+  "pauseReplay": true,
+  "seedJSONReproduce": true,
+  "twoStyles": true,
+  "eightPalettes": true,
+  "paletteScalePreserveTime": true,
+  "desktopMobile": true,
+  "noJSErrors": true,
+  "frames": 2462,
+  "p95RenderMs": 2.400000035762787,
+  "segments": 105087,
+  "style": "full",
+  "final": {
+    "seed": "fans-full-circle-reference",
+    "style": "full",
+    "palette": "ivory",
+    "scale": 1,
+    "time": 41000,
+    "playing": false,
+    "segments": 105087
+  }
+}

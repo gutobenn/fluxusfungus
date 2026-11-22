@@ -1,0 +1,35 @@
+[
+  {
+    "style": "clean",
+    "seed": "ff-colony-v3-reference",
+    "segments": 3832,
+    "hairs": 0,
+    "fibers": 0,
+    "maturing": 0,
+    "duration": 22500,
+    "markers": 10,
+    "milliseconds": 538
+  },
+  {
+    "style": "fuzzy",
+    "seed": "ff-colony-v3-reference",
+    "segments": 68010,
+    "hairs": 64178,
+    "fibers": 0,
+    "maturing": 2948,
+    "duration": 29000,
+    "markers": 10,
+    "milliseconds": 1264
+  },
+  {
+    "style": "fans",
+    "seed": "ff-colony-v3-reference",
+    "segments": 43030,
+    "hairs": 12478,
+    "fibers": 23938,
+    "maturing": 5194,
+    "duration": 31000,
+    "markers": 10,
+    "milliseconds": 382
+  }
+]

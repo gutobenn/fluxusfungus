@@ -1,0 +1,12 @@
+{
+  "eightColors": true,
+  "scale123PixelExactReturn": true,
+  "geometryUnchangedByControls": true,
+  "sourceCSVHashes": {
+    "edges": "684744066a4656537b98e65a21c9cfc6403c12c0d3a0db29f33ee3ac23a91db4",
+    "spatial": "b6b382339c5e1bef0e230659186a0e72a1689f1a9f64bb2fac078a397f61e48b",
+    "vertices": "4ed5db7d733b42b11d9217a0c7ba77f5736f314d4ef653d43cc8b3f2106c0574"
+  },
+  "noJSErrors": true,
+  "mobileNoHorizontalOverflow": true
+}

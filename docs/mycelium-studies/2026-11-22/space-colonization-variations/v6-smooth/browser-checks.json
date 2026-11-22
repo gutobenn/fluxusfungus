@@ -1,0 +1,9 @@
+{
+  "eightColors": true,
+  "controlsPreserveTimeAndGeometry": true,
+  "pauseReplay": true,
+  "mobilePauseReplay": true,
+  "mobileNoOverflow": true,
+  "finalCanvasPixelIdenticalToV5": true,
+  "noJSErrors": true
+}

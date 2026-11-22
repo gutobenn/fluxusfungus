@@ -1,0 +1,16 @@
+{
+  "frame": "745A6398",
+  "nodes": 5794,
+  "edges": 8201,
+  "bounds": {
+    "minX": 1047,
+    "maxX": 3628,
+    "minY": 345,
+    "maxY": 2395
+  },
+  "visibleEdges": 8103,
+  "omittedCentralNode": 5794,
+  "indexValidation": true,
+  "sourceCoordinatePreservation": true,
+  "sourceTopologyPreservation": true
+}

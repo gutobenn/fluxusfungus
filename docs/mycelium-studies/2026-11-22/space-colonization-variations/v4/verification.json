@@ -1,0 +1,67 @@
+{
+  "oldThreeGeometryAndTimingIdentical": true,
+  "fiveAutoFamilies": true,
+  "eightColors": true,
+  "cases": [
+    {
+      "style": "mesh",
+      "seed": "ff-colony-v4-reference",
+      "segments": 2548,
+      "graphVertices": 2473,
+      "cycleRank": 76,
+      "continuations": 2361,
+      "duration": 27000,
+      "ms": 45
+    },
+    {
+      "style": "mesh",
+      "seed": "other-colony-1",
+      "segments": 5880,
+      "graphVertices": 5693,
+      "cycleRank": 188,
+      "continuations": 5417,
+      "duration": 27000,
+      "ms": 55
+    },
+    {
+      "style": "mesh",
+      "seed": "other-colony-2",
+      "segments": 6159,
+      "graphVertices": 5960,
+      "cycleRank": 200,
+      "continuations": 5691,
+      "duration": 27000,
+      "ms": 57
+    },
+    {
+      "style": "tufts",
+      "seed": "ff-colony-v4-reference",
+      "segments": 59759,
+      "graphVertices": 59760,
+      "cycleRank": 0,
+      "continuations": 57718,
+      "duration": 31000,
+      "ms": 952
+    },
+    {
+      "style": "tufts",
+      "seed": "other-colony-1",
+      "segments": 58764,
+      "graphVertices": 58765,
+      "cycleRank": 0,
+      "continuations": 56810,
+      "duration": 31000,
+      "ms": 875
+    },
+    {
+      "style": "tufts",
+      "seed": "other-colony-2",
+      "segments": 57421,
+      "graphVertices": 57422,
+      "cycleRank": 0,
+      "continuations": 55460,
+      "duration": 31000,
+      "ms": 892
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "seed": "ff-space-2026-01",
+    "parameters": {
+      "nutrientCount": 3149,
+      "influence": 75.17994231980293,
+      "consumption": 7.816955709531903,
+      "step": 5.431245407061651
+    },
+    "segments": 6354,
+    "markers": 10,
+    "milliseconds": 702
+  },
+  {
+    "seed": "ff-space-2026-02",
+    "parameters": {
+      "nutrientCount": 2953,
+      "influence": 78.14500216700137,
+      "consumption": 8.032965960353613,
+      "step": 5.598729177620261
+    },
+    "segments": 5971,
+    "markers": 10,
+    "milliseconds": 594
+  },
+  {
+    "seed": "ff-space-2026-03",
+    "parameters": {
+      "nutrientCount": 2905,
+      "influence": 75.92253497950732,
+      "consumption": 7.960820909887552,
+      "step": 5.527330930018797
+    },
+    "segments": 5869,
+    "markers": 10,
+    "milliseconds": 634
+  },
+  {
+    "seed": "ff-space-2026-04",
+    "parameters": {
+      "nutrientCount": 3150,
+      "influence": 75.86544281817973,
+      "consumption": 7.985811705738306,
+      "step": 5.282392438361421
+    },
+    "segments": 6397,
+    "markers": 10,
+    "milliseconds": 741
+  },
+  {
+    "seed": "ff-space-2026-05",
+    "parameters": {
+      "nutrientCount": 2963,
+      "influence": 78.14260067541151,
+      "consumption": 7.818401218578219,
+      "step": 5.294432360986248
+    },
+    "segments": 6196,
+    "markers": 10,
+    "milliseconds": 636
+  }
+]

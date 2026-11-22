@@ -1,0 +1,21 @@
+{
+  "seed": "fungal-cords-reference",
+  "segments": 40547,
+  "baseNodes": 4878,
+  "graphCycles": 293,
+  "fieldAlignedSteps": 33668,
+  "resourceContacts": [
+    {
+      "index": 3847,
+      "x": 1040.752599267289,
+      "y": 311.99891418917105,
+      "at": 20639.38699833577
+    },
+    {
+      "index": 3945,
+      "x": 1133.1995492381975,
+      "y": 610.8051333297044,
+      "at": 20801.358393031547
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "pauseReplay": true,
+  "seedJSONReproduce": true,
+  "paletteScalePreserveTime": true,
+  "desktopMobile": true,
+  "noJSErrors": true,
+  "frames": 1803,
+  "p95RenderMs": 1.300000011920929,
+  "segments": 40547,
+  "cycles": 293,
+  "fieldAlignedSteps": 33668,
+  "final": {
+    "seed": "fungal-cords-reference",
+    "palette": "ivory",
+    "scale": 1,
+    "time": 30000,
+    "playing": false,
+    "segments": 40547
+  }
+}

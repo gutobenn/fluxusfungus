@@ -1,0 +1,112 @@
+[
+  {
+    "seed": "ff-colony-v2-003",
+    "title": "01 · Fino e espaçado",
+    "config": {
+      "origin": {
+        "x": 951.6772504034452,
+        "y": 527.2729576891288
+      },
+      "nutrientCount": 1847,
+      "influence": 82.43775374931283,
+      "consumption": 8.066611220221967,
+      "step": 5.856010017055087,
+      "trunk": 2.8174350507557393,
+      "fine": 0.2847468127496541,
+      "extentX": 0.6857244662195444,
+      "extentY": 0.8847083379887044,
+      "preferred": 3.0131584160168465
+    },
+    "nodes": 3435,
+    "markers": 10,
+    "milliseconds": 388
+  },
+  {
+    "seed": "ff-colony-v2-588",
+    "title": "02 · Mais espesso e denso",
+    "config": {
+      "origin": {
+        "x": 838.2726337015629,
+        "y": 440.5348921613768
+      },
+      "nutrientCount": 4156,
+      "influence": 78.22221282520331,
+      "consumption": 7.423952290322632,
+      "step": 5.653371840249747,
+      "trunk": 5.227778471261264,
+      "fine": 0.41625408444553613,
+      "extentX": 0.9383396257204004,
+      "extentY": 0.7687618117500097,
+      "preferred": 4.252548515646434
+    },
+    "nodes": 5430,
+    "markers": 10,
+    "milliseconds": 1070
+  },
+  {
+    "seed": "ff-colony-v2-000",
+    "title": "03 · Origem à esquerda",
+    "config": {
+      "origin": {
+        "x": 379.107414719183,
+        "y": 557.14872892946
+      },
+      "nutrientCount": 2941,
+      "influence": 85.81208416866139,
+      "consumption": 7.828587174694985,
+      "step": 5.749141592322848,
+      "trunk": 3.89893187135458,
+      "fine": 0.18146687510423362,
+      "extentX": 0.6894189451565035,
+      "extentY": 0.9752960704639554,
+      "preferred": 6.211814399757674
+    },
+    "nodes": 4462,
+    "markers": 10,
+    "milliseconds": 839
+  },
+  {
+    "seed": "ff-colony-v2-009",
+    "title": "04 · Expansão mais ampla",
+    "config": {
+      "origin": {
+        "x": 826.8824471044354,
+        "y": 560.6996228732169
+      },
+      "nutrientCount": 2646,
+      "influence": 71.81413109833375,
+      "consumption": 7.946731240395456,
+      "step": 5.377619437710382,
+      "trunk": 3.140348777920008,
+      "fine": 0.28876781762577597,
+      "extentX": 0.9898024532059209,
+      "extentY": 0.7469184214808047,
+      "preferred": 4.348237947712511
+    },
+    "nodes": 4617,
+    "markers": 10,
+    "milliseconds": 752
+  },
+  {
+    "seed": "ff-colony-v2-030",
+    "title": "05 · Origem alta, manchas irregulares",
+    "config": {
+      "origin": {
+        "x": 1000.4464943613857,
+        "y": 371.0682616010308
+      },
+      "nutrientCount": 1981,
+      "influence": 76.81525929854251,
+      "consumption": 7.798337994795292,
+      "step": 5.608258500113152,
+      "trunk": 2.4420820958912373,
+      "fine": 0.27492258727550506,
+      "extentX": 0.7441135263582692,
+      "extentY": 0.9773138147220015,
+      "preferred": 5.2731106022909255
+    },
+    "nodes": 3827,
+    "markers": 10,
+    "milliseconds": 554
+  }
+]

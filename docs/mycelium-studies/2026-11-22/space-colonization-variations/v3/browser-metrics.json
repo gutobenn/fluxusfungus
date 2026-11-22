@@ -1,0 +1,28 @@
+[
+  {
+    "style": "fuzzy",
+    "duration": 29000,
+    "segments": 68010,
+    "agePixelCounts": [
+      12,
+      64
+    ],
+    "frames": 1741,
+    "fps": 59.96774149078427,
+    "averageRenderMs": 1.0497415285217289,
+    "p95RenderMs": 2.300000011920929
+  },
+  {
+    "style": "fans",
+    "duration": 31000,
+    "segments": 43030,
+    "agePixelCounts": [
+      12,
+      98
+    ],
+    "frames": 1862,
+    "fps": 60.00245039560992,
+    "averageRenderMs": 1.3654672408078334,
+    "p95RenderMs": 3
+  }
+]

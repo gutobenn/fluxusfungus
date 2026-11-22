@@ -1,0 +1,24 @@
+[
+  {
+    "style": "mesh",
+    "seed": "ff-colony-v4-reference",
+    "segments": 2548,
+    "hairs": 0,
+    "fibers": 0,
+    "maturing": 2156,
+    "duration": 27000,
+    "markers": 10,
+    "milliseconds": 108
+  },
+  {
+    "style": "tufts",
+    "seed": "ff-colony-v4-reference",
+    "segments": 59759,
+    "hairs": 0,
+    "fibers": 0,
+    "maturing": 1596,
+    "duration": 31000,
+    "markers": 10,
+    "milliseconds": 918
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "seed": "fluxus-five-algorithms-2026-11-22",
+  "canvas": {
+    "width": 1440,
+    "height": 900
+  },
+  "algorithms": [
+    {
+      "id": "01-persistent-branching",
+      "segments": 13701,
+      "nodes": 4489,
+      "markers": 10,
+      "milliseconds": 17
+    },
+    {
+      "id": "02-stochastic-lsystem",
+      "segments": 2292,
+      "nodes": 2292,
+      "markers": 10,
+      "milliseconds": 5
+    },
+    {
+      "id": "03-space-colonization",
+      "segments": 6126,
+      "nodes": 6127,
+      "markers": 10,
+      "milliseconds": 585
+    },
+    {
+      "id": "04-diffusion-aggregation",
+      "segments": 3696,
+      "nodes": 3697,
+      "markers": 10,
+      "milliseconds": 11572
+    },
+    {
+      "id": "05-reinforced-graph",
+      "segments": 1115,
+      "nodes": 973,
+      "markers": 10,
+      "milliseconds": 23
+    }
+  ]
+}

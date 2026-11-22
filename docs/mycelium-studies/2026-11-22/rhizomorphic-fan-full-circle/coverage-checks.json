@@ -1,0 +1,95 @@
+{
+  "openMatchesV3": true,
+  "eightColors": true,
+  "determinism": true,
+  "connectedParentTiming": true,
+  "cases": [
+    {
+      "seed": "fans-full-circle-reference",
+      "segments": 105087,
+      "r95": 216,
+      "maximumRadius": 304,
+      "bands": [
+        {
+          "innerR": 61,
+          "outerR": 107,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 139
+        },
+        {
+          "innerR": 107,
+          "outerR": 152,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 78
+        },
+        {
+          "innerR": 152,
+          "outerR": 228,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 66
+        }
+      ]
+    },
+    {
+      "seed": "fans-circle-second",
+      "segments": 105004,
+      "r95": 210,
+      "maximumRadius": 287,
+      "bands": [
+        {
+          "innerR": 57,
+          "outerR": 101,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 111
+        },
+        {
+          "innerR": 101,
+          "outerR": 144,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 132
+        },
+        {
+          "innerR": 144,
+          "outerR": 216,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 76
+        }
+      ]
+    },
+    {
+      "seed": "fans-circle-third",
+      "segments": 105064,
+      "r95": 212,
+      "maximumRadius": 299,
+      "bands": [
+        {
+          "innerR": 60,
+          "outerR": 105,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 115
+        },
+        {
+          "innerR": 105,
+          "outerR": 149,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 161
+        },
+        {
+          "innerR": 149,
+          "outerR": 224,
+          "coverageDegrees": 360,
+          "maxEmptyGapDegrees": 0,
+          "minNodesPer5DegreeBin": 49
+        }
+      ]
+    }
+  ]
+}

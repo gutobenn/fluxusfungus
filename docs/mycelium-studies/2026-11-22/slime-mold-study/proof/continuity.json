@@ -1,0 +1,8 @@
+{
+  "duration": 40000,
+  "fpsSample": 60,
+  "maxAlphaChangePerFrame": 0.021742498626712736,
+  "maxVisibleWidthChangePerFramePx": 0.0282004486375671,
+  "geometryStaticDuringAdaptation": true,
+  "rawPhysicalHistoryPreserved": true
+}

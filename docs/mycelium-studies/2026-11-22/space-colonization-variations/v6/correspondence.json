@@ -1,0 +1,108 @@
+[
+  {
+    "frame": "745A6193",
+    "nodes": 129,
+    "edges": 97,
+    "omitted": 66,
+    "centralNode": 129
+  },
+  {
+    "frame": "745A6216",
+    "nodes": 161,
+    "edges": 144,
+    "omitted": 54,
+    "centralNode": 161,
+    "geometricAnchors": 90,
+    "unmatchedComponents": 9,
+    "maxDistance": 166,
+    "sameIDMedianDisplacement": 218
+  },
+  {
+    "frame": "745A6239",
+    "nodes": 406,
+    "edges": 434,
+    "omitted": 80,
+    "centralNode": 406,
+    "geometricAnchors": 209,
+    "unmatchedComponents": 12,
+    "maxDistance": 287,
+    "sameIDMedianDisplacement": 348
+  },
+  {
+    "frame": "745A6262",
+    "nodes": 734,
+    "edges": 894,
+    "omitted": 83,
+    "centralNode": 734,
+    "geometricAnchors": 472,
+    "unmatchedComponents": 4,
+    "maxDistance": 226,
+    "sameIDMedianDisplacement": 388
+  },
+  {
+    "frame": "745A6285",
+    "nodes": 1054,
+    "edges": 1355,
+    "omitted": 91,
+    "centralNode": 1054,
+    "geometricAnchors": 806,
+    "unmatchedComponents": 4,
+    "maxDistance": 211,
+    "sameIDMedianDisplacement": 406
+  },
+  {
+    "frame": "745A6308",
+    "nodes": 1471,
+    "edges": 1932,
+    "omitted": 95,
+    "centralNode": 1471,
+    "geometricAnchors": 1195,
+    "unmatchedComponents": 1,
+    "maxDistance": 190,
+    "sameIDMedianDisplacement": 362
+  },
+  {
+    "frame": "745A6331",
+    "nodes": 1969,
+    "edges": 2632,
+    "omitted": 101,
+    "centralNode": 1969,
+    "geometricAnchors": 1651,
+    "unmatchedComponents": 3,
+    "maxDistance": 160,
+    "sameIDMedianDisplacement": 410
+  },
+  {
+    "frame": "745A6354",
+    "nodes": 4101,
+    "edges": 5715,
+    "omitted": 93,
+    "centralNode": 4101,
+    "geometricAnchors": 3299,
+    "unmatchedComponents": 1,
+    "maxDistance": 144,
+    "sameIDMedianDisplacement": 672
+  },
+  {
+    "frame": "745A6377",
+    "nodes": 5060,
+    "edges": 7094,
+    "omitted": 94,
+    "centralNode": 5060,
+    "geometricAnchors": 4396,
+    "unmatchedComponents": 0,
+    "maxDistance": 178,
+    "sameIDMedianDisplacement": 447
+  },
+  {
+    "frame": "745A6398",
+    "nodes": 5794,
+    "edges": 8103,
+    "omitted": 98,
+    "centralNode": 5794,
+    "geometricAnchors": 5100,
+    "unmatchedComponents": 0,
+    "maxDistance": 307,
+    "sameIDMedianDisplacement": 425
+  }
+]

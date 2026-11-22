@@ -1,0 +1,59 @@
+{
+  "seed": "ff-colony-v2-588",
+  "palettes": [
+    {
+      "key": "ivory",
+      "name": "Marfim",
+      "milliseconds": 6,
+      "emission": false
+    },
+    {
+      "key": "amber",
+      "name": "Âmbar suave",
+      "milliseconds": 10,
+      "emission": false
+    },
+    {
+      "key": "teal",
+      "name": "Azul-esverdeado",
+      "milliseconds": 7,
+      "emission": false
+    },
+    {
+      "key": "yellow",
+      "name": "Amarelo-dourado",
+      "milliseconds": 6,
+      "emission": false
+    },
+    {
+      "key": "pink",
+      "name": "Rosa",
+      "milliseconds": 8,
+      "emission": false
+    },
+    {
+      "key": "coral",
+      "name": "Coral-avermelhado",
+      "milliseconds": 8,
+      "emission": false
+    },
+    {
+      "key": "lilac",
+      "name": "Lilás",
+      "milliseconds": 6,
+      "emission": false
+    },
+    {
+      "key": "violet",
+      "name": "Violeta",
+      "milliseconds": 9,
+      "emission": false
+    },
+    {
+      "key": "luminous",
+      "name": "Verde luminoso",
+      "milliseconds": 11,
+      "emission": true
+    }
+  ]
+}
