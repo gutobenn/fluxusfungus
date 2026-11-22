@@ -74,6 +74,7 @@ const data = {
     <meta property="og:image" content={image} />
     <meta property="og:type" content="website" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} (${lang})`} href={new URL(lang === "pt" ? "/rss.xml" : "/en/rss.xml", Astro.site).href} />
     <link rel="alternate" hreflang={other === "pt" ? "pt-BR" : "en"} href={new URL(otherHref, Astro.site).href} />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
@@ -102,6 +103,7 @@ const data = {
           <div class="site-nav__spacer"></div>
           <div><a href={routes.about} data-route="about">{pages.about.title}</a></div>
           <div><a href={routes.contaminations} data-route="contaminations">{pages.contaminations.title}</a></div>
+          <div><a href={lang === "pt" ? "/rss.xml" : "/en/rss.xml"} aria-label={lang === "pt" ? "Assinar o feed RSS" : "Subscribe to the RSS feed"}>rss</a></div>
           <div class="site-nav__lang">
             {lang === "pt" ? (
               <>[<span class="current">pt</span>|<a href={otherHref} hreflang="en">en</a>]</>

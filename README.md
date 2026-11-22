@@ -6,7 +6,7 @@ Desde 2026-11 o site é estático, na Cloudflare, sem custo. Ele substitui o Nex
 
 ## Como funciona
 
-- **Astro** gera HTML estático (`src/`). A página inicial é o desenho do micélio em p5 (`src/scripts/mycelium.js`), igual ao site antigo. Cada nó abre um item numa janela.
+- **Astro** gera HTML estático (`src/`). A página inicial anima o crescimento do micélio em p5 (`src/scripts/mycelium.js`), com ramificações, filamentos afilados e encontros entre hifas. Cada nó abre um item numa janela. Os cinco estudos visuais e as instruções para reproduzi-los ficam em `docs/mycelium-studies/`.
 - **Conteúdo em arquivos:** um YAML por item em `src/content/items/`, e as páginas "sobre" e "contaminações" em `src/content/pages/`. As imagens ficam em `src/assets/uploads/`, e o Astro gera as versões WebP no build.
 - **Editor:** [Pages CMS](https://app.pagescms.org), configurado em `.pages.yml`. Cada edição salva vira um commit na `main`.
 - **Publicação:** a Cloudflare (Workers Builds) faz o build a cada push na `main` e publica o Worker `fluxusfungus`, na conta "Fluxus Fungus". O Worker só serve arquivos estáticos.
@@ -30,6 +30,12 @@ Desde 2026-11 o site é estático, na Cloudflare, sem custo. Ele substitui o Nex
 
 Imagens grandes não são problema: o build gera as versões menores. Prefira JPEG.
 
+## Feed RSS
+
+O link `rss` no menu oferece os itens do micélio em [português](https://fluxusfungus.com/rss.xml) e [inglês](https://fluxusfungus.com/en/rss.xml), conforme a língua da página. Os leitores de RSS também descobrem o feed pelo HTML. Cada feed respeita os campos "Mostrar no site em …", inclui as imagens, citações e links dos áudios/vídeos, e é atualizado automaticamente a cada publicação.
+
+Os itens são ordenados pela data do editor, do mais recente ao mais antigo, com o ID como desempate. Um item sem data continua no feed, sem uma data inventada. O endereço permanente do item é seu identificador no feed, portanto editar o conteúdo mantém a mesma entrada.
+
 ## Rodar localmente
 
 Requisitos: Node 24 (`.nvmrc`) e pnpm.
@@ -38,6 +44,7 @@ Requisitos: Node 24 (`.nvmrc`) e pnpm.
 pnpm install --frozen-lockfile
 pnpm dev          # http://localhost:4321
 pnpm preview      # build + o servidor da Cloudflare, em http://localhost:8787
+node --test test/rss.test.mjs  # regressões da geração do feed (Node 24)
 ```
 
 ## Importação do site antigo

@@ -1,239 +1,146 @@
-/**
- * The mycelium sketch (p5 instance mode). Ported from sketches/mycelium.js of the Next.js site,
- * same growth rules: a random seed per visit, a branch every few iterations, and one "blob"
- * (an item) placed on a branch every `postsEveryNth` new paths.
- */
-import seedrandom from "seedrandom";
-
-function chromeOnWindowsNeedsWorkaround() {
-  const ua = navigator.userAgent;
-  const windows = /Windows/.test(ua);
-  const chrome = ua.match(/(?:Chrome|Chromium)\/(\d+)/);
-  return windows && chrome !== null && Number(chrome[1]) >= 83;
-}
+/** p5 hosts the animated drawing and accessible item controls. */
+import { growMycelium, postPositions } from "./mycelium-growth.js";
 
 /**
  * @param {typeof import("p5")} P5
  * @param {HTMLElement} container
  * @param {{posts: {id: string}[], hasNextPage: boolean, strings: Record<string, string>,
- *   showPost: (id: string) => void, nextPage: () => void, goToFirstPage: () => void}} options
+ *   showPost: (id: string) => void, nextPage: () => void, goToFirstPage: () => void,
+ *   seed?: string, preset?: string}} options
  */
 export function startMycelium(P5, container, options) {
   return new P5((p5) => {
-    const maxIterations = Math.min(Math.floor(window.innerWidth * window.innerHeight * 0.12), 160000);
-    let currentIteration = 1;
-    let iterationsSincePathCleanUp = 0;
-    let paths = new Array(1);
-    const collisionGrid = new Set();
-
-    const posts = options.posts;
-    let postsCount = 0;
+    const seed = options.seed ?? String(Math.random());
+    const preset = options.preset ?? "balanced";
     const blobs = [];
-    let canvas;
-
-    const myrng = seedrandom(String(Math.random()));
-    let pathsCounter = 1;
-    let finished = false;
-    const postsEveryNth = Math.max(1, Math.floor(maxIterations / 400));
-    const applyChromeAntialiasingWorkaround = chromeOnWindowsNeedsWorkaround();
-
-    class Path {
-      constructor(parent) {
-        if (parent === undefined) {
-          if (window.innerWidth < 1280) {
-            this.location = p5.createVector((0.3 + 0.5 * myrng.quick()) * p5.width, (0.3 + 0.5 * myrng.quick()) * p5.height);
-          } else {
-            this.location = p5.createVector((0.6 + 0.2 * myrng.quick()) * p5.width, (0.3 + 0.5 * myrng.quick()) * p5.height);
-          }
-          this.velocity = p5.createVector(p5.width / 2 - this.location.x, p5.height / 2 - this.location.y).normalize();
-          this.diameter = 4;
-          this.level = 1;
-          this.iterationCounter = 1;
-        } else {
-          this.location = parent.location.copy();
-          this.velocity = parent.velocity.copy().rotate(-0.75 + 1.5 * myrng.quick());
-          this.level = parent.level + 1;
-          this.diameter = parent.diameter * 0.98;
-          this.iterationCounter = parent.iterationCounter + 1;
-        }
-      }
-
-      update() {
-        this.location.add(this.velocity);
-        const bump = p5.createVector(-1 + 2 * myrng.quick(), -1 + 2 * myrng.quick());
-        bump.mult(0.012 * Math.log(this.iterationCounter));
-        this.velocity.add(bump);
-        this.velocity.normalize();
-
-        if (
-          myrng.quick() / Math.log(this.iterationCounter) < 0.015 ||
-          (this.iterationCounter <= 36 && this.iterationCounter % 7 === 0)
-        ) {
-          const newPath = new Path(this);
-          if (paths.length < 8) {
-            newPath.velocity = this.velocity.copy().rotate((paths.length + myrng.quick() / 4) * p5.HALF_PI);
-          }
-          if (
-            pathsCounter % postsEveryNth === 0 &&
-            postsCount < posts.length &&
-            this.location.x > 15 &&
-            this.location.y > 15 &&
-            this.location.x < p5.width - 15 &&
-            this.location.y < p5.height - 15
-          ) {
-            const blob = blobs[postsCount];
-            blob.position(this.location.x - 6, this.location.y - 6);
-            blob.removeClass("invisible");
-            postsCount++;
-          }
-          paths.push(newPath);
-          pathsCounter++;
-        }
-
-        this.diameter = this.diameter > 2 ? this.diameter * 0.98 : this.diameter * 0.9986;
-        this.iterationCounter = this.iterationCounter + 1;
-      }
+    const timers = new Set();
+    let growth, positions, canvas, drawn = 0, finished = false, disposed = false;
+    let nextButton = null, endMessage = null, transitioning = false;
+    function later(action, delay) {
+      const timer = setTimeout(() => { timers.delete(timer); if (!disposed) action(); }, delay);
+      timers.add(timer);
     }
-
-    function addPostBlobs() {
-      for (const post of posts) {
+    // p5 removes DOM nodes, but application timers also need to stop on page changes.
+    const remove = p5.remove.bind(p5);
+    p5.remove = () => {
+      disposed = true;
+      timers.forEach(clearTimeout);
+      timers.clear();
+      remove();
+    };
+    function prepareGrowth() {
+      timers.forEach(clearTimeout);
+      timers.clear();
+      canvas.style("opacity", "1");
+      growth = growMycelium({ width: p5.width, height: p5.height, seed, preset });
+      positions = postPositions(growth, options.posts.length);
+      drawn = 0;
+      finished = false;
+      transitioning = false;
+      nextButton?.remove(); nextButton = null;
+      endMessage?.remove(); endMessage = null;
+      p5.background(48, 38, 37);
+      blobs.forEach((blob) => {
+        blob.addClass("invisible");
+        blob.removeClass("pulse");
+        blob.attribute("tabindex", "-1");
+        blob.style("opacity", "");
+      });
+      p5.loop();
+    }
+    p5.setup = () => {
+      p5.frameRate(50);
+      p5.pixelDensity(1);
+      canvas = p5.createCanvas(window.innerWidth, window.innerHeight);
+      p5.background(48, 38, 37);
+      p5.noLoop();
+      for (const post of options.posts) {
         const blob = p5.createSpan("");
         blob.addClass("mycelium_blob");
         blob.addClass("invisible");
         blob.addClass("unvisited");
         blob.attribute("data-post-id", post.id);
         blob.attribute("role", "button");
-        blob.attribute("tabindex", "0");
+        blob.attribute("tabindex", "-1");
+        blob.attribute("aria-label", `${document.documentElement.lang.startsWith("pt") ? "Abrir item" : "Open item"} ${post.id}`);
         blob.position(0, 0);
         blob.mouseClicked(() => openPost(blob));
         blob.elt.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            openPost(blob);
-          }
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openPost(blob); }
         });
         blobs.push(blob);
       }
-    }
-
-    function drawFirstPath() {
-      paths[0] = new Path();
-      p5.fill("#fff");
-      p5.ellipse(
-        paths[0].location.x - paths[0].velocity.x * paths[0].diameter,
-        paths[0].location.y - paths[0].velocity.y * paths[0].diameter,
-        5,
-        6,
-      );
-      p5.fill("#eee");
-      p5.loop();
-    }
-
-    p5.setup = () => {
-      p5.frameRate(50);
-      p5.pixelDensity(1);
-      canvas = p5.createCanvas(window.innerWidth, window.innerHeight);
-      p5.background(p5.color(48, 38, 37));
-      p5.ellipseMode(p5.CENTER);
-      p5.noStroke();
-      p5.smooth();
-      p5.noLoop();
-      addPostBlobs();
-      setTimeout(drawFirstPath, 600);
+      later(prepareGrowth, 600);
     };
-
     p5.draw = () => {
-      const pathsLength = paths.length;
-
-      for (let i = pathsLength - 1; i >= 0 && currentIteration < maxIterations; i--) {
-        if ((i > 10 && myrng.quick() < 0.3) || paths[i] == null) continue;
-
-        const loc = paths[i].location;
-        const diam = paths[i].diameter;
-        const vel = paths[i].velocity;
-
-        // Workaround for canvas flickering on Chrome for Windows (https://bugs.chromium.org/p/chromium/issues/detail?id=1092080).
-        if (applyChromeAntialiasingWorkaround) {
-          p5.get(loc.x + diam * vel.x, loc.y + diam * vel.y);
-        }
-
-        if (
-          collisionGrid.has(Math.round(loc.x + diam * vel.x) + "_" + Math.round(loc.y + diam * vel.y)) ||
-          diam <= 0.45 ||
-          loc.x <= 0 ||
-          loc.y <= 0 ||
-          loc.x >= p5.width ||
-          loc.y >= p5.height
-        ) {
-          paths[i] = null;
-        } else {
-          p5.ellipse(loc.x, loc.y, diam, diam);
-          collisionGrid.add(Math.round(loc.x) + "_" + Math.round(loc.y));
-
-          if (diam >= 1) {
-            for (let x = Math.round(loc.x - diam / p5.PI); x <= Math.round(loc.x + diam / p5.PI); x++) {
-              for (let y = Math.round(loc.y - diam / p5.PI); y <= Math.round(loc.y + diam / p5.PI); y++) {
-                collisionGrid.add(x + "_" + y);
-              }
-            }
-          } else {
-            collisionGrid.add(Math.round(loc.x - (diam * vel.x) / p5.PI) + "_" + Math.round(loc.y - (diam * vel.y) / p5.PI));
-          }
-          paths[i].update();
-        }
-        currentIteration += 1;
+      if (!growth || disposed) return;
+      const context = p5.drawingContext;
+      context.lineCap = "round";
+      const until = Math.min(growth.segments.length, drawn + Math.max(100, Math.ceil(growth.segments.length / 160)));
+      // One continuous stroke per tip in this frame avoids dotted antialiasing at
+      // every 1–2px segment and reduces canvas calls for dense colonies.
+      const strokes = new Map();
+      for (; drawn < until; drawn++) {
+        const line = growth.segments[drawn];
+        if (!strokes.has(line.owner)) strokes.set(line.owner, []);
+        strokes.get(line.owner).push(line);
       }
-
-      iterationsSincePathCleanUp += 1;
-      if (iterationsSincePathCleanUp > 20) {
-        paths = paths.filter((path) => path != null);
-        iterationsSincePathCleanUp = 0;
+      for (const lines of strokes.values()) {
+        const first = lines[0];
+        context.strokeStyle = `rgba(243,238,226,${first.alpha})`;
+        context.lineWidth = first.width;
+        context.beginPath();
+        context.moveTo(first.x, first.y);
+        for (const line of lines) context.lineTo(line.nx, line.ny);
+        context.stroke();
       }
-
-      // Stop when the iteration budget is spent or no path is left, then make the blobs pulse.
-      if (currentIteration === maxIterations || pathsLength === 0) {
-        paths = [];
-        p5.noLoop();
-        blobs.forEach((blob, index) => setTimeout(() => blob.addClass("pulse"), 200 * index));
-        currentIteration++;
+      positions.forEach((position, index) => {
+        if (position.at <= drawn && blobs[index].hasClass("invisible")) {
+          blobs[index].position(position.x - 6, position.y - 6);
+          blobs[index].removeClass("invisible");
+          blobs[index].attribute("tabindex", "0");
+        }
+      });
+      if (drawn >= growth.segments.length) {
         finished = true;
+        p5.noLoop();
+        blobs.forEach((blob, index) => later(() => { if (blob.hasClass("unvisited")) blob.addClass("pulse"); }, 200 * index));
         maybeShowNext();
       }
     };
-
-    function fadeOutAnd(button, extra, action) {
-      setTimeout(action, 1000);
-      button.addClass("hide-to-right");
-      extra?.addClass("hide-to-right");
+    p5.windowResized = () => {
+      if (disposed || !growth) return;
+      p5.resizeCanvas(window.innerWidth, window.innerHeight);
+      prepareGrowth();
+    };
+    function fadeOutAnd(action) {
+      if (transitioning || disposed) return;
+      transitioning = true;
+      nextButton?.attribute("disabled", "");
+      nextButton?.addClass("hide-to-right");
+      endMessage?.addClass("hide-to-right");
       blobs.forEach((blob) => blob.style("opacity", "0"));
       canvas.style("opacity", "0");
+      later(action, 1000);
     }
-
     function openPost(blob) {
       options.showPost(blob.attribute("data-post-id"));
       blob.removeClass("pulse");
       blob.removeClass("unvisited");
       maybeShowNext();
     }
-
-    /**
-     * Once the mycelium stopped and every blob on screen was visited, offer the next page
-     * (or the end message). Only blobs on screen count: when growth stops early, some never appear.
-     */
     function maybeShowNext() {
-      const allVisited = document.querySelectorAll(".mycelium_blob.unvisited:not(.invisible)").length === 0;
-      const alreadyShown = document.querySelector(".mycelium_next_button, .mycelium_end_message");
-      if (!finished || !allVisited || alreadyShown) return;
+      if (!finished || nextButton || blobs.some((blob) => blob.hasClass("unvisited"))) return;
       if (options.hasNextPage) {
-        const nextButton = p5.createButton(options.strings.next);
+        nextButton = p5.createButton(options.strings.next);
         nextButton.addClass("mycelium_next_button");
-        nextButton.mousePressed(() => fadeOutAnd(nextButton, null, options.nextPage));
+        nextButton.mousePressed(() => fadeOutAnd(options.nextPage));
       } else {
-        const endMessage = p5.createDiv(options.strings.end);
+        endMessage = p5.createDiv(options.strings.end);
         endMessage.addClass("mycelium_end_message");
-        const firstPageButton = p5.createButton(options.strings.restart);
-        firstPageButton.addClass("mycelium_first_page_button");
-        firstPageButton.mousePressed(() => fadeOutAnd(firstPageButton, endMessage, options.goToFirstPage));
+        nextButton = p5.createButton(options.strings.restart);
+        nextButton.addClass("mycelium_first_page_button");
+        nextButton.mousePressed(() => fadeOutAnd(options.goToFirstPage));
       }
     }
   }, container);

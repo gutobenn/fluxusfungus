@@ -30,6 +30,8 @@ type ItemContent =
 
 interface ItemFile {
   title: string;
+  /** Publication day entered in Pages CMS; older items retain their original date. */
+  date?: string;
   /** Written by scripts/assign-item-ids.mjs, shown read-only in Pages CMS. */
   link?: string;
   show_pt?: boolean;
