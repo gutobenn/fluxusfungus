@@ -2,7 +2,7 @@
  * Client controller: the "quer som?" question, the mycelium pages (10 items each, shuffled),
  * modals and the URL (/p/26, /sobre, ...), with the browser back button working.
  */
-import { openGallery, openMedia, openText } from "./modals.js";
+import { openGallery, openMedia, openRSS, openText } from "./modals.js";
 import { startMycelium } from "./mycelium.js";
 
 const POSTS_PER_PAGE = 10;
@@ -20,6 +20,7 @@ let currentPage = 0;
 let sketch = null;
 let started = false;
 let closeModal = null;
+let rssVisible = false;
 let activeModal = null; // only the latest modal may change the URL when it closes
 
 function shuffle(array) {
@@ -95,6 +96,7 @@ function pathFor(target) {
 }
 
 function show(target, { push }) {
+  rssVisible = false;
   closeModal?.();
   closeModal = null;
   if (push) {
@@ -131,6 +133,34 @@ function show(target, { push }) {
   else closeModal = openMedia(post, options);
 }
 
+function showRSS() {
+  if (rssVisible) return;
+  closeModal?.();
+  rssVisible = true;
+  const token = Symbol("rss");
+  activeModal = token;
+  closeModal = openRSS(data.rss, {
+    closeLabel: strings.close,
+    onClosed: () => {
+      if (activeModal !== token) return;
+      rssVisible = false;
+      activeModal = null;
+      closeModal = null;
+      // An informational dialog does not change the URL. Restore an item/page
+      // that was already open, or return to the unchanged home/sound prompt.
+      const target = targetFromPath(location.pathname);
+      if (target) show(target, { push: false });
+      else askForSound();
+    },
+  });
+}
+
+document.querySelector("[data-rss]").addEventListener("click", (event) => {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  showRSS();
+});
+
 function openItem(id) {
   show({ kind: "item", id }, { push: true });
 }
@@ -148,6 +178,7 @@ document.querySelectorAll("[data-route]").forEach((link) =>
     const route = link.dataset.route;
     if (route === "home") {
       event.preventDefault();
+      if (rssVisible && location.pathname !== routes.home) history.pushState(null, "", routes.home);
       closeModal?.();
       return;
     }

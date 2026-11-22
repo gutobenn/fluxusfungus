@@ -709,3 +709,63 @@ button {
   padding: 20px;
   background: #fff;
 }
+
+/* RSS stays a normal feed link without JavaScript; enhancement opens an explanation. */
+.rss-link svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.rss-link:focus-visible,
+.modal--rss :is(button, a, input):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.rss-address-label,
+.rss-address,
+.rss-actions,
+.rss-feedback {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.rss-address-label {
+  display: block;
+  margin: 1rem 0 0.5rem;
+}
+
+.rss-address {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.rss-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.rss-actions button {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+
+.rss-actions a {
+  text-decoration: underline;
+}
+
+.rss-feedback {
+  min-height: 3em;
+  margin: 1rem 0 0;
+}

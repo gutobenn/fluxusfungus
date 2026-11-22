@@ -55,6 +55,27 @@ const data = {
   open: open ?? null,
   music: SITE.music,
   analytics: SITE.analytics,
+  rss: lang === "pt" ? {
+    title: "Acompanhe pelo RSS",
+    description: "Receba novos esporos do fluxus fungus no seu leitor de RSS, sem precisar visitar o site para conferir as novidades.",
+    instruction: "Copie o endereço abaixo e adicione-o ao leitor de RSS que você usa.",
+    addressLabel: "Endereço do feed RSS",
+    copy: "Copiar endereço",
+    copied: "Endereço copiado.",
+    copyFailed: "Não foi possível copiar automaticamente. O endereço está selecionado para você copiar.",
+    openFeed: "Abrir o feed",
+    url: new URL("/rss.xml", Astro.site).href,
+  } : {
+    title: "Follow via RSS",
+    description: "Receive new fluxus fungus spores in your RSS reader, without having to visit the site to check for updates.",
+    instruction: "Copy the address below and add it to your RSS reader.",
+    addressLabel: "RSS feed address",
+    copy: "Copy address",
+    copied: "Address copied.",
+    copyFailed: "The address could not be copied automatically. It is selected so you can copy it.",
+    openFeed: "Open the feed",
+    url: new URL("/en/rss.xml", Astro.site).href,
+  },
   strings:
     lang === "pt"
       ? { question: "quer som?", yes: "sim", no: "não", end: "o micélio parou por aqui", next: "mais fluxus »", restart: "rever fluxus »", close: "fechar", previous: "anterior", following: "próxima" }
@@ -103,7 +124,14 @@ const data = {
           <div class="site-nav__spacer"></div>
           <div><a href={routes.about} data-route="about">{pages.about.title}</a></div>
           <div><a href={routes.contaminations} data-route="contaminations">{pages.contaminations.title}</a></div>
-          <div><a href={lang === "pt" ? "/rss.xml" : "/en/rss.xml"} aria-label={lang === "pt" ? "Assinar o feed RSS" : "Subscribe to the RSS feed"}>rss</a></div>
+          <div>
+            <a class="rss-link" data-rss href={lang === "pt" ? "/rss.xml" : "/en/rss.xml"} aria-label={data.rss.title} title={data.rss.title} aria-haspopup="dialog">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="5" cy="19" r="2" fill="currentColor" />
+                <path d="M3 10a11 11 0 0 1 11 11M3 3a18 18 0 0 1 18 18" fill="none" stroke="currentColor" stroke-width="2.5" />
+              </svg>
+            </a>
+          </div>
           <div class="site-nav__lang">
             {lang === "pt" ? (
               <>[<span class="current">pt</span>|<a href={otherHref} hreflang="en">en</a>]</>

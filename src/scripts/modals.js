@@ -19,7 +19,7 @@ function escapeHtml(text) {
 }
 
 /** Shared open/close plumbing. */
-function mount(element, { closeLabel, onClosed, onKey }) {
+function mount(element, { closeLabel, onClosed, onKey, trapFocus = false }) {
   const closeButton = document.createElement("button");
   closeButton.type = "button";
   closeButton.className = "modal-close";
@@ -40,13 +40,20 @@ function mount(element, { closeLabel, onClosed, onKey }) {
     closeButton.remove();
     setTimeout(() => {
       element.remove();
-      if (previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true });
+      if (!root().querySelector('[role="dialog"]') && previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true });
       onClosed?.();
     }, FADE_MS);
   };
   const keydown = (event) => {
     if (event.key === "Escape") close();
-    else onKey?.(event);
+    else if (event.key === "Tab" && trapFocus) {
+      const controls = [...element.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])'), closeButton];
+      const index = controls.indexOf(document.activeElement);
+      if (index < 0 || (event.shiftKey && index === 0) || (!event.shiftKey && index === controls.length - 1)) {
+        event.preventDefault();
+        controls[event.shiftKey ? controls.length - 1 : 0].focus();
+      }
+    } else onKey?.(event);
   };
   document.addEventListener("keydown", keydown);
   closeButton.addEventListener("click", close);
@@ -67,6 +74,42 @@ export function openText({ title, html, author }, { closeLabel, onClosed }) {
     author ? `<div class="quote-author">[${escapeHtml(author)}]</div>` : ""
   }</div>`;
   return mount(modal, { closeLabel, onClosed });
+}
+
+/** RSS uses the same text dialog and close/fade behavior as the site's pages. */
+export function openRSS(content, { closeLabel, onClosed }) {
+  const modal = document.createElement("div");
+  modal.className = "modal modal--text modal--rss";
+  modal.tabIndex = -1;
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-labelledby", "rss-title");
+  modal.innerHTML = `<div class="modal__content">
+    <h1 class="page-title" id="rss-title">${escapeHtml(content.title)}</h1>
+    <div class="markdown"><p>${escapeHtml(content.description)}</p><p>${escapeHtml(content.instruction)}</p></div>
+    <label class="rss-address-label" for="rss-address">${escapeHtml(content.addressLabel)}</label>
+    <input id="rss-address" class="rss-address" type="text" readonly value="${escapeHtml(content.url)}" />
+    <div class="rss-actions"><button type="button" data-rss-copy>${escapeHtml(content.copy)}</button><a href="${escapeHtml(content.url)}" target="_blank" rel="noopener">${escapeHtml(content.openFeed)}</a></div>
+    <p class="rss-feedback" role="status" aria-live="polite"></p>
+  </div>`;
+  const address = modal.querySelector(".rss-address");
+  const feedback = modal.querySelector(".rss-feedback");
+  const copy = modal.querySelector("[data-rss-copy]");
+  address.addEventListener("focus", () => address.select());
+  copy.addEventListener("click", async () => {
+    copy.disabled = true;
+    try {
+      await navigator.clipboard.writeText(content.url);
+      feedback.textContent = content.copied;
+    } catch {
+      feedback.textContent = content.copyFailed;
+      address.focus();
+      address.select();
+    } finally {
+      copy.disabled = false;
+    }
+  });
+  return mount(modal, { closeLabel, onClosed, trapFocus: true });
 }
 
 /** Embed URL for Vimeo and YouTube links; null for anything else. */
