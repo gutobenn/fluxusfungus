@@ -7,14 +7,8 @@ Site do [fluxusfungus.com](https://fluxusfungus.com), projeto da artista visual 
 - **Astro** gera HTML estático (`src/`). A página inicial anima o crescimento do micélio em p5 (`src/scripts/mycelium.js`), com ramificações, filamentos afilados e encontros entre hifas. Cada nó abre um item numa janela. Os cinco estudos visuais e as instruções para reproduzi-los ficam em `docs/mycelium-studies/`.
 - **Conteúdo em arquivos:** um YAML por item em `src/content/items/`, e as páginas "sobre" e "contaminações" em `src/content/pages/`. As imagens ficam em `src/assets/uploads/`, e o Astro gera as versões WebP no build.
 - **Editor:** [Pages CMS](https://app.pagescms.org), configurado em `.pages.yml`. Cada edição salva vira um commit na `main`.
-- **Publicação:** a Cloudflare (Workers Builds) faz o build a cada push na `main` e publica o Worker `fluxusfungus`, na conta "Fluxus Fungus". O Worker só serve arquivos estáticos.
+- **Publicação:** a Cloudflare (Workers Builds) faz o build a cada push na `main` e publica o Worker `fluxusfungus`. O Worker só serve arquivos estáticos.
 - **Endereços antigos mantidos:** `/p/<id>`, `/sobre`, `/contaminacoes` e as versões em inglês em `/en/...`. Os arquivos de `static.fluxusfungus.com` (PDF e MP3) ficam na raiz do site. A exceção é o MP3 do Luiz Bruno, que foi para `public/audio/`. O endereço antigo dele redireciona para o novo (`public/_redirects`).
-
-## Domínio e e-mail
-
-- **Domínio:** `fluxusfungus.com` fica na conta "Fluxus Fungus" da Cloudflare. O registrador é a Squarespace Domains, e o domínio expira em 2027-10-01.
-- **Endereços:** `fluxusfungus.com`, `www.fluxusfungus.com` e `static.fluxusfungus.com` apontam para o Worker (`routes` em `wrangler.jsonc`).
-- **E-mail:** o Cloudflare Email Routing repassa `esporos@fluxusfungus.com`, o endereço de contribuições da página "contaminações", para a caixa da Tuane. E-mails para outros endereços `@fluxusfungus.com` são recusados. A regra fica em Email → Email Routing.
 
 ## Editar o conteúdo
 
